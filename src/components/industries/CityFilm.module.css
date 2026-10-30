@@ -1,0 +1,219 @@
+.film {
+  position: relative;
+}
+
+.stage {
+  display: none;
+}
+
+.chapters {
+  position: relative;
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .stage {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    display: block;
+    height: 100svh;
+    overflow: hidden;
+    background: linear-gradient(180deg, #6b5a8e, #2c2442 55%, #1c2036);
+  }
+
+  .track {
+    position: absolute;
+    inset: 0 auto 0 0;
+    height: 100%;
+    aspect-ratio: 3840 / 1648;
+    will-change: transform;
+  }
+
+  .pano {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .spot {
+    position: absolute;
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    transform: translate(-50%, -100%);
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .pin {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #f3d9a4;
+    box-shadow:
+      0 0 0 6px rgb(243 217 164 / 0.25),
+      0 0 24px 6px rgb(243 217 164 / 0.45);
+    order: 2;
+    transition: transform 0.35s ease;
+  }
+
+  .spotLabel {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgb(12 20 38 / 0.78);
+    font-size: 0.95rem;
+    font-weight: 650;
+    white-space: nowrap;
+    transition:
+      background 0.35s ease,
+      color 0.35s ease;
+  }
+
+  .spot[data-on] .spotLabel,
+  .spot:hover .spotLabel,
+  .spot:focus-visible .spotLabel {
+    background: #fff;
+    color: var(--ink);
+  }
+
+  .spot[data-on] .pin {
+    transform: scale(1.5);
+  }
+
+  .card {
+    position: absolute;
+    left: clamp(24px, 3.2vw, 56px);
+    top: 50%;
+    transform: translateY(-46%);
+    width: min(30vw, 26rem);
+    display: grid;
+    gap: 12px;
+    color: #fff;
+    text-shadow: 0 2px 18px rgb(0 0 0 / 0.4);
+    animation: cardIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  /* a soft shade at the card's edge instead of a box (it follows the card to either side) */
+  .stage::before,
+  .stage::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: min(52vw, 760px);
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  .stage::after {
+    left: 0;
+    background: linear-gradient(90deg, rgb(8 10 22 / 0.62), rgb(8 10 22 / 0.34) 55%, transparent);
+  }
+
+  .stage::before {
+    right: 0;
+    z-index: 1;
+    background: linear-gradient(270deg, rgb(8 10 22 / 0.62), rgb(8 10 22 / 0.34) 55%, transparent);
+    opacity: 0;
+  }
+
+  .film[data-side="right"] .stage::after {
+    opacity: 0;
+  }
+
+  .film[data-side="right"] .stage::before {
+    opacity: 1;
+  }
+
+  .film[data-side="right"] .card {
+    left: auto;
+    right: clamp(24px, 3.2vw, 56px);
+  }
+
+  .card {
+    z-index: 2;
+  }
+
+  @keyframes cardIn {
+    from {
+      opacity: 0;
+      transform: translateY(-42%);
+    }
+  }
+
+  .kicker {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #f3dfb5;
+  }
+
+  .card h3 {
+    color: #fff;
+  }
+
+  .card h3 {
+    font-size: clamp(1.7rem, 1rem + 1.35vw, 2.4rem);
+  }
+
+  .context {
+    font-size: 1.02rem;
+    line-height: 1.5;
+    color: rgb(255 255 255 / 0.92);
+  }
+
+  .modules {
+    display: grid;
+    gap: 6px;
+    list-style: none;
+  }
+
+  .modules li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.22);
+    font-size: 0.95rem;
+  }
+
+  .modules li:nth-child(n + 3) {
+    display: none;
+  }
+
+  .modules span {
+    color: rgb(255 255 255 / 0.85);
+    text-align: right;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .links a {
+    padding: 6px 12px;
+    border-radius: 999px;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.55);
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: #fff;
+    text-shadow: none;
+  }
+
+  .chapters {
+    margin-top: -100svh;
+    pointer-events: none;
+  }
+
+  .chapters a,
+  .chapters button,
+  .chapters [data-panel] {
+    pointer-events: auto;
+  }
+}
+

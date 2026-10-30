@@ -1,0 +1,997 @@
+/* Chapters of the Solutions film. Flat (stacked) layout first; film layout under the desktop query. */
+
+.block {
+  position: relative;
+}
+
+/* Deep-link targets (#websites, #business-software). In film mode they sit inside the hold so the
+   display is lit and the interface is on the wall when the link lands. */
+.anchor {
+  position: absolute;
+  top: 0;
+}
+
+.flatPlate {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.intro .flatPlate {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  aspect-ratio: auto;
+  object-position: 40% 50%;
+}
+
+.intro {
+  display: grid;
+  align-items: end;
+  min-height: 92svh;
+  padding: calc(var(--header-h) + 40px) 0 48px;
+  overflow: hidden;
+}
+
+.intro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(250 246 239 / 0.6), rgb(250 246 239 / 0.4) 40%, rgb(250 246 239 / 0.94) 80%);
+}
+
+.introInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+}
+
+.h1 {
+  max-width: 12em;
+  font-size: var(--step-6);
+  line-height: 0.98;
+  letter-spacing: -0.034em;
+}
+
+.lede {
+  max-width: 34em;
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--graphite);
+}
+
+.scrollHint {
+  display: none;
+}
+
+.jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.jump a {
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.78);
+  box-shadow: 0 0 0 1px var(--line);
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.jump a:hover,
+.jump a:focus-visible {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.move {
+  display: none;
+}
+
+.hold {
+  padding-bottom: clamp(40px, 6vw, 72px);
+  background: var(--porcelain);
+}
+
+.panelWrap {
+  padding: 0 var(--gutter, 20px);
+}
+
+.panel {
+  display: grid;
+  gap: 18px;
+  max-width: 40rem;
+  margin: -36px auto 0;
+  position: relative;
+  padding: clamp(22px, 4vw, 32px);
+  border-radius: 22px;
+  background: rgb(255 255 255 / 0.94);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 24px 60px -30px rgb(21 25 33 / 0.35);
+}
+
+.num {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6a4f22;
+}
+
+.title {
+  font-size: var(--step-4);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.story {
+  display: grid;
+  gap: 14px;
+}
+
+.story div {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding-left: 14px;
+  border-left: 2px solid var(--line-strong);
+}
+
+.story dt {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.story dd {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 650;
+  color: var(--cobalt);
+}
+
+.flatDemo {
+  margin-top: clamp(28px, 5vw, 48px);
+}
+
+.outro {
+  padding: clamp(56px, 8vw, 96px) 0;
+  background: var(--porcelain);
+}
+
+.outroInner {
+  display: grid;
+  gap: 16px;
+}
+
+.outroCard {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.outroLede {
+  max-width: 40em;
+  color: var(--graphite);
+  line-height: 1.55;
+}
+
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+  list-style: none;
+}
+
+.rooms a {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 12px;
+  height: 100%;
+  padding: 20px 22px;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.9);
+  box-shadow: 0 0 0 1px var(--line);
+  transition:
+    box-shadow 0.25s,
+    transform 0.25s var(--ease-out);
+}
+
+.rooms a:hover,
+.rooms a:focus-visible {
+  box-shadow: 0 0 0 1px var(--line-strong), 0 18px 40px -26px rgb(21 25 33 / 0.4);
+  transform: translateY(-2px);
+}
+
+.roomName {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.roomPitch {
+  grid-column: 1;
+  font-size: 0.9rem;
+  color: var(--graphite);
+}
+
+.rooms svg {
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  align-self: center;
+}
+
+/* ---------- film mode: the chapters scroll over the sticky camera ---------- */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .flatPlate,
+  .intro::after {
+    display: none;
+  }
+
+  .intro {
+    min-height: 0;
+    height: 115svh;
+    align-items: start;
+    padding: calc(var(--header-h) + 9svh) 0 0;
+    overflow: visible;
+  }
+
+  .introInner {
+    position: sticky;
+    top: calc(var(--header-h) + 9svh);
+  }
+
+  .scrollHint {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    font-size: 0.78rem;
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--graphite);
+  }
+
+  .scrollHint span {
+    width: 1px;
+    height: 34px;
+    background: linear-gradient(var(--ink), transparent);
+  }
+
+  .move {
+    display: block;
+    height: 170svh;
+  }
+
+  .moveLine {
+    position: sticky;
+    top: calc(100svh - 84px);
+    width: fit-content;
+    margin-left: clamp(24px, 4vw, 64px);
+    padding: 11px 20px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.92);
+    box-shadow: 0 14px 34px -20px rgb(21 25 33 / 0.55);
+    font-size: 0.98rem;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+  }
+
+  .anchor {
+    top: calc(var(--header-h) + 16px + 18svh);
+  }
+
+  .hold {
+    height: var(--hold, 300svh);
+    padding: 0;
+    background: none;
+  }
+
+  .panelWrap {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100svh;
+    padding: var(--header-h) 0 24px clamp(24px, 3.2vw, 56px);
+  }
+
+  .panel {
+    width: min(31vw, 28rem);
+    margin: 0;
+    gap: 16px;
+    padding: 28px 28px 26px;
+    background: rgb(255 255 255 / 0.84);
+    backdrop-filter: blur(16px) saturate(1.1);
+  }
+
+  .title {
+    font-size: clamp(1.7rem, 1rem + 1.35vw, 2.45rem);
+    line-height: 1.05;
+    letter-spacing: -0.018em;
+  }
+
+  .story dd {
+    font-size: 1rem;
+    line-height: 1.52;
+    color: var(--ink);
+  }
+
+  .story dt {
+    font-size: 0.78rem;
+    color: #6a4f22;
+  }
+
+  .num {
+    font-size: 0.8rem;
+  }
+
+  .lede {
+    font-size: 1.06rem;
+    color: #2b3445;
+  }
+
+  .outro {
+    height: 160svh;
+    padding: 0;
+    background: none;
+  }
+
+  .outroInner {
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+    align-content: end;
+    gap: 12px;
+    padding: var(--header-h) 0 clamp(28px, 5svh, 56px);
+  }
+
+  /* The invitation sits on the scene itself: dark ink with a soft light halo for legibility,
+     compact so it stays below the facade's window labels. */
+  .outroCard {
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+    max-width: 46rem;
+    position: relative;
+    isolation: isolate;
+    color: var(--ink);
+    text-shadow:
+      0 0 22px rgb(255 250 240 / 1),
+      0 0 8px rgb(255 250 240 / 0.95),
+      0 0 2px rgb(255 250 240 / 0.95);
+  }
+
+  /* A soft, shapeless glow behind the words (not a box) so they read over the reflections. */
+  .outroCard::before {
+    content: "";
+    position: absolute;
+    inset: -70px -140px -50px -110px;
+    z-index: -1;
+    background: radial-gradient(closest-side, rgb(250 246 239 / 0.78), rgb(250 246 239 / 0.45) 55%, transparent);
+    pointer-events: none;
+  }
+
+  .outroCard a:not(:global(.btn)) {
+    color: #10317a;
+    font-weight: 700;
+  }
+
+  .outroCard :global(.kicker),
+  .outroCard .outroLede {
+    color: #1d2433;
+    font-weight: 600;
+  }
+
+  .outroCard :global(.kicker)::before {
+    background: #1d2433;
+  }
+
+  .outroInner .title {
+    font-size: clamp(1.6rem, 0.9rem + 1.4vw, 2.4rem);
+  }
+
+  /* the facade's six windows are the links in film mode */
+  .outroInner .rooms {
+    display: none;
+  }
+
+  .jump {
+    pointer-events: auto;
+  }
+
+  .rooms {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .rooms a {
+    padding: 16px 16px 18px;
+    grid-template-columns: 1fr;
+    align-content: start;
+  }
+
+  .rooms svg {
+    display: none;
+  }
+
+  .roomName {
+    font-size: 1.05rem;
+  }
+
+  .roomPitch {
+    font-size: 0.82rem;
+  }
+
+  .rooms a {
+    background: rgb(255 255 255 / 0.82);
+    backdrop-filter: blur(14px);
+  }
+}
+
+/* Compact panel on small desktops and short windows. */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) and (max-width: 1279px),
+  (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) and (max-height: 800px) {
+  .panel {
+    width: min(30vw, 22rem);
+    gap: 10px;
+    padding: 18px 18px 16px;
+  }
+
+  .story {
+    gap: 8px;
+  }
+
+  .story dd {
+    font-size: 0.8rem;
+    line-height: 1.42;
+  }
+}
+
+/* Industries: the intro screen over the panorama (scrolls away; the district cards take over). */
+.cityIntro {
+  position: relative;
+  z-index: 1;
+  padding: 0 var(--gutter, 20px) 32px;
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .city {
+    height: 620svh;
+  }
+
+  .cityIntro[data-gone="true"] {
+    visibility: hidden;
+  }
+
+  /* pinned for the whole film; CityFilm dissolves it in place before the first district */
+  .cityIntro {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100svh;
+    padding: var(--header-h) 0 24px clamp(24px, 3.2vw, 56px);
+  }
+}
+
+/* ---------- Minimal chapter copy (owner, 2026-10-29): no boxes over the scenes. ----------
+   White type on a soft, shapeless shade at the left edge; one line of story, then the action. */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .panelWrap {
+    isolation: isolate;
+  }
+
+  .panelWrap::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: -1;
+    width: min(54vw, 780px);
+    background: linear-gradient(90deg, rgb(8 12 24 / 0.68), rgb(8 12 24 / 0.42) 52%, transparent);
+    /* feathered top and bottom too, so the shade never reads as a box while a chapter scrolls */
+    mask-image: linear-gradient(180deg, transparent, #000 16%, #000 84%, transparent);
+    pointer-events: none;
+  }
+}
+
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+
+  .panel {
+    width: min(30vw, 26rem);
+    gap: 14px;
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
+    box-shadow: none;
+    color: #fff;
+    text-shadow: 0 2px 18px rgb(0 0 0 / 0.35);
+  }
+
+  .panel .title {
+    color: #fff;
+  }
+
+  .panel .num,
+  .panel :global(.kicker),
+  .panel .story dt {
+    color: #f3dfb5;
+  }
+
+  .panel .lede,
+  .panel .story dd {
+    color: rgb(255 255 255 / 0.92);
+  }
+
+  .panel .story div {
+    border-left-color: rgb(255 255 255 / 0.4);
+  }
+
+  /* one line of story only: the middle entry ("On the wall", "On the table") */
+  .panel .story div:not(:nth-child(2)) {
+    display: none;
+  }
+
+  .panel.storyAll .story div:nth-child(n) {
+    display: grid;
+  }
+
+  .panel a:not(:global(.btn)),
+  .panel .more {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .panel :global(.btn-primary) {
+    background: #fff;
+    color: var(--ink);
+    text-shadow: none;
+  }
+
+  .panel nav,
+  .panel nav * {
+    color: rgb(255 255 255 / 0.85) !important;
+  }
+}
+
+/* ---------- Wider chapters: lists, columns and questions told on the scene itself ---------- */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .wideWrap::before {
+    width: min(78vw, 1180px) !important;
+  }
+
+  .panel.wide {
+    width: min(64vw, 60rem);
+  }
+
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px 28px;
+    margin-top: 4px;
+  }
+
+  .cols > div {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgb(255 255 255 / 0.3);
+  }
+
+  .cols h3 {
+    color: #fff;
+    font-size: 1.08rem;
+    font-weight: 650;
+  }
+
+  .cols h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .cols p,
+  .cols li {
+    color: rgb(255 255 255 / 0.88);
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .cols ul {
+    display: grid;
+    gap: 3px;
+    list-style: none;
+  }
+
+  .lines {
+    display: grid;
+    gap: 0;
+    list-style: none;
+  }
+
+  .lines li {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    gap: 2px 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.22);
+    color: rgb(255 255 255 / 0.9);
+    font-size: 0.98rem;
+  }
+
+  .lines li b {
+    color: #fff;
+  }
+
+  .lines li > span {
+    color: #f3dfb5;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  .faq {
+    display: grid;
+    gap: 0;
+  }
+
+  .faq details {
+    border-bottom: 1px solid rgb(255 255 255 / 0.25);
+  }
+
+  .faq summary {
+    padding: 13px 0;
+    color: #fff;
+    font-size: 1.04rem;
+    font-weight: 650;
+    cursor: pointer;
+  }
+
+  .faq details p {
+    padding: 0 0 14px;
+    color: rgb(255 255 255 / 0.9);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+}
+
+/* Lists inside chapters: plain lists in the stacked layout, white type on the scene in the film. */
+.lines,
+.capList {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.capList li::before {
+  content: "— ";
+  color: var(--gold);
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .capList {
+    display: block;
+    columns: 2;
+    column-gap: 32px;
+  }
+
+  .capList li {
+    break-inside: avoid;
+    padding: 5px 0;
+    color: rgb(255 255 255 / 0.92);
+    font-size: 0.98rem;
+  }
+
+  .capList li::before {
+    color: #f3dfb5;
+  }
+
+  .lines a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+/* ---------- Words in place (owner, 2026-10-30: "I hate the way texts move up on scroll") ----------
+   A chapter's words never scroll. Each chapter runs on one viewport under the next one, so its words
+   stay pinned for the whole chapter; the film engine marks the current chapter and only its words are
+   shown. A change of chapter is a calm crossfade with a slight settle, timed, never tied to scroll.
+   Camera-move pills ("Step inside…") are gone: the picture says it. */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .hold {
+    height: calc(var(--hold, 300svh) + 100svh);
+    margin-bottom: -100svh;
+  }
+
+  /* The last chapter has no next one to run under; its words are read for its full length, then
+     they go just as the scene starts to leave (the engine ends it there). */
+  .hold:last-child {
+    height: calc(var(--hold, 300svh) + 100svh);
+    margin-bottom: 0;
+  }
+
+  .intro {
+    height: 215svh;
+    margin-bottom: -100svh;
+  }
+
+  .moveLine {
+    display: none !important;
+  }
+
+  [data-engine] .panelWrap,
+  [data-engine] .introInner,
+  [data-engine] .outroInner {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.4s ease,
+      visibility 0s linear 0.4s;
+  }
+
+  [data-engine] [data-current] > .panelWrap,
+  [data-engine] [data-current] > .introInner,
+  [data-engine] [data-current] > .outroInner {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.75s ease 0.15s,
+      visibility 0s;
+  }
+
+  [data-engine] .panelWrap .panel {
+    translate: 0 14px;
+    transition: translate 0.9s var(--ease-out) 0.1s;
+  }
+
+  [data-engine] [data-current] > .panelWrap .panel {
+    translate: 0 0;
+  }
+
+  /* The message carries: a statement-size title and a calm, generous line. */
+  .panel .title {
+    font-size: clamp(2.1rem, 1.1rem + 2.1vw, 3.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+
+  .panel .lede {
+    font-size: clamp(1.08rem, 0.9rem + 0.35vw, 1.3rem);
+    line-height: 1.55;
+  }
+
+  .panel {
+    width: min(36vw, 34rem);
+  }
+}
+
+/* ---------- Words never over a display (owner, 2026-10-30) ----------
+   Gallery rooms: the column ends before the wall display. The display's left edge sits at about 34 %
+   of the plate, and the plate covers the stage (width max(100vw, 16/9 of the height), centred), so
+   its left edge is 50vw - 0.16 × plate width. Solution pages: where the display is the picture (the
+   room, its live demo, the next step) the words sit below it, on a shade that rises from the floor. */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .panel.beside {
+    width: min(34rem, calc(50vw - 0.16 * max(100vw, 177.78svh) - clamp(24px, 3.2vw, 56px) - 32px));
+  }
+
+  .panel.beside .title {
+    font-size: clamp(1.7rem, 0.9rem + 1.45vw, 2.6rem);
+  }
+
+  .panelWrap.low {
+    align-items: flex-end;
+    padding-bottom: 3.5svh;
+  }
+
+  .panelWrap.low::before {
+    width: min(72vw, 1040px);
+    mask-image: linear-gradient(180deg, transparent 38%, #000 66%);
+  }
+
+  .panelWrap.low .panel {
+    width: min(50vw, 46rem);
+    gap: 12px;
+  }
+
+  .panelWrap.low .panel .title {
+    font-size: clamp(1.8rem, 0.9rem + 1.5vw, 2.6rem);
+  }
+
+  .panelWrap.low .lines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 22px;
+  }
+
+  .panelWrap.low .lines li {
+    padding: 2px 0;
+    border: 0;
+  }
+}
+
+
+/* ---------- Phones, tablets and reduced motion: scenes, not cards (owner, 2026-10-30) ----------
+   Each chapter is a tall picture that fades into deep navy; its words sit in white on that fade and
+   carry on below on the same dark ground. No white boxes over or under the scenes. */
+@media not all and (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .hold,
+  .outro {
+    padding-bottom: 56px;
+    background: var(--ink-deep);
+    color: #fff;
+  }
+
+  .flatPlate {
+    aspect-ratio: 4 / 5;
+    max-height: 78svh;
+    object-position: 50% 50%;
+    mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
+  }
+
+  .panel {
+    margin: -110px auto 0;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: #fff;
+  }
+
+  .hold:not(:has(.flatPlate)) .panel {
+    margin-top: 0;
+    padding-top: 56px;
+  }
+
+  .panel .title,
+  .panel h1,
+  .panel h2,
+  .panel h3,
+  .outro h2,
+  .outro h3 {
+    color: #fff;
+  }
+
+  .panel .num,
+  .panel :global(.kicker),
+  .panel .story dt,
+  .outro :global(.kicker) {
+    color: rgb(255 255 255 / 0.66);
+  }
+
+  .panel .lede,
+  .panel p,
+  .panel li,
+  .panel dd,
+  .panel summary,
+  .outroLede {
+    color: rgb(255 255 255 / 0.86);
+  }
+
+  .panel .story div {
+    border-left-color: rgb(255 255 255 / 0.28);
+  }
+
+  .panel a:not(:global(.btn)) {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .panel p a:not(:global(.btn)),
+  .panel .more,
+  .outro .more {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+
+  .panel :global(.btn-primary),
+  .outro :global(.btn-primary) {
+    background: #faf6ef;
+    color: var(--ink);
+  }
+
+  .panel nav,
+  .panel nav * {
+    color: rgb(255 255 255 / 0.75) !important;
+  }
+
+  .lines li,
+  .capList li,
+  .faq details,
+  .cols > div {
+    border-color: rgb(255 255 255 / 0.18) !important;
+  }
+
+  .intro::after {
+    background: linear-gradient(180deg, rgb(8 24 52 / 0.35), rgb(8 24 52 / 0.45) 40%, rgb(8 24 52 / 0.95) 85%);
+  }
+
+  .introInner,
+  .introInner :is(h1, p) {
+    color: #fff;
+  }
+
+  .rooms a {
+    background: rgb(255 255 255 / 0.06);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.18);
+  }
+
+  .roomName {
+    color: #fff;
+  }
+
+  .roomPitch {
+    color: rgb(255 255 255 / 0.75);
+  }
+}
+
+/* Phones: the Industries intro and the notes under the inline demos sit on the dark ground too. */
+@media not all and (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .cityIntro {
+    padding-top: 32px;
+    background: var(--ink-deep);
+    color: #fff;
+  }
+
+  .cityIntro .lede,
+  .cityIntro p {
+    color: rgb(255 255 255 / 0.86);
+  }
+
+  .cityIntro .more {
+    color: #fff;
+  }
+
+  /* An inline demo is an interface, shown on its own light surface (like a screen) inside the chapter. */
+  .flatDemo {
+    margin-top: 28px;
+    padding: 18px 16px;
+    border-radius: 22px;
+    background: var(--porcelain);
+    color: var(--ink);
+  }
+}
+
+@media not all and (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .outro .more,
+  .outroInner a:not(:global(.btn)) {
+    color: #fff;
+  }
+
+  .outroInner :is(h2, h3) {
+    color: #fff;
+  }
+}

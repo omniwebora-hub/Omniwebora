@@ -1,0 +1,115 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: calc(var(--header-h) + clamp(40px, 7vw, 96px)) 0 clamp(64px, 8vw, 112px);
+}
+
+.porcelain {
+  background:
+    radial-gradient(ellipse 45% 60% at 92% 30%, rgb(231 239 247 / 0.95), transparent 70%),
+    radial-gradient(ellipse 40% 50% at 10% 100%, rgb(255 226 182 / 0.35), transparent 70%),
+    var(--porcelain);
+}
+
+.mist {
+  background: linear-gradient(180deg, #edf3f9, var(--mist));
+}
+
+.ink {
+  background:
+    radial-gradient(ellipse 60% 70% at 90% 10%, rgb(20 103 197 / 0.28), transparent 70%),
+    var(--ink);
+}
+
+.ink .title {
+  color: var(--porcelain);
+}
+
+.ink .lede {
+  color: #c4d0e2;
+}
+
+.ink :global(.kicker) {
+  color: var(--gold-soft);
+}
+
+.ink :global(nav[aria-label="Breadcrumb"]) a,
+.ink :global(nav[aria-label="Breadcrumb"]) span {
+  color: #c4d0e2;
+}
+
+/* The same atrium as the home hero: a colonnade plate, faded into the page on the left. */
+.plate {
+  position: absolute;
+  inset: 0 0 0 30%;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.35) 30%, #000 72%);
+  mask: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.35) 30%, #000 72%);
+}
+
+.plateImg {
+  object-fit: cover;
+  object-position: 70% 50%;
+  opacity: 0.55;
+}
+
+.hero:has(.withAside) .plateImg {
+  opacity: 0.3;
+}
+
+.ink .plateImg {
+  opacity: 0.22;
+  mix-blend-mode: luminosity;
+}
+
+.inner {
+  position: relative;
+  display: grid;
+  gap: 48px;
+}
+
+.withAside {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+}
+
+.copy {
+  display: grid;
+  gap: 22px;
+  justify-items: start;
+  max-width: 760px;
+}
+
+.title {
+  font-size: var(--step-7);
+  font-weight: 500;
+  letter-spacing: -0.034em;
+  line-height: 0.98;
+}
+
+.lede {
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--graphite);
+  max-width: 40em;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 18px;
+  margin-top: 10px;
+}
+
+.aside {
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .withAside {
+    grid-template-columns: 1fr;
+  }
+  .aside {
+    max-width: 520px;
+  }
+}

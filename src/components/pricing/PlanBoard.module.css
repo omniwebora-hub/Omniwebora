@@ -1,0 +1,197 @@
+.board {
+  display: grid;
+  gap: 22px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--white);
+  font-weight: 650;
+  font-size: 0.92rem;
+  color: var(--ink);
+}
+
+.tab[aria-selected="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+
+.panel {
+  display: grid;
+  gap: 18px;
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+.intro {
+  max-width: 48em;
+  color: var(--graphite);
+  line-height: 1.55;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  list-style: none;
+}
+
+.plan {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 26px 24px;
+  border-radius: 22px;
+  background: var(--white);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 22px 50px -36px rgb(21 25 33 / 0.4);
+}
+
+.plan[data-level="3"] {
+  background: linear-gradient(180deg, #16213a, #0e1729);
+  color: var(--white);
+}
+
+.steps {
+  display: flex;
+  gap: 4px;
+}
+
+.steps i {
+  width: 22px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--line-strong);
+}
+
+.steps i[data-on] {
+  background: #b59258;
+}
+
+.planName {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 500;
+}
+
+.position {
+  font-weight: 600;
+}
+
+.pending {
+  font-size: 0.85rem;
+  color: var(--graphite);
+}
+
+.plan[data-level="3"] .planName,
+.plan[data-level="3"] .position {
+  color: var(--white);
+}
+
+.plan[data-level="3"] .pending {
+  color: rgb(255 255 255 / 0.72);
+}
+
+.ask {
+  margin-top: 6px;
+  font-weight: 650;
+  color: var(--cobalt);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.plan[data-level="3"] .ask {
+  color: #e8cf9e;
+}
+
+.proposal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 28px;
+  padding: 28px;
+  border-radius: 22px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.proposal > div {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  justify-items: start;
+}
+
+.label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.questions {
+  display: grid;
+  gap: 8px;
+  padding-left: 1.1em;
+}
+
+.note {
+  font-size: 0.9rem;
+  color: var(--graphite);
+}
+
+@media (max-width: 860px) {
+  .plans,
+  .proposal {
+    grid-template-columns: 1fr;
+  }
+}
+
+.proposalHead {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #fbf0dc;
+  color: #6a4f22;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.qLabel {
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6a4f22;
+}
+
+.plan[data-level="3"] .qLabel {
+  color: #e8cf9e;
+}
+
+.proposalFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+}

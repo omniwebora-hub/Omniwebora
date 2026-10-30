@@ -1,0 +1,168 @@
+.explorer {
+  padding-top: clamp(32px, 4vw, 56px);
+}
+
+.title {
+  font-size: var(--step-5);
+}
+
+.table {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+  margin-top: 32px;
+  list-style: none;
+  border-top: 2px solid var(--gold);
+}
+
+.table li {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 20px 16px 20px 0;
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+
+.table li + li {
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+}
+
+.n {
+  font-family: var(--font-display);
+  color: #6a4f22;
+}
+
+.table h3 {
+  font-size: 1.35rem;
+}
+
+.table p {
+  font-size: 0.9rem;
+  color: var(--graphite);
+}
+
+.del {
+  display: grid;
+  gap: 2px;
+  margin-top: 6px;
+  font-weight: 650;
+  color: var(--ink) !important;
+}
+
+.del span {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.note {
+  margin-top: 18px;
+  font-size: 0.88rem;
+  color: var(--graphite);
+}
+
+.stone {
+  background: var(--stone);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(24px, 5vw, 80px);
+  align-items: start;
+}
+
+.columns {
+  display: grid;
+  gap: 26px;
+}
+
+.columns h3 {
+  margin-bottom: 8px;
+  font-size: var(--step-3);
+}
+
+.columns p {
+  color: var(--ink-soft);
+}
+
+.columns a {
+  color: var(--cobalt);
+  text-decoration: underline;
+}
+
+.faq {
+  border-top: 1px solid var(--line-strong);
+}
+
+.faq details {
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.faq summary {
+  padding: 20px 0;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.faq p {
+  padding-bottom: 20px;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 1100px) {
+  .table {
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 0;
+  }
+
+  .table li,
+  .table li + li {
+    padding: 18px 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 860px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .table {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- The planning table (film mode) ---------- */
+/* Chapters that only exist in the film: on phones, tablets and with reduced motion the full planner
+   below does the same job, so they are not repeated. */
+.filmOnly {
+  display: none;
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .filmOnly {
+    display: block;
+  }
+
+  /* On the wide view of the table the copy sits on the open marble below the devices. */
+  .low {
+    align-items: flex-end;
+    padding-bottom: clamp(32px, 6svh, 64px);
+  }
+
+  .low::before {
+    mask-image: linear-gradient(180deg, transparent 35%, #000 70%) !important;
+  }
+}
+
+.head {
+  display: grid;
+  gap: 10px;
+  margin-bottom: clamp(24px, 3vw, 40px);
+}

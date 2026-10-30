@@ -1,0 +1,238 @@
+/* Shared by /solutions and /solutions/[slug] route-specific sections. */
+
+.hero {
+  padding: calc(var(--header-h) + clamp(32px, 5vw, 72px)) 0 clamp(56px, 7vw, 100px);
+  background:
+    radial-gradient(55% 45% at 90% 10%, rgb(231 239 247 / 0.95), transparent 70%),
+    radial-gradient(40% 40% at 0% 100%, rgb(255 226 182 / 0.3), transparent 70%),
+    var(--porcelain);
+}
+
+.heroInner {
+  display: grid;
+  gap: 20px;
+  justify-items: start;
+  margin-bottom: clamp(40px, 5vw, 72px);
+}
+
+.h1 {
+  max-width: 14em;
+  font-size: var(--step-7);
+  line-height: 0.98;
+  letter-spacing: -0.034em;
+}
+
+.lede {
+  max-width: 40em;
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--graphite);
+}
+
+.head {
+  display: grid;
+  gap: 12px;
+  max-width: 52em;
+  margin-bottom: clamp(28px, 4vw, 48px);
+}
+
+.sectionTitle {
+  font-size: var(--step-5);
+}
+
+.note {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: var(--graphite);
+}
+
+.note a {
+  color: var(--cobalt);
+  text-decoration: underline;
+}
+
+.stone {
+  background: var(--stone);
+}
+
+.narratives {
+  list-style: none;
+  border-top: 1px solid var(--line-strong);
+}
+
+.narratives li {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1.1fr) minmax(0, 1fr) 48px;
+  gap: 24px;
+  align-items: center;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: #6a4f22;
+}
+
+.narratives h3 {
+  font-size: var(--step-3);
+}
+
+.narratives h3 a:hover {
+  color: var(--cobalt);
+}
+
+.pitch {
+  margin-top: 4px;
+  color: var(--ink-soft);
+}
+
+.needs {
+  color: var(--graphite);
+}
+
+.go {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.go:hover {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.combos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.combo {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 28px;
+  border-left: 2px solid var(--gold);
+  background: linear-gradient(90deg, rgb(181 146 88 / 0.08), transparent);
+}
+
+.combo h3 {
+  font-size: var(--step-3);
+}
+
+.parts {
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border-radius: 20px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table thead th {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.table tbody th {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.table td:last-child {
+  font-weight: 650;
+  color: #6a4f22;
+  white-space: nowrap;
+}
+
+.callout {
+  display: grid;
+  gap: 14px;
+  max-width: 56em;
+  padding: clamp(24px, 3vw, 40px);
+  border-radius: 24px;
+  background: var(--stone);
+}
+
+.callout h2 {
+  font-size: var(--step-4);
+}
+
+.callout p {
+  color: var(--ink-soft);
+}
+
+.compare {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.compare > div {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 26px;
+  border-radius: 20px;
+  background: var(--stone);
+}
+
+.compare h3 {
+  font-size: var(--step-3);
+}
+
+.compare p {
+  color: var(--ink-soft);
+}
+
+@media (max-width: 960px) {
+  .narratives li {
+    grid-template-columns: 44px 1fr;
+  }
+
+  .needs,
+  .go {
+    grid-column: 2;
+  }
+
+  .go {
+    width: 44px;
+    height: 44px;
+  }
+
+  .combos,
+  .compare {
+    grid-template-columns: 1fr;
+  }
+}

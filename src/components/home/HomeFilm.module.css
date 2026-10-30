@@ -1,0 +1,609 @@
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .screen {
+    overflow: hidden;
+    border-radius: 3px;
+    background: #fbf8f2;
+  }
+
+  /* facade windows */
+  .bay {
+    display: grid;
+    align-items: end;
+    justify-items: center;
+    border-radius: 999px 999px 6px 6px / 46% 46% 6px 6px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .glow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(70% 55% at 50% 60%, rgb(255 226 170 / 0.55), rgb(255 214 150 / 0.12) 70%, transparent);
+    box-shadow: inset 0 0 0 2px rgb(255 236 200 / 0.55);
+    opacity: 0.25;
+    transition:
+      opacity 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+
+  .bay:hover .glow,
+  .bay:focus-visible .glow {
+    opacity: 1;
+    box-shadow:
+      inset 0 0 0 2px rgb(255 236 200 / 0.95),
+      0 0 40px 6px rgb(255 214 150 / 0.45);
+  }
+
+  .bay:focus-visible {
+    outline: none;
+  }
+
+  .label {
+    position: relative;
+    margin-bottom: 8%;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.9);
+    box-shadow: 0 10px 24px -14px rgb(21 25 33 / 0.6);
+    font-size: clamp(0.66rem, 0.45rem + 0.35vw, 0.86rem);
+    font-weight: 700;
+    white-space: nowrap;
+    transition: transform 0.3s ease;
+  }
+
+  .label small {
+    color: #7a5b28;
+    font-weight: 700;
+  }
+
+  .pitch {
+    position: absolute;
+    left: 50%;
+    bottom: -14%;
+    width: 220%;
+    transform: translate(-50%, 6px);
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: rgb(255 255 255 / 0.94);
+    box-shadow: 0 16px 30px -18px rgb(21 25 33 / 0.55);
+    font-size: 0.8rem;
+    line-height: 1.35;
+    text-align: center;
+    opacity: 0;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+    pointer-events: none;
+  }
+
+  .bay:hover .label,
+  .bay:focus-visible .label {
+    transform: translateY(-4px);
+    background: var(--ink);
+    color: var(--white);
+  }
+
+  .bay:hover .label small,
+  .bay:focus-visible .label small {
+    color: #e8cf9e;
+  }
+
+  .bay:hover .pitch,
+  .bay:focus-visible .pitch {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  /* seven stages timeline over the pool */
+  /* Beyond launch: a fine light rail across the water (no boxes). Done stages light the rail, the
+     current one glows; labels sit on a feathered shade so they read over the reflections. */
+  .timeline {
+    left: 7%;
+    right: 7%;
+    top: 74%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    list-style: none;
+    isolation: isolate;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    inset: -40% -6% -70%;
+    z-index: -1;
+    background: radial-gradient(60% 55% at 50% 45%, rgb(6 10 22 / 0.62), rgb(6 10 22 / 0.3) 60%, transparent 80%);
+    pointer-events: none;
+  }
+
+  .timeline li {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 3px;
+    padding-top: 26px;
+    color: rgb(255 255 255 / 0.62);
+    font-size: clamp(0.8rem, 0.55rem + 0.45vw, 1.05rem);
+    font-weight: 600;
+    text-align: center;
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.65);
+    transition: color 0.5s ease;
+  }
+
+  /* the rail between this stage and its neighbours */
+  .timeline li::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background: rgb(255 255 255 / 0.28);
+    transition:
+      background 0.5s ease,
+      box-shadow 0.5s ease;
+  }
+
+  .timeline li:first-child::before {
+    left: 50%;
+  }
+
+  .timeline li:last-child::before {
+    right: 50%;
+  }
+
+  /* the stage's node */
+  .timeline li::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: calc(50% - 6px);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgb(20 28 48 / 0.9);
+    box-shadow: 0 0 0 1.5px rgb(255 255 255 / 0.45);
+    transition:
+      background 0.5s ease,
+      box-shadow 0.5s ease,
+      transform 0.5s ease;
+  }
+
+  .timeline li span {
+    font-size: 0.68em;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    opacity: 0.85;
+  }
+
+  .timeline li[data-state="done"] {
+    color: rgb(255 255 255 / 0.9);
+  }
+
+  .timeline li[data-state="done"]::before,
+  .timeline li[data-state="now"]::before {
+    background: linear-gradient(90deg, #d9b26a, #f6dca6);
+    box-shadow: 0 0 10px rgb(246 208 140 / 0.7);
+  }
+
+  /* lit up to the current node, dim beyond it */
+  .timeline li[data-state="now"]::before {
+    background: linear-gradient(90deg, #d9b26a, #f6dca6 50%, rgb(255 255 255 / 0.28) 50%);
+    box-shadow: none;
+  }
+
+  .timeline li[data-state="done"]::after {
+    background: #f1d39a;
+    box-shadow: 0 0 0 1.5px rgb(255 236 200 / 0.9);
+  }
+
+  .timeline li[data-state="now"] {
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .timeline li[data-state="now"]::after {
+    background: #fff6e3;
+    box-shadow:
+      0 0 0 4px rgb(246 208 140 / 0.35),
+      0 0 18px 6px rgb(255 214 150 / 0.75);
+    transform: scale(1.25);
+  }
+}
+
+/* chapter layouts specific to Home (flat first) */
+.services {
+  display: grid;
+  gap: 10px;
+  margin-top: 6px;
+  list-style: none;
+}
+
+.services a {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line);
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.services a span {
+  color: var(--graphite);
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.stageList {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+  padding-left: 1.2em;
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .bottomWrap {
+    position: sticky;
+    top: 0;
+    display: grid;
+    align-content: end;
+    height: 100svh;
+    padding: var(--header-h) clamp(24px, 3.2vw, 56px) clamp(28px, 5svh, 56px);
+    pointer-events: none;
+  }
+
+  .bottomWrap > * {
+    pointer-events: auto;
+    max-width: 46rem;
+    display: grid;
+    gap: 10px;
+    justify-items: start;
+    position: relative;
+    isolation: isolate;
+    color: var(--ink);
+    text-shadow:
+      0 0 22px rgb(255 250 240 / 1),
+      0 0 8px rgb(255 250 240 / 0.95),
+      0 0 2px rgb(255 250 240 / 0.95);
+  }
+
+  .bottomWrap > *::before {
+    content: "";
+    position: absolute;
+    inset: -70px -140px -50px -110px;
+    z-index: -1;
+    background: radial-gradient(closest-side, rgb(250 246 239 / 0.78), rgb(250 246 239 / 0.45) 55%, transparent);
+    pointer-events: none;
+  }
+
+  .bottomWrap :global(.kicker),
+  .bottomWrap p {
+    color: #1d2433;
+    font-weight: 600;
+  }
+
+  .bottomWrap :global(.kicker)::before {
+    background: #1d2433;
+  }
+
+  .bottomWrap .services {
+    display: none;
+  }
+
+  .nightWrap {
+    position: sticky;
+    top: 0;
+    display: grid;
+    align-content: start;
+    height: 100svh;
+    padding: calc(var(--header-h) + 5svh) 0 0 clamp(24px, 3.2vw, 56px);
+    pointer-events: none;
+  }
+
+  /* No box over the night scene: white type on a feathered shade at the left edge. */
+  .nightWrap {
+    isolation: isolate;
+  }
+
+  .nightWrap::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: -1;
+    width: min(50vw, 720px);
+    background: linear-gradient(90deg, rgb(8 12 24 / 0.6), rgb(8 12 24 / 0.32) 55%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 14%, #000 62%, transparent 88%);
+    pointer-events: none;
+  }
+
+  .nightPanel {
+    pointer-events: auto;
+    display: grid;
+    gap: 12px;
+    max-width: 28rem;
+    color: #f3f5fa;
+    text-shadow: 0 2px 18px rgb(0 0 0 / 0.4);
+  }
+
+  .nightPanel h2 {
+    color: #fff;
+  }
+
+  .nightPanel p {
+    color: #eef2f9;
+  }
+
+  .nightPanel a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .nightPanel :global(.kicker) {
+    color: #fff;
+  }
+
+  .nightPanel :global(.kicker)::before {
+    background: #fff;
+  }
+
+  .nightPanel .stageList {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  /* Product wall: the displays own the upper frame; the story runs as a strip along the floor. */
+  .stripWrap {
+    position: sticky;
+    top: 0;
+    display: grid;
+    align-content: end;
+    height: 100svh;
+    padding: var(--header-h) clamp(24px, 3.2vw, 56px) 24px;
+    pointer-events: none;
+  }
+
+  .strip {
+    width: 100% !important;
+    max-width: 1240px;
+    margin: 0 auto !important;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 2.1fr);
+    align-items: center;
+    column-gap: 32px !important;
+    padding: 22px 28px !important;
+    pointer-events: auto;
+  }
+
+  .strip > p,
+  .strip > h2,
+  .strip > div:last-child {
+    grid-column: 1;
+  }
+
+  .strip > dl {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .strip > h2 {
+    font-size: clamp(1.35rem, 0.8rem + 1vw, 1.9rem) !important;
+  }
+
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .stripWrap {
+    isolation: isolate;
+  }
+
+  .stripWrap::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: -1;
+    height: 52%;
+    background: linear-gradient(0deg, rgb(8 12 24 / 0.72), rgb(8 12 24 / 0.4) 55%, transparent);
+    pointer-events: none;
+  }
+
+  .strip .story div {
+    display: grid !important;
+    align-content: start;
+  }
+
+  .strip > dl {
+    align-self: start;
+  }
+}
+
+
+/* ---------- the opening: "Ideas we bring to life." over the drawing ---------- */
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: var(--step-7);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+
+.heroTitle span {
+  display: block;
+  color: #8a6a32;
+}
+
+.cue {
+  display: none;
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  /* a deeper shade under the opening words, so the drawing's lines never compete with them */
+  .heroWrap::before {
+    width: min(64vw, 940px) !important;
+    background: linear-gradient(90deg, rgb(8 12 26 / 0.74), rgb(8 12 26 / 0.52) 48%, transparent) !important;
+  }
+
+  .heroPanel {
+    width: min(44vw, 44rem) !important;
+    gap: 20px !important;
+  }
+
+  .heroTitle {
+    color: #fff;
+    font-size: clamp(3.4rem, 1.4rem + 4.8vw, 6.6rem);
+    text-shadow: 0 4px 30px rgb(0 0 0 / 0.35);
+  }
+
+  .heroTitle span {
+    color: #f3d6a0;
+  }
+
+  .heroPanel :global(.btn-primary) {
+    background: #fff;
+    color: var(--ink);
+  }
+
+  .cue {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  .cue span {
+    width: 40px;
+    height: 1px;
+    background: rgb(255 255 255 / 0.75);
+  }
+
+  /* the service list is the facade's windows in the film */
+  .home .services {
+    display: none;
+  }
+
+  /* On the drawing the six bays are still plans: a fine outline and the service's name. */
+  .home[data-block="innovate"] .glow {
+    background: none;
+    box-shadow: none;
+    border: 1.5px dashed rgb(255 255 255 / 0.7);
+    opacity: 1;
+  }
+
+  .home[data-block="innovate"] .bay:hover .glow,
+  .home[data-block="innovate"] .bay:focus-visible .glow {
+    border-style: solid;
+    box-shadow: 0 0 30px 4px rgb(255 240 210 / 0.35);
+  }
+}
+
+/* Words in place (see chapters.module.css): Home's own wrappers follow the current chapter too. */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  [data-engine] .stripWrap,
+  [data-engine] .nightWrap,
+  [data-engine] .bottomWrap {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.4s ease,
+      visibility 0s linear 0.4s;
+  }
+
+  [data-engine] [data-current] > .stripWrap,
+  [data-engine] [data-current] > .nightWrap,
+  [data-engine] [data-current] > .bottomWrap {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.75s ease 0.15s,
+      visibility 0s;
+  }
+}
+
+/* Phones: Home's own lists on the dark ground (see chapters.module.css). */
+@media not all and (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .heroTitle,
+  .heroTitle span {
+    color: #fff;
+  }
+
+  /* The six services: a calm list, name over one line of what it is, left-aligned. */
+  .services {
+    gap: 0;
+    margin-top: 4px;
+  }
+
+  .services li + li {
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+  }
+
+  .services a {
+    display: grid;
+    gap: 4px;
+    padding: 14px 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 500;
+    line-height: 1.15;
+    text-decoration: none;
+  }
+
+  .services a span {
+    color: rgb(255 255 255 / 0.72);
+    font-family: var(--font-text);
+    font-size: 0.92rem;
+    font-weight: 400;
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  .stageList b {
+    color: #fff;
+  }
+
+  .nightPanel,
+  .nightPanel :is(h2, p, li) {
+    color: #fff;
+  }
+
+  .cue {
+    display: none;
+  }
+}
+
+@media not all and (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .nightWrap {
+    padding: 0 var(--gutter, 20px);
+  }
+
+  .nightPanel {
+    max-width: 40rem;
+    margin: -110px auto 0;
+    position: relative;
+  }
+
+  .nightPanel a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .nightPanel :global(.kicker) {
+    color: rgb(255 255 255 / 0.66);
+  }
+}

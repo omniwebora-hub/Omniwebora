@@ -1,0 +1,23 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  min-height: 44px;
+}
+
+.logo svg {
+  flex: none;
+}
+
+.word {
+  font-family: var(--font-text);
+  font-weight: 650;
+  font-size: 1.36rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.onDark {
+  color: var(--porcelain);
+}

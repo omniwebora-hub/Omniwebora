@@ -1,0 +1,136 @@
+.wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+}
+
+.stackCol {
+  display: grid;
+  gap: 22px;
+}
+
+.stack {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  perspective: 1600px;
+}
+
+.layer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 62px;
+  padding: 0 22px;
+  border-radius: 16px;
+  border: 1px solid rgb(12 35 73 / 0.1);
+  background: linear-gradient(100deg, #ffffff 0%, #f5f2ec 100%);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  text-align: left;
+  box-shadow: 0 18px 30px -24px rgb(12 35 73 / 0.5);
+  transform: rotateX(16deg) translateX(calc(var(--n) * 10px));
+  transform-origin: 50% 100%;
+  transition:
+    transform 0.45s var(--ease-out),
+    background-color 0.3s,
+    opacity 0.3s,
+    box-shadow 0.3s;
+}
+
+.layer:hover {
+  transform: rotateX(8deg) translateX(calc(var(--n) * 10px + 6px));
+}
+
+.layer[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--white);
+  transform: rotateX(0deg) translateX(calc(var(--n) * 10px + 14px));
+  box-shadow: 0 26px 40px -24px rgb(12 35 73 / 0.7), 0 0 0 1px #d9bc85;
+}
+
+.layer[data-dim] {
+  background: #ece9e2;
+  color: #4f5a6e;
+  box-shadow: none;
+}
+
+.layerIndex {
+  font-family: var(--font-text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #6a4f22;
+}
+
+.layer[aria-pressed="true"] .layerIndex {
+  color: #d9bc85;
+}
+
+.detail {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding: clamp(22px, 3vw, 36px);
+  border-radius: 24px;
+  background: var(--white);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 40px 70px -50px rgb(12 35 73 / 0.5);
+}
+
+.detailTitle {
+  font-size: var(--step-4);
+}
+
+.facts {
+  display: grid;
+  gap: 4px 0;
+  margin: 0;
+}
+
+.facts dt {
+  margin-top: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6a4f22;
+}
+
+.facts dd {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 900px) {
+  .wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .layer {
+    transform: none;
+  }
+
+  .layer[aria-pressed="true"],
+  .layer:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer,
+  .layer:hover,
+  .layer[aria-pressed="true"] {
+    transform: none;
+  }
+}
+
+.embedded {
+  height: 100%;
+  padding: 22px 26px;
+  overflow: auto;
+  background: #fbf8f2;
+}
