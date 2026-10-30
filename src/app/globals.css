@@ -1,0 +1,459 @@
+/* ============================================================
+   Omniwebora — design tokens and base styles
+   See docs/design-direction.md
+   ============================================================ */
+
+:root {
+  /* palette */
+  --ink: #0c2349;
+  --ink-deep: #081834;
+  --ink-soft: #1b3460;
+  --cobalt: #1467c5;
+  --cobalt-deep: #0f56a8;
+  --cobalt-glow: #4c93f0;
+  --porcelain: #faf8f3;
+  --stone: #f2eee6;
+  --mist: #e7eff7;
+  --mist-deep: #d6e3f1;
+  --gold: #b59258;
+  --gold-soft: #d9bc85;
+  --gold-text: #83632e;
+  --graphite: #4d5b70;
+  --graphite-soft: #5e6b80;
+  --white: #ffffff;
+
+  --line: rgb(12 35 73 / 0.12);
+  --line-strong: rgb(12 35 73 / 0.22);
+  --line-on-ink: rgb(217 188 133 / 0.22);
+
+  /* type */
+  --font-display: var(--font-newsreader), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-text: var(--font-hanken), "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  /* major third scale from 17px */
+  --step--2: 0.7rem;
+  --step--1: 0.85rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.328rem;
+  --step-2: 1.66rem;
+  --step-3: clamp(1.75rem, 1.4rem + 1.2vw, 2.075rem);
+  --step-4: clamp(2rem, 1.5rem + 2vw, 2.6rem);
+  --step-5: clamp(2.4rem, 1.6rem + 3.2vw, 3.25rem);
+  --step-6: clamp(2.8rem, 1.6rem + 4.6vw, 4.6rem);
+  --step-7: clamp(3.1rem, 1.4rem + 6.2vw, 6rem);
+
+  /* layout */
+  --page-max: 1320px;
+  --gutter: clamp(20px, 5vw, 72px);
+  --header-h: 76px;
+  --radius-s: 8px;
+  --radius-m: 14px;
+  --radius-l: 22px;
+  --radius-pill: 999px;
+
+  --section-space: clamp(88px, 11vw, 168px);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --shadow-float: 0 1px 0 rgb(255 255 255 / 0.8) inset, 0 24px 48px -28px rgb(12 35 73 / 0.38), 0 6px 16px -10px rgb(12 35 73 / 0.18);
+  --focus: 0 0 0 3px var(--porcelain), 0 0 0 5px var(--cobalt);
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--porcelain);
+  color: var(--graphite);
+  font-family: var(--font-text);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-feature-settings: "kern", "liga";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.022em;
+  margin: 0;
+  text-wrap: balance;
+  font-optical-sizing: auto;
+}
+
+h3,
+h4 {
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: rgb(20 103 197 / 0.18);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+  border-radius: 6px;
+}
+
+/* ---------- utilities ---------- */
+
+.container {
+  width: 100%;
+  max-width: calc(var(--page-max) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 12px 18px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--white);
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 0.2s var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* lede / body copy */
+.lede {
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--graphite);
+  max-width: 58ch;
+}
+
+.prose {
+  max-width: 66ch;
+}
+
+.prose p + p {
+  margin-top: 1em;
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+  --btn-h: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: var(--btn-h);
+  padding: 0 28px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  transition:
+    background-color 0.25s var(--ease-out),
+    color 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #16305e 0%, var(--ink) 55%, var(--ink-deep) 100%);
+  color: var(--white);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.18) inset, 0 14px 30px -14px rgb(12 35 73 / 0.7);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, #1c3a70 0%, #11295a 55%, var(--ink) 100%);
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.22) inset, 0 18px 36px -14px rgb(12 35 73 / 0.75), 0 0 0 4px rgb(181 146 88 / 0.18);
+}
+
+.btn-primary .btn-arrow {
+  transition: transform 0.3s var(--ease-out);
+}
+
+.btn-primary:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+.btn-ghost {
+  background: rgb(255 255 255 / 0.55);
+  border-color: rgb(181 146 88 / 0.45);
+  color: var(--ink);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.btn-ghost:hover {
+  background: rgb(255 255 255 / 0.85);
+  border-color: var(--gold);
+}
+
+.btn-on-ink {
+  background: var(--porcelain);
+  color: var(--ink);
+}
+
+.btn-on-ink:hover {
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgb(217 188 133 / 0.3);
+}
+
+.btn-small {
+  --btn-h: 44px;
+  padding: 0 20px;
+  font-size: 0.95rem;
+}
+
+.btn-play {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  color: var(--gold-text);
+}
+
+/* text link with animated underline */
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cobalt);
+  font-weight: 600;
+  background: linear-gradient(currentColor, currentColor) left 100% / 0% 1.5px no-repeat;
+  padding-bottom: 2px;
+  transition: background-size 0.35s var(--ease-out);
+}
+
+.text-link:hover,
+.text-link:focus-visible {
+  background-size: 100% 1.5px;
+}
+
+/* ---------- section scaffolding ---------- */
+
+.section {
+  padding-block: var(--section-space);
+  position: relative;
+}
+
+.section-mist {
+  background: linear-gradient(180deg, var(--mist) 0%, #edf3f9 100%);
+}
+
+.section-stone {
+  background: var(--stone);
+}
+
+.section-ink {
+  background: var(--ink);
+  color: #c4d0e2;
+}
+
+.section-ink h2,
+.section-ink h3 {
+  color: var(--porcelain);
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--gold-text);
+}
+
+.kicker::before {
+  content: "";
+  width: 36px;
+  height: 1.5px;
+  background: var(--gold);
+}
+
+.section-ink .kicker {
+  color: var(--gold-soft);
+}
+
+.section-head {
+  display: grid;
+  gap: 22px;
+  max-width: 760px;
+  margin-bottom: clamp(48px, 6vw, 88px);
+}
+
+.section-head h2 {
+  font-size: var(--step-6);
+}
+
+/* Below-the-fold sections: let the browser skip their rendering until they approach. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1100px;
+}
+
+/* entrance motion: only applied when JS has run and motion is allowed */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.9s var(--ease-out),
+      transform 0.9s var(--ease-out);
+    transition-delay: var(--reveal-delay, 0s);
+  }
+
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Page transitions ----------
+   One camera language between pages: the page you leave eases a touch forward as it fades, the next
+   settles in. Short (≈0.5 s) so it never delays reading; header and footer are not part of it. */
+/* The header is its own layer, so it stays on top and in place while the page beneath dissolves. */
+body > header {
+  view-transition-name: site-header;
+}
+
+::view-transition-group(site-header) {
+  z-index: 1;
+  animation: none;
+}
+
+::view-transition-old(.page) {
+  animation: 260ms cubic-bezier(0.4, 0, 1, 1) both page-out;
+}
+
+::view-transition-new(.page) {
+  animation: 420ms cubic-bezier(0.2, 0.7, 0.2, 1) 80ms both page-in;
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: scale(0.992);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* The page lifts away to reveal the footer scene beneath it (wide screens). */
+@media (min-width: 1024px) and (min-height: 640px) {
+  main {
+    position: relative;
+    z-index: 1;
+    background: var(--porcelain);
+  }
+}
+
+/* Content that only exists without the film (phones, tablets, reduced motion). */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .flat-only {
+    display: none !important;
+  }
+}

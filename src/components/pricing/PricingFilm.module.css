@@ -1,0 +1,53 @@
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .scale {
+    left: 34%;
+    right: 14%;
+    top: 86%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    list-style: none;
+  }
+
+  .scale li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px 4px 10px;
+    border-bottom: 2px solid rgb(21 25 33 / 0.25);
+    color: rgb(21 25 33 / 0.62);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 0.6rem + 0.7vw, 1.4rem);
+    text-shadow: 0 0 12px rgb(255 250 240 / 0.9), 0 0 2px rgb(255 250 240 / 0.9);
+    font-weight: 500;
+    transition:
+      border-color 0.4s ease,
+      color 0.4s ease;
+  }
+
+  .scale li[data-state="done"] {
+    color: rgb(21 25 33 / 0.8);
+  }
+
+  .scale li[data-state="now"] {
+    border-bottom-color: var(--ink);
+    color: var(--ink);
+  }
+
+  .bars {
+    display: flex;
+    gap: 3px;
+  }
+
+  .bars i {
+    width: 14px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgb(21 25 33 / 0.2);
+  }
+
+  .bars i[data-on] {
+    background: #b59258;
+  }
+}

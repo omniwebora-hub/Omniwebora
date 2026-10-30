@@ -1,0 +1,255 @@
+/* Solutions pilot film. Film mode = desktop + motion allowed (same query as FILM_QUERY). */
+
+.film {
+  position: relative;
+  background: #efe7da;
+}
+
+.stage {
+  display: none;
+}
+
+.chapters {
+  position: relative;
+}
+
+.steps {
+  display: none;
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .stage {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    display: block;
+    height: 100svh;
+    overflow: hidden;
+    container-type: size;
+    background: #e9dfcf;
+  }
+
+  .plate {
+    --pw: max(100cqw, calc(100cqh * 16 / 9));
+    --ph: calc(var(--pw) * 9 / 16);
+    position: absolute;
+    left: calc((100cqw - var(--pw)) / 2);
+    top: calc((100cqh - var(--ph)) / 2);
+    width: var(--pw);
+    height: var(--ph);
+  }
+
+  .camera {
+    position: absolute;
+    inset: 0;
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+
+  .still {
+    /* Composited up front so each still is decoded and uploaded before its hold, not on first show. */
+    will-change: opacity;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .media {
+    position: absolute;
+    inset: 0;
+  }
+
+
+  .media :global(.film-media) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .screen {
+    position: absolute;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    background: #fbf8f2;
+    border-radius: 2px;
+  }
+
+  /* Opacity is written per frame from scroll; data-on gates visibility/focus, data-live clicks. */
+  .screen[data-on="true"] {
+    visibility: visible;
+  }
+
+  .screen[data-live="true"] {
+    pointer-events: auto;
+  }
+
+  .screenInner {
+    transform: scale(var(--s, 0.5));
+    transform-origin: 0 0;
+    overflow: hidden;
+  }
+
+  /* Interfaces on the walls never become scroll containers: the wheel must always move the page
+     (and the camera), never the content inside a display. Full scrolling demos live on detail pages. */
+  .screenInner :global(*) {
+    overflow: hidden !important;
+  }
+
+  /* Finale: the six windows of the facade, each a way back into its room. */
+  .bay {
+    position: absolute;
+    display: grid;
+    align-items: end;
+    justify-items: center;
+    border-radius: 999px 999px 6px 6px / 46% 46% 6px 6px;
+    pointer-events: none;
+    visibility: hidden;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .film[data-bays="true"] .bay {
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  .bayGlow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(70% 55% at 50% 60%, rgb(255 226 170 / 0.55), rgb(255 214 150 / 0.12) 70%, transparent);
+    box-shadow: inset 0 0 0 2px rgb(255 236 200 / 0.55);
+    opacity: 0.25;
+    transition:
+      opacity 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+
+  .bay:hover .bayGlow,
+  .bay:focus-visible .bayGlow {
+    opacity: 1;
+    box-shadow:
+      inset 0 0 0 2px rgb(255 236 200 / 0.95),
+      0 0 40px 6px rgb(255 214 150 / 0.45);
+  }
+
+  .bay:focus-visible {
+    outline: none;
+  }
+
+  .bayLabel {
+    position: relative;
+    margin-bottom: 8%;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.88);
+    box-shadow: 0 10px 24px -14px rgb(21 25 33 / 0.6);
+    font-size: clamp(0.66rem, 0.45rem + 0.35vw, 0.86rem);
+    font-weight: 700;
+    white-space: nowrap;
+    transition: transform 0.3s ease;
+  }
+
+  .bayLabel small {
+    color: #7a5b28;
+    font-weight: 700;
+  }
+
+  .bay:hover .bayLabel,
+  .bay:focus-visible .bayLabel {
+    transform: translateY(-4px);
+    background: var(--ink);
+    color: var(--white);
+  }
+
+  .bay:hover .bayLabel small,
+  .bay:focus-visible .bayLabel small {
+    color: #e8cf9e;
+  }
+
+  .veil {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgb(250 246 239 / 0.86), rgb(250 246 239 / 0.6) 32%, transparent 58%),
+      linear-gradient(180deg, rgb(250 246 239 / 0.5), transparent 18%);
+  }
+
+  .chapters {
+    z-index: 1;
+    margin-top: -100svh;
+    pointer-events: none;
+  }
+
+  .chapters a,
+  .chapters button,
+  .chapters [data-panel] {
+    pointer-events: auto;
+  }
+
+  .steps {
+    position: fixed;
+    right: clamp(20px, 3vw, 44px);
+    bottom: 28px;
+    z-index: 2;
+    display: flex;
+    gap: 6px;
+    list-style: none;
+    pointer-events: none;
+  }
+
+  .steps li {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.55);
+    backdrop-filter: blur(8px);
+    font-size: 0.75rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    color: var(--graphite);
+    transition:
+      background 0.3s,
+      color 0.3s;
+  }
+
+  .steps li[data-on] {
+    background: var(--ink);
+    color: var(--white);
+  }
+}
+
+/* ---------- generic overlays for CinemaFilm pages ---------- */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .overlay {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .overlay[data-on="true"] {
+    visibility: visible;
+  }
+
+  .overlay[data-live="true"] {
+    pointer-events: auto;
+  }
+
+  .overlayInner {
+    transform: scale(var(--s, 0.5));
+    transform-origin: 0 0;
+    overflow: hidden;
+  }
+
+  .overlayInner :global(*) {
+    overflow: hidden !important;
+  }
+}

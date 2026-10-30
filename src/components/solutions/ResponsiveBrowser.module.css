@@ -1,0 +1,314 @@
+.wrap {
+  display: grid;
+  gap: 16px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.stage {
+  display: grid;
+  justify-items: center;
+  padding: clamp(16px, 3vw, 36px);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgb(250 245 236 / 0.4), rgb(250 245 236 / 0.75)),
+    url("/assets/cinematic/d01-colonnade-1280.webp") 70% 50% / cover;
+}
+
+.browser {
+  max-width: 100%;
+  transition: width 0.6s var(--ease-out);
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #f3f1ec;
+  border-bottom: 1px solid var(--line);
+}
+
+.url {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--white);
+  font-size: 0.78rem;
+  color: var(--graphite);
+}
+
+.viewport {
+  container-type: inline-size;
+  height: 430px;
+  overflow: auto;
+  background: #fffdf9;
+}
+
+.site {
+  padding: 16px 20px 24px;
+}
+
+.siteNav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.siteLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+
+.siteLinks button {
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--graphite);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.siteLinks button[aria-current="page"] {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-color: var(--gold);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: center;
+  padding-top: 22px;
+}
+
+.heroCopy {
+  display: grid;
+  gap: 12px;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #6a4f22;
+}
+
+.heroTitle {
+  font-size: clamp(1.6rem, 6cqi, 2.6rem);
+  line-height: 1.02;
+}
+
+.heroText {
+  font-size: 0.9rem;
+  color: var(--graphite);
+}
+
+.heroCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.heroImage {
+  min-height: 260px;
+  border-radius: 16px;
+  background: url("/assets/cinematic/a01-studio-table-1280.webp") 60% 50% / cover;
+}
+
+.panel {
+  display: grid;
+  gap: 14px;
+  padding-top: 20px;
+}
+
+.panelTitle {
+  font-size: 1.5rem;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.fields label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.fields input,
+.fields textarea {
+  min-height: 42px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  background: var(--white);
+  font-weight: 400;
+}
+
+.fields [aria-invalid="true"] {
+  border-color: #b3261e;
+}
+
+.wide {
+  grid-column: 1 / -1;
+}
+
+.err {
+  color: #8f2424;
+  font-weight: 500;
+}
+
+.catHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  list-style: none;
+}
+
+.product {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line);
+  font-size: 0.85rem;
+}
+
+.productImg {
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  background: url("/assets/cinematic/a01-studio-table-1280.webp") 80% 40% / 300% auto;
+}
+
+.productImg[data-cat="Products"] {
+  background-position: 70% 30%;
+}
+
+.productImg[data-cat="Plans"] {
+  background-position: 92% 45%;
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.slot,
+.slotTaken {
+  display: inline-grid;
+  place-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+
+.slot {
+  border: 1px solid rgb(47 155 106 / 0.35);
+  background: #f1f6ef;
+  color: #1b6342;
+}
+
+.slot[aria-pressed="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--white);
+}
+
+.slotTaken {
+  background: #eceef3;
+  color: #4f5a6e;
+}
+
+/* The site reflows with its own width, like a real responsive build. */
+@container (max-width: 560px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .heroImage {
+    min-height: 160px;
+    order: -1;
+  }
+
+  .fields {
+    grid-template-columns: 1fr;
+  }
+
+  .products {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@container (max-width: 380px) {
+  .products {
+    grid-template-columns: 1fr;
+  }
+
+  .siteLinks {
+    width: 100%;
+  }
+}
+
+/* ---------- embedded on a display wall ---------- */
+
+.embedded {
+  height: 100%;
+  display: grid;
+  justify-items: center;
+}
+
+.embeddedBrowser {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: none;
+  transition: width 0.7s var(--ease-out);
+}
+
+.embeddedViewport {
+  flex: 1;
+  height: auto;
+}

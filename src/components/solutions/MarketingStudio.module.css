@@ -1,0 +1,229 @@
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 0;
+}
+
+.panel {
+  padding: 16px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.controls {
+  display: grid;
+  gap: 10px;
+}
+
+.label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.checks {
+  display: grid;
+  gap: 6px;
+  list-style: none;
+}
+
+.checks label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  min-height: 32px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.checks input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--ink);
+}
+
+.checks small {
+  display: block;
+  color: var(--graphite);
+  font-size: 0.78rem;
+}
+
+.note {
+  font-size: 0.78rem;
+  color: var(--graphite);
+}
+
+.status {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f4f1ea;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ad preview */
+.ad {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.adHead {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.adHead small {
+  display: block;
+  color: var(--graphite);
+  font-size: 0.72rem;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1c2b47, #b59258);
+}
+
+.adImage {
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  background: url("/assets/cinematic/a01-studio-table-1280.webp") 60% 50% / cover;
+}
+
+.adFoot {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.adCta {
+  flex: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #eef1f6;
+  font-size: 0.8rem;
+}
+
+.adMeta {
+  font-size: 0.76rem;
+  color: var(--graphite);
+}
+
+/* tracking funnel */
+.funnel {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.funnel li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.stepNo {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #eef1f6;
+  font-size: 0.75rem;
+}
+
+.funnel li[data-ok] .stepNo {
+  background: var(--ink);
+  color: var(--white);
+}
+
+/* seo */
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.field small {
+  float: right;
+  font-weight: 500;
+  color: var(--graphite);
+}
+
+.field input,
+.field textarea {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line-strong);
+  background: var(--white);
+  font: inherit;
+  font-weight: 400;
+  resize: vertical;
+}
+
+.field [aria-invalid="true"] {
+  border-color: #b3261e;
+}
+
+.serp {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.serpUrl {
+  font-size: 0.8rem;
+  color: #3c4043;
+}
+
+.serpTitle {
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: #1a0dab;
+}
+
+.serpDesc {
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: #4d5156;
+}
+
+.embedded {
+  height: 100%;
+  overflow: auto;
+}
+
+@media (max-width: 720px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+}

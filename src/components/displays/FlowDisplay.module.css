@@ -1,0 +1,138 @@
+.flow {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 14px;
+  padding: 18px 24px 40px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+}
+
+.pipe {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  list-style: none;
+}
+
+.pipe li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgb(255 255 255 / 0.05);
+  color: #8a97b2;
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.pipe li[data-state="done"] {
+  color: #8fe3bb;
+}
+
+.pipe li[data-state="now"] {
+  background: rgb(200 164 99 / 0.18);
+  color: #fff;
+  box-shadow: inset 0 0 0 1.5px #c8a463;
+}
+
+.node {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.1);
+  font-size: 14px;
+}
+
+.pipe li[data-state="now"] .node {
+  background: #c8a463;
+  color: #121a2b;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr 1fr;
+  gap: 14px;
+  min-height: 0;
+}
+
+.mail {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  font-size: 18px;
+}
+
+.mail b {
+  font-size: 22px;
+}
+
+.stage > div {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-height: 100%;
+}
+
+.big {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 500;
+  font-size: 30px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.draft {
+  padding: 12px 14px;
+  border-left: 3px solid #c8a463;
+  background: rgb(255 255 255 / 0.04);
+  font-size: 17px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.log {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  list-style: none;
+  font-size: 15px;
+  color: #c4cee2;
+}
+
+.log li {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.04);
+  animation: in 0.4s ease both;
+}
+
+.log time {
+  color: #8a97b2;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}

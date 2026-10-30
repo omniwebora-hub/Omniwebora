@@ -1,0 +1,230 @@
+/* The footer is the last scene: the building at night, lit across the pool. */
+.footer {
+  background: var(--ink-deep);
+  color: #d2dae8;
+  padding-top: clamp(64px, 8vw, 112px);
+  position: relative;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold-soft) 50%, var(--gold) 70%, transparent);
+  opacity: 0.6;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: 1.4fr 1.2fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 64px;
+}
+
+.brand {
+  display: grid;
+  gap: 22px;
+  align-content: start;
+  justify-items: start;
+  max-width: 380px;
+}
+
+.brand p {
+  font-size: 0.98rem;
+  line-height: 1.6;
+}
+
+.colTitle {
+  font-family: var(--font-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gold-soft);
+  margin-bottom: 14px;
+}
+
+.col ul {
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.col a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  color: #d5deeb;
+  transition: color 0.2s;
+}
+
+.col a:hover {
+  color: var(--white);
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-block: 26px 34px;
+  border-top: 1px solid rgb(255 255 255 / 0.08);
+  font-size: 0.88rem;
+}
+
+.made {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: #aebbd0;
+}
+
+.made:hover {
+  color: var(--white);
+}
+
+.footer :focus-visible {
+  box-shadow: 0 0 0 3px var(--ink-deep), 0 0 0 5px var(--gold-soft);
+}
+
+@media (max-width: 900px) {
+  .top {
+    grid-template-columns: 1fr 1fr;
+  }
+  .brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .top {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tagline {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--porcelain) !important;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.scene video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 55%;
+}
+
+/* the building stays visible above; the words rest on the darker water below */
+.veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(6 12 26 / 0.15) 0%, rgb(6 12 26 / 0.25) 35%, rgb(6 12 26 / 0.82) 62%, rgb(6 12 26 / 0.94) 100%);
+}
+
+.footer > :not(.scene) {
+  position: relative;
+  z-index: 1;
+}
+
+/* Wide screens: a full scene revealed in place as the page lifts away (see globals.css main). */
+@media (min-width: 1024px) and (min-height: 640px) {
+  .footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 100svh;
+    padding-top: 0;
+  }
+
+  .footer::before {
+    display: none;
+  }
+
+  .top {
+    padding-bottom: 40px;
+  }
+}
+
+/* The page's next step: one large link at the top of the footer scene. */
+.next {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding-bottom: clamp(40px, 6vw, 72px);
+  margin-bottom: clamp(40px, 6vw, 64px);
+  border-bottom: 1px solid rgb(255 255 255 / 0.16);
+}
+
+.nextKicker {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.7);
+}
+
+.nextLink {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px 32px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1rem + 3vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  text-shadow: 0 2px 24px rgb(0 0 0 / 0.5);
+}
+
+.nextCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: #faf6ef;
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-shadow: none;
+  transition: background 0.2s, transform 0.3s var(--ease-out);
+}
+
+.nextLink:hover .nextCta,
+.nextLink:focus-visible .nextCta {
+  background: #fff;
+  transform: translateX(4px);
+}
+
+.nextLink:hover > span:first-child {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 8px;
+}
+
+.direct {
+  color: #fff;
+}
+
+/* Phones: the footer is tall, so its words sit over the building too; a deeper shade keeps them legible. */
+@media (max-width: 1023px), (max-height: 639px) {
+  .veil {
+    background: linear-gradient(180deg, rgb(6 12 26 / 0.55) 0%, rgb(6 12 26 / 0.8) 30%, rgb(6 12 26 / 0.92) 60%, rgb(6 12 26 / 0.96) 100%);
+  }
+}

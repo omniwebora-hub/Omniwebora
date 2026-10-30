@@ -1,0 +1,48 @@
+.band {
+  position: relative;
+  overflow: hidden;
+  padding-block: clamp(64px, 8vw, 112px);
+  background:
+    radial-gradient(ellipse 40% 90% at 100% 50%, rgb(20 103 197 / 0.32), transparent 70%),
+    radial-gradient(ellipse 30% 80% at 0% 100%, rgb(181 146 88 / 0.18), transparent 70%),
+    var(--ink);
+  color: #c4d0e2;
+}
+
+.band::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 40%, var(--gold-soft) 60%, transparent);
+  opacity: 0.5;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px 64px;
+  flex-wrap: wrap;
+}
+
+.copy {
+  display: grid;
+  gap: 14px;
+  max-width: 720px;
+}
+
+.copy h2 {
+  font-size: var(--step-5);
+  color: var(--porcelain);
+}
+
+.copy p {
+  font-size: 1.1rem;
+}
+
+.band :focus-visible {
+  box-shadow: 0 0 0 3px var(--ink), 0 0 0 5px var(--gold-soft);
+}

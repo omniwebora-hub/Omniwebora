@@ -1,0 +1,98 @@
+.brief {
+  padding: 8px 0 clamp(48px, 7vw, 96px);
+}
+
+@media not all and (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .brief {
+    padding: 32px var(--gutter, 20px) 64px;
+    background: var(--ink-deep);
+    color: #fff;
+  }
+}
+
+.anchor {
+  position: absolute;
+  top: 0;
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  /* The camera rests on the pavilion; the brief appears in place on the scene itself, no card: white
+     type over a feathered dusk shade on the left, the lit pavilion clear on the right. It stays put
+     for the whole chapter (the words never scroll). */
+  /* Long on purpose: the brief stays on stage for about three screens of scrolling, so a stray
+     wheel turn or two while filling it in never moves it away. */
+  .brief {
+    height: 400svh;
+    padding: 0;
+  }
+
+  .anchor {
+    top: calc(var(--header-h) + 24px);
+  }
+
+  .brief::before {
+    content: "";
+    position: sticky;
+    top: 0;
+    display: block;
+    height: 100svh;
+    margin-bottom: -100svh;
+    background:
+      radial-gradient(70% 90% at 0% 100%, rgb(10 16 34 / 0.5), transparent 70%),
+      linear-gradient(90deg, rgb(10 16 34 / 0.74) 0%, rgb(10 16 34 / 0.62) 30%, rgb(10 16 34 / 0.24) 50%, transparent 64%),
+      linear-gradient(180deg, rgb(10 16 34 / 0.35), transparent 22%);
+    pointer-events: none;
+  }
+
+  .card {
+    position: sticky;
+    top: calc(var(--header-h) + 2svh);
+    width: min(46vw, 680px);
+    max-width: none;
+    max-height: calc(100svh - var(--header-h) - 4svh);
+    overflow: auto;
+    margin: 0 0 0 clamp(24px, 4vw, 64px);
+    padding: 8px 4px 12px 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.3) transparent;
+  }
+
+  [data-engine] .brief::before,
+  [data-engine] .brief .card {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.4s ease,
+      visibility 0s linear 0.4s;
+  }
+
+  [data-engine] .brief[data-current]::before,
+  [data-engine] .brief[data-current] .card {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.75s ease 0.15s,
+      visibility 0s;
+  }
+}
+
+/* The scene answers the brief: as it fills in, the camera eases toward the lit pavilion and its glow
+   warms (ContactFilm sets --brief from 0 to 1). Visual feedback only, never an estimate. */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .answers [data-stage] > :first-child {
+    scale: calc(1 + var(--brief, 0) * 0.06);
+    transform-origin: 72% 58%;
+    transition: scale 1.8s var(--ease-out);
+  }
+
+  .answers [data-stage] > :first-child::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(34% 44% at 72% 56%, rgb(255 204 130 / 0.42), transparent 72%);
+    mix-blend-mode: screen;
+    opacity: var(--brief, 0);
+    transition: opacity 1.6s ease;
+    pointer-events: none;
+  }
+}

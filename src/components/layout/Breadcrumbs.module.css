@@ -1,0 +1,39 @@
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  font-size: 0.9rem;
+  color: var(--graphite);
+}
+
+.crumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.crumbs li + li::before {
+  content: "";
+  width: 14px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.crumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--ink);
+}
+
+.crumbs a:hover {
+  color: var(--cobalt);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.crumbs [aria-current="page"] {
+  color: var(--graphite);
+}

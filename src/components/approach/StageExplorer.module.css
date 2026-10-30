@@ -1,0 +1,494 @@
+.wrap {
+  display: grid;
+  gap: clamp(28px, 4vw, 48px);
+}
+
+/* ---------- rail ---------- */
+
+.rail {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.track {
+  position: absolute;
+  left: calc(100% / 14);
+  right: calc(100% / 14);
+  top: 13px;
+  height: 2px;
+  background: var(--line-strong);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--gold);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.stop {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 0 4px 6px;
+  border: 0;
+  background: none;
+  color: var(--graphite);
+  text-align: center;
+}
+
+.stopDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--porcelain);
+  box-shadow: inset 0 0 0 2px var(--line-strong);
+  transition:
+    background-color 0.3s,
+    box-shadow 0.3s,
+    transform 0.3s var(--ease-out);
+}
+
+.stop[data-past] .stopDot {
+  background: var(--gold);
+  box-shadow: none;
+}
+
+.stop[aria-selected="true"] .stopDot {
+  background: var(--ink);
+  box-shadow: 0 0 0 5px rgb(181 146 88 / 0.3);
+  transform: scale(1.1);
+}
+
+.stopNum {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6a4f22;
+}
+
+.stopName {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+.stop[aria-selected="true"] .stopName {
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-underline-offset: 6px;
+}
+
+/* ---------- panel ---------- */
+
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 72px);
+  align-items: center;
+}
+
+.desk {
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+  padding: 36px;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgb(250 245 236 / 0.1), rgb(250 245 236 / 0.35)),
+    url("/assets/cinematic/a01-studio-table-1280.webp") 30% 85% / 180% auto;
+  box-shadow: inset 0 0 0 1px rgb(12 35 73 / 0.06);
+}
+
+.copy {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+
+.kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6a4f22;
+}
+
+.title {
+  font-size: var(--step-5);
+}
+
+.summary {
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 34em;
+}
+
+.activities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+}
+
+.activities li {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f0ede6;
+  font-size: 0.86rem;
+}
+
+.meta {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.meta dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+
+.meta dd {
+  margin: 2px 0 0;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  gap: 10px;
+}
+
+.navBtn {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--white);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.navBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- artefacts ---------- */
+
+.paper {
+  position: relative;
+  width: min(100%, 360px);
+  min-height: 250px;
+  padding: 22px;
+  border-radius: 6px;
+  background: #fffefb;
+  color: var(--ink);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.9) inset,
+    0 30px 50px -28px rgb(12 35 73 / 0.55),
+    0 4px 10px -6px rgb(12 35 73 / 0.25);
+  transform: rotate(-1.4deg);
+  font-size: 0.86rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .paper {
+    animation: place 0.55s var(--ease-out);
+  }
+}
+
+@keyframes place {
+  from {
+    opacity: 0;
+    transform: rotate(-4deg) translateY(16px);
+  }
+}
+
+.paperTitle {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.brief p {
+  margin-bottom: 8px;
+  line-height: 1.45;
+}
+
+.brief em {
+  display: inline-block;
+  width: 5.2em;
+  font-style: normal;
+  font-weight: 700;
+  color: #6a4f22;
+}
+
+.stamp {
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  padding: 2px 8px;
+  border: 1.5px solid #b59258;
+  border-radius: 4px;
+  color: #6a4f22;
+  font-size: 0.72rem;
+  font-weight: 700;
+  transform: rotate(6deg);
+}
+
+.wire {
+  display: grid;
+  gap: 10px;
+  background:
+    linear-gradient(rgb(20 103 197 / 0.06) 1px, transparent 1px) 0 0 / 14px 14px,
+    linear-gradient(90deg, rgb(20 103 197 / 0.06) 1px, transparent 1px) 0 0 / 14px 14px,
+    #fbfdff;
+}
+
+.wBar {
+  height: 14px;
+  border-radius: 3px;
+  border: 1.5px dashed #8aa0c4;
+}
+
+.wHero {
+  position: relative;
+  height: 96px;
+  border-radius: 4px;
+  border: 1.5px dashed #8aa0c4;
+}
+
+.wRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.wRow > span {
+  position: relative;
+  height: 70px;
+  border-radius: 4px;
+  border: 1.5px dashed #8aa0c4;
+}
+
+.wNote {
+  position: absolute;
+  left: 8px;
+  bottom: -10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #7a5b28;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ui {
+  display: grid;
+  gap: 12px;
+  border-radius: 18px;
+  transform: rotate(1deg);
+}
+
+.uiTitle {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.uiDays,
+.uiSlots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.uiDays span,
+.uiSlots span {
+  display: grid;
+  place-items: center;
+  min-height: 36px;
+  border-radius: 10px;
+  background: #eef2f8;
+  font-weight: 650;
+  font-size: 0.8rem;
+}
+
+.uiDays span[data-on],
+.uiSlots span[data-on] {
+  background: var(--cobalt);
+  color: var(--white);
+}
+
+.uiBtn {
+  display: grid;
+  place-items: center;
+  min-height: 42px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--white);
+  font-weight: 650;
+}
+
+.integration {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 18px 26px;
+  background: #0f2550;
+  color: #e3eaf6;
+}
+
+.iNode {
+  position: relative;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.2);
+  font-weight: 650;
+}
+
+.iNode[data-hub] {
+  background: #d9bc85;
+  color: #0c2349;
+}
+
+.iNode + .iNode::before {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  width: 26px;
+  height: 1.5px;
+  background: #d9bc85;
+}
+
+.iCaption {
+  width: 100%;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #c3d0e6;
+}
+
+.checklist {
+  display: grid;
+  gap: 8px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.check::before {
+  content: "";
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+  font-size: 0.75rem;
+}
+
+.check[data-done]::before {
+  content: "✓";
+  background: #2f9b6a;
+  color: #fff;
+  box-shadow: none;
+}
+
+.monitor {
+  display: grid;
+  gap: 10px;
+}
+
+.spark {
+  width: 100%;
+  height: 60px;
+}
+
+.spark polyline {
+  fill: none;
+  stroke: var(--cobalt);
+  stroke-width: 1.6;
+}
+
+.mRow {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.roadmap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.rCol {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.rCol b {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6a4f22;
+}
+
+.rItem {
+  padding: 10px;
+  border-radius: 8px;
+  background: #fff6e3;
+  box-shadow: 0 6px 10px -8px rgb(12 35 73 / 0.5);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+/* ---------- compact (home teaser) ---------- */
+
+.compact .desk {
+  min-height: 300px;
+}
+
+/* ---------- narrow ---------- */
+
+@media (max-width: 900px) {
+  .rail {
+    grid-template-columns: repeat(7, minmax(84px, 1fr));
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .track {
+    right: auto;
+    width: calc(100% * 6 / 7);
+  }
+
+  .panel {
+    grid-template-columns: 1fr;
+  }
+
+  .desk {
+    min-height: 280px;
+    padding: 24px;
+  }
+}

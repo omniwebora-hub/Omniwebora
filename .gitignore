@@ -1,0 +1,53 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# env — never commit secrets
+.env
+.env.*
+!.env.example
+
+# local claude settings
+.claude/settings.local.json
+
+# Raw Higgsfield downloads (large; re-downloadable from the job IDs in assets/ASSET_MANIFEST.md).
+# Only the optimised outputs in public/assets/cinematic/ ship with the site.
+assets/higgsfield/raw/
+
+# QA artefacts
+qa/screenshots/
+playwright-report/
+test-results/
+.lighthouseci/
+
+# misc
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+.vercel
+.playwright-mcp/
+# keep only the final Lighthouse reports
+qa/lighthouse/*
+!qa/lighthouse/*-final.report.json
+!qa/lighthouse/*-final.report.html
+
+# local AI tooling (not part of the site)
+.claude/
+.agents/
+skills-lock.json
+.mcp.json
+
+# heavy local QA output (scripts are kept)
+qa/perf/results/
+qa/perf/frames/
+qa/e2e-last.log
+qa/perf/joins_*/

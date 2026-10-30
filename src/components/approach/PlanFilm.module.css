@@ -1,0 +1,242 @@
+/* The planning table (How We Work): interfaces on the two tablets and the laptop, designed at device
+   resolution (tablets 720px wide, laptop 1000px) and scaled onto the measured screens. */
+
+.device {
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.tablet,
+.laptop {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-text), system-ui, sans-serif;
+}
+
+.bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 22px;
+  border-bottom: 1px solid rgb(18 26 43 / 0.08);
+  font-size: 19px;
+}
+
+.bar b {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bar > span {
+  color: #5b6475;
+  font-size: 16px;
+}
+
+.n {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #121a2b;
+  color: #fff;
+  font-size: 15px;
+}
+
+/* the device being asked about wakes up: its number turns gold */
+[data-focus] .n {
+  background: #a87d32;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px 22px 20px;
+  flex: 1;
+  align-content: start;
+}
+
+.options button,
+.wants button {
+  display: flex;
+  align-items: center;
+  min-height: 70px;
+  padding: 10px 16px;
+  border: 1px solid rgb(18 26 43 / 0.12);
+  border-radius: 14px;
+  background: #fff;
+  color: #121a2b;
+  font: inherit;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.options button:last-child {
+  grid-column: 1 / -1;
+  min-height: 52px;
+}
+
+.options button:hover,
+.wants button:hover:not(:disabled) {
+  border-color: #121a2b;
+}
+
+.options button[aria-pressed="true"],
+.wants button[aria-pressed="true"] {
+  background: #121a2b;
+  border-color: #121a2b;
+  color: #fff;
+}
+
+.options button:focus-visible,
+.wants button:focus-visible,
+.send:focus-visible {
+  outline: 3px solid #2f6fe4;
+  outline-offset: 2px;
+}
+
+.wants {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 18px 24px;
+  flex: 1;
+  align-content: center;
+}
+
+.wants button {
+  min-height: 112px;
+  align-items: flex-start;
+  padding: 16px 18px;
+  font-size: 21px;
+}
+
+.wants button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.plan .bar {
+  padding-bottom: 14px;
+}
+
+.track {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 14px 22px 0;
+  list-style: none;
+}
+
+.track li {
+  padding: 8px 0;
+  border-radius: 999px;
+  background: #eef0f4;
+  color: #5b6475;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.track li[data-state="done"] {
+  background: #dfe7f5;
+  color: #1c2b47;
+}
+
+.track li[data-state="now"] {
+  background: #121a2b;
+  color: #fff;
+}
+
+.stage {
+  display: grid;
+  gap: 10px;
+  padding: 22px 26px 0;
+  flex: 1;
+  animation: stageIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes stageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.stageNum {
+  color: #7a5b28;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.stageLine {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 29px;
+  line-height: 1.25;
+  color: #121a2b;
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 22px 18px;
+  border-top: 1px solid rgb(18 26 43 / 0.08);
+}
+
+.services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+}
+
+.services li {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #e3f3ea;
+  color: #1b6342;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.send {
+  flex: none;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: #121a2b;
+  color: #fff;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hint {
+  color: #5b6475;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    animation: none;
+  }
+}

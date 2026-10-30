@@ -1,0 +1,364 @@
+/* Shared layouts for interior pages. */
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+}
+
+.splitHead {
+  display: grid;
+  gap: 18px;
+  position: sticky;
+  top: calc(var(--header-h) + 32px);
+}
+
+.splitHead h2 {
+  font-size: var(--step-5);
+}
+
+.rows {
+  list-style: none;
+  display: grid;
+  border-top: 1px solid var(--line-strong);
+}
+
+.rows > li {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+  gap: 12px 40px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.rows h3 {
+  font-size: var(--step-2);
+}
+
+.rows p {
+  line-height: 1.65;
+}
+
+.checks {
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+
+.checks li {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 12px;
+  align-items: start;
+  line-height: 1.55;
+}
+
+.checks li::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 12.5 4 4L18 8'/%3E%3C/svg%3E") center / 14px no-repeat,
+    var(--ink);
+}
+
+.quotes {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.quotes li {
+  padding: 22px 24px;
+  border-radius: var(--radius-m);
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line);
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 56px);
+}
+
+.colTitle {
+  font-size: var(--step-2);
+  margin-bottom: 18px;
+}
+
+.steps {
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1.5px solid var(--gold);
+}
+
+.steps li {
+  counter-increment: step;
+  position: relative;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 28px 20px 0 0;
+}
+
+.steps li::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  box-shadow: 0 0 0 4px var(--porcelain);
+}
+
+.steps h3 {
+  font-size: 1.3rem;
+}
+
+.steps h3::before {
+  content: counter(step, decimal-leading-zero);
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--gold-text);
+  margin-bottom: 6px;
+}
+
+.steps p {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.cards {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 2.5vw, 28px);
+}
+
+.card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42%;
+  gap: 20px;
+  align-items: center;
+  padding: clamp(22px, 3vw, 32px);
+  border-radius: var(--radius-l);
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line), 0 40px 70px -55px rgb(12 35 73 / 0.4);
+  transition: box-shadow 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 1px rgb(181 146 88 / 0.5), 0 50px 80px -50px rgb(12 35 73 / 0.45);
+}
+
+.cardBody {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.cardBody h3 {
+  font-size: var(--step-3);
+}
+
+.cardBody p {
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.cardArt {
+  width: 100%;
+  height: auto;
+}
+
+.notice {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 22px;
+  border-radius: var(--radius-m);
+  background: #fbf3e4;
+  box-shadow: inset 0 0 0 1px rgb(181 146 88 / 0.45);
+  color: #5d4520;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.notice svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.prose h2 {
+  font-size: var(--step-3);
+  margin: 48px 0 14px;
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+}
+
+.prose p,
+.prose li {
+  line-height: 1.7;
+}
+
+.prose p + p {
+  margin-top: 1em;
+}
+
+.prose ul {
+  padding-left: 1.2em;
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.prose a {
+  color: var(--cobalt);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.related {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.related a {
+  display: grid;
+  gap: 6px;
+  height: 100%;
+  padding: 22px 24px;
+  border-radius: var(--radius-m);
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line);
+  transition: box-shadow 0.3s;
+}
+
+.related a:hover {
+  box-shadow: 0 0 0 1px var(--gold);
+}
+
+.related strong {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.35rem;
+  color: var(--ink);
+}
+
+.related span {
+  font-size: 0.92rem;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
+.formCard {
+  padding: clamp(24px, 4vw, 48px);
+  border-radius: var(--radius-l);
+  background: var(--white);
+  box-shadow: 0 0 0 1px var(--line), 0 50px 90px -60px rgb(12 35 73 / 0.45);
+}
+
+.aside {
+  display: grid;
+  gap: 32px;
+  position: sticky;
+  top: calc(var(--header-h) + 32px);
+}
+
+.aside h2 {
+  font-size: var(--step-2);
+  margin-bottom: 12px;
+}
+
+.aside p,
+.aside li {
+  font-size: 0.97rem;
+  line-height: 1.6;
+}
+
+.numbered {
+  list-style: none;
+  counter-reset: n;
+  display: grid;
+  gap: 12px;
+}
+
+.numbered li {
+  counter-increment: n;
+  display: grid;
+  grid-template-columns: 30px 1fr;
+}
+
+.numbered li::before {
+  content: counter(n) ".";
+  font-family: var(--font-display);
+  color: var(--gold-text);
+  font-size: 1.05rem;
+}
+
+@media (max-width: 960px) {
+  .split,
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+  .splitHead,
+  .aside {
+    position: static;
+  }
+  .steps {
+    grid-template-columns: 1fr;
+    border-top: 0;
+    border-left: 1.5px solid var(--gold);
+    padding-left: 24px;
+    gap: 24px;
+  }
+  .steps li {
+    padding: 0;
+  }
+  .steps li::before {
+    top: 6px;
+    left: -30px;
+  }
+  .related {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .rows > li,
+  .columns,
+  .cards,
+  .quotes {
+    grid-template-columns: 1fr;
+  }
+  .card {
+    grid-template-columns: 1fr;
+  }
+  .cardArt {
+    max-width: 280px;
+  }
+}
