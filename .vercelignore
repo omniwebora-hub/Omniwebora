@@ -1,0 +1,19 @@
+# Only what the site needs to build is uploaded to Vercel.
+.env*
+!.env.example
+.claude/
+.agents/
+.mcp.json
+skills-lock.json
+node_modules/
+.next/
+assets/higgsfield/
+qa/
+reference/
+docs/
+design/
+reports/
+tests/
+test-results/
+playwright-report/
+*.log
