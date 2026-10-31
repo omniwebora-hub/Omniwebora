@@ -217,3 +217,75 @@
   }
 }
 
+
+/* ---------- The card in the water (owner, 2026-10-31) ----------
+   The districts stand on the skyline; their words sit below them in the water, as one calm band
+   across the screen (title, what changes, then the example modules and links). Nothing covers a
+   district or its label, so no marker needs hiding. */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .card,
+  .film[data-side="right"] .card {
+    left: clamp(24px, 3.2vw, 56px);
+    right: clamp(24px, 3.2vw, 56px);
+    top: auto;
+    bottom: 5svh;
+    width: auto;
+    transform: none;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr) minmax(0, 1fr);
+    column-gap: clamp(24px, 3.4vw, 56px);
+    align-items: end;
+    animation-name: cardRise;
+  }
+
+  .card > .kicker {
+    grid-column: 1 / -1;
+  }
+
+  .card > h3 {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+    align-self: end;
+  }
+
+  .card > .context {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: end;
+  }
+
+  .card > .modules {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .card > .links {
+    grid-column: 3;
+    grid-row: 3;
+  }
+
+  .card > .links:nth-child(4) {
+    grid-column: 3;
+    grid-row: 2 / span 2;
+  }
+
+  .stage::after,
+  .film[data-side="right"] .stage::after {
+    inset: auto 0 0 0;
+    width: 100%;
+    height: 44%;
+    background: linear-gradient(0deg, rgb(8 10 22 / 0.72), rgb(8 10 22 / 0.4) 55%, transparent);
+    opacity: 1;
+  }
+
+  .stage::before,
+  .film[data-side="right"] .stage::before {
+    opacity: 0;
+  }
+
+  @keyframes cardRise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+}

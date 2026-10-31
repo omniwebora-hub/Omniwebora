@@ -1,0 +1,159 @@
+/* Home opening overlay (see HomeOpening.tsx). Only rendered while the film runs. */
+
+.root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.root[data-on="false"] {
+  visibility: hidden;
+}
+
+/* The mark and name in the crystal's deep-blue core. Sized for the crystal at rest (its height is
+   28.4 % of the plate); the driver moves and scales it with the camera. */
+.core {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform, opacity;
+}
+
+.coreIn {
+  display: grid;
+  justify-items: center;
+  gap: calc(var(--ph) * 0.006);
+  width: calc(var(--ph) * 0.2);
+  translate: -50% -38%;
+  color: #fff;
+  animation: coreIn 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s backwards;
+}
+
+.markSvg {
+  width: calc(var(--ph) * 0.052);
+  height: calc(var(--ph) * 0.052);
+  color: #8fc3ff;
+  filter: drop-shadow(0 0 calc(var(--ph) * 0.006) rgb(120 180 255 / 0.95)) drop-shadow(0 0 calc(var(--ph) * 0.018) rgb(70 140 255 / 0.7));
+}
+
+.word {
+  font-family: var(--font-text);
+  font-size: calc(var(--ph) * 0.0215);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fff;
+  text-shadow:
+    0 0 calc(var(--ph) * 0.008) rgb(140 190 255 / 0.9),
+    0 0 calc(var(--ph) * 0.02) rgb(70 130 255 / 0.6);
+  white-space: nowrap;
+}
+
+/* The six services: light glass cards around the crystal (owner reference), name and one line. */
+.cards {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  will-change: opacity;
+}
+
+.card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform, translate;
+  animation: cardIn 1s ease backwards;
+}
+
+.card a {
+  container-type: inline-size;
+  display: grid;
+  gap: 3px;
+  width: 220px;
+  padding: 12px 14px 13px;
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.8), rgb(255 255 255 / 0.62));
+  box-shadow:
+    0 18px 40px -26px rgb(40 30 10 / 0.45),
+    inset 0 1px 0 rgb(255 255 255 / 0.7);
+  backdrop-filter: blur(12px) saturate(1.25);
+  color: var(--ink);
+  text-decoration: none;
+  pointer-events: none;
+}
+
+.cards[data-live="true"] .card a {
+  pointer-events: auto;
+}
+
+.card b {
+  font-size: clamp(0.86rem, 0.7rem + 0.25vw, 1rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.card span {
+  color: #2b3445;
+  font-size: clamp(0.74rem, 0.62rem + 0.2vw, 0.84rem);
+  line-height: 1.35;
+}
+
+/* narrow screens: a tighter card, name and one short line */
+.card[data-compact="true"] a {
+  padding: 9px 11px 10px;
+  border-radius: 12px;
+}
+
+.card[data-compact="true"] b {
+  font-size: 0.8rem;
+}
+
+.card[data-compact="true"] span {
+  font-size: 0.72rem;
+}
+
+.cards[data-fits="false"] {
+  display: none;
+}
+
+/* the drawn preview under the name (owner reference); only when the card has room for it */
+@container (max-width: 179px) {
+  .pv {
+    display: none !important;
+  }
+}
+
+.pv {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 7px;
+  border-radius: 7px;
+  filter: drop-shadow(0 6px 10px rgb(20 30 60 / 0.12));
+}
+
+.card a:hover,
+.card a:focus-visible {
+  background: linear-gradient(160deg, rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.72));
+  outline: none;
+}
+
+/* Portrait (phones): no room beside the crystal; the mark stays, the cards do not. */
+.root[data-portrait="true"] .cards {
+  display: none;
+}
+
+@keyframes coreIn {
+  from {
+    opacity: 0;
+    scale: 0.85;
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+  }
+}

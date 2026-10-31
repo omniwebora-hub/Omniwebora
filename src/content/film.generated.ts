@@ -135,9 +135,6 @@ export const FILM = {
     "screenStart": null,
     "screenEnd": null
   },
-  "h01-end": {
-    "screen": null
-  },
   "h02-wall": {
     "screen": [
       0.5021,
@@ -354,6 +351,20 @@ export const FILM = {
   "plan-arrive": {
     "frames": 64,
     "videoFrames": 158,
+    "fps": 24,
+    "screenStart": null,
+    "screenEnd": null
+  },
+  "home-push": {
+    "frames": 64,
+    "videoFrames": 158,
+    "fps": 24,
+    "screenStart": null,
+    "screenEnd": null
+  },
+  "home-dive": {
+    "frames": 64,
+    "videoFrames": 123,
     "fps": 24,
     "screenStart": null,
     "screenEnd": null

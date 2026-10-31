@@ -7,7 +7,8 @@ import { stages } from "@/content/approach";
 import { OFFERS, WEBSITE_PLANS } from "@/content/pricing";
 import { ROOMS } from "@/content/gallery";
 import { searchEntries } from "@/content/searchIndex";
-import { CUBE_REST, SEQUENCE, STILLS, heroPanels } from "@/content/heroWorld";
+import { CUBE_REST, STILLS, heroPanels } from "@/content/heroWorld";
+import { H01_FRAMES, H01_TRACK } from "@/content/cinematic.generated";
 
 const SRC = path.resolve(import.meta.dirname, "../../src");
 const read = (p: string) => fs.readFileSync(path.join(SRC, p), "utf8");
@@ -109,40 +110,31 @@ describe("site search", () => {
 describe("hero world (Higgsfield-rendered media)", () => {
   const PUBLIC = path.resolve(import.meta.dirname, "../../public");
 
-  it("ships every still and every sequence frame locally (no remote generation URLs at runtime)", () => {
-    const stills = [...STILLS.hero, ...STILLS.heroPortrait, ...STILLS.pullback, ...STILLS.colonnade]
+  it("ships every still and the opening's clips locally (no remote generation URLs at runtime)", () => {
+    const files = [...STILLS.hero, ...STILLS.heroPortrait, ...STILLS.colonnade]
       .map((s) => s.src)
-      .concat(STILLS.end, "/assets/cinematic/a01-studio-table-2400.webp", "/assets/cinematic/a01-studio-table-1280.webp");
-    for (const src of stills) expect(fs.existsSync(path.join(PUBLIC, src)), src).toBe(true);
-    for (const size of ["lg", "md"] as const)
-      for (let i = 0; i < SEQUENCE.frames; i++) expect(fs.existsSync(path.join(PUBLIC, SEQUENCE.path(size, i))), `${size} ${i}`).toBe(true);
+      .concat("/assets/cinematic/a01-studio-table-2400.webp", "/assets/cinematic/a01-studio-table-1280.webp")
+      .concat(["home-push", "home-dive"].flatMap((id) => [`/assets/cinematic/${id}/v1600.mp4`, `/assets/cinematic/${id}/v1280.mp4`, `/assets/cinematic/${id}-end-1920.webp`]));
+    for (const src of files) expect(fs.existsSync(path.join(PUBLIC, src)), src).toBe(true);
     const runtime = walk(SRC).filter((f) => /\.(tsx?|css)$/.test(f)).map((f) => fs.readFileSync(f, "utf8")).join("\n");
     expect(runtime).not.toMatch(/cloudfront\.net|higgsfield\.ai|muapi/i);
   });
 
-  it("has one smooth cube track sample per frame", () => {
-    expect(SEQUENCE.track).toHaveLength(SEQUENCE.frames);
-    for (let i = 1; i < SEQUENCE.track.length; i++) {
-      const [x0, y0, h0] = SEQUENCE.track[i - 1];
-      const [x1, y1, h1] = SEQUENCE.track[i];
+  it("has one smooth crystal track sample per frame of the push-in", () => {
+    expect(H01_TRACK).toHaveLength(H01_FRAMES);
+    for (let i = 1; i < H01_TRACK.length; i++) {
+      const [x0, y0, h0] = H01_TRACK[i - 1];
+      const [x1, y1, h1] = H01_TRACK[i];
       expect(Math.abs(x1 - x0), `x jump at ${i}`).toBeLessThan(0.02);
       expect(Math.abs(y1 - y0), `y jump at ${i}`).toBeLessThan(0.02);
       expect(h1, `push-in never pulls back at ${i}`).toBeGreaterThanOrEqual(h0 - 0.002);
     }
-    expect(CUBE_REST.x).toBeGreaterThan(0.6); // sculpture sits in the right of the frame, copy on the left
+    expect(CUBE_REST.x).toBeGreaterThan(0.6); // the crystal sits right of centre, the words on the left
   });
 
-  it("keeps hero panels clear of each other and of the copy column", () => {
-    const boxes = heroPanels.map((p) => ({ l: p.dx - p.w / 2, r: p.dx + p.w / 2, t: p.dy - p.h / 2, b: p.dy + p.h / 2 }));
-    for (let i = 0; i < boxes.length; i++)
-      for (let j = i + 1; j < boxes.length; j++) {
-        const a = boxes[i];
-        const b = boxes[j];
-        const overlap = a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
-        expect(overlap, `${heroPanels[i].slug} × ${heroPanels[j].slug}`).toBe(false);
-      }
-    // In u (1% of plate height): the leftmost panel edge stays right of 42% of a 16:9 plate.
-    const leftmost = Math.min(...boxes.map((b) => b.l));
-    expect(CUBE_REST.x * 177.78 + leftmost).toBeGreaterThan(0.42 * 177.78);
+  it("puts the six services around the crystal, three each side", () => {
+    expect(heroPanels).toHaveLength(6);
+    expect(heroPanels.filter((p) => p.side === "left")).toHaveLength(3);
+    expect(heroPanels.filter((p) => p.side === "right")).toHaveLength(3);
   });
 });

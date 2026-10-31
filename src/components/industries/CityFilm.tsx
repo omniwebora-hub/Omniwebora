@@ -36,7 +36,6 @@ export function CityFilm({ children }: { children: React.ReactNode }) {
     const stage = el.querySelector<HTMLElement>("[data-stage]")!;
     const track = el.querySelector<HTMLElement>("[data-track]")!;
     const n = industries.length;
-    const spots = Array.from(el.querySelectorAll<HTMLElement>("[data-spot]"));
     const introEl = el.querySelector<HTMLElement>("[data-city-intro]");
     let last = -1;
     const engine = new FilmEngine({
@@ -70,17 +69,10 @@ export function CityFilm({ children }: { children: React.ReactNode }) {
           const gone = o < 0.01 ? "true" : "false";
           if (introEl.dataset.gone !== gone) introEl.dataset.gone = gone;
         }
-        // The card takes the side of the frame its district is not on, so it never covers the district.
+        // Which half the district is in (kept for styling hooks; the words sit in the water below).
         const activeX = st > 0 ? SPOTS[industries[i].id][0] * imgW - x * intro : geo.W;
         const side = activeX < geo.W * 0.5 ? "right" : "left";
         if (el.dataset.side !== side) el.dataset.side = side;
-        // Markers that pass behind the copy fade out so the words stay clean.
-        const cardSpan = Math.min(geo.W * 0.3, 416) + 200;
-        for (const sp of spots) {
-          const sx = Number(sp.dataset.spot) * imgW - x * intro;
-          const hidden = side === "left" ? sx < cardSpan : sx > geo.W - cardSpan;
-          engine.set(sp, "opacity", hidden ? "0" : "1");
-        }
         if (st !== last) {
           last = st;
           setStep(st);

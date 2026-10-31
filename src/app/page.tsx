@@ -42,9 +42,11 @@ const STAGE_COPY = [
 export default function HomePage() {
   return (
     <HomeFilm>
-      <section className={`${c.block} ${c.hold}`} data-film-block="arrive" style={{ "--hold": "120svh" } as React.CSSProperties} aria-labelledby="hero-title">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className={c.flatPlate} src="/assets/cinematic/k1-draw-1280.webp" alt="" fetchPriority="high" />
+      <section className={`${c.block} ${c.hold}`} data-film-block="arrive" style={{ "--hold": "100svh" } as React.CSSProperties} aria-labelledby="hero-title">
+        <picture>
+          <source media="(max-width: 1023px)" srcSet="/assets/cinematic/h00-hero-portrait-720.webp 720w, /assets/cinematic/h00-hero-portrait-1100.webp 1100w" sizes="100vw" />
+          <img className={`${c.flatPlate} ${h.heroPlate}`} src="/assets/cinematic/h00-hero-1280.webp" srcSet="/assets/cinematic/h00-hero-1280.webp 1280w, /assets/cinematic/h00-hero-1920.webp 1920w" sizes="100vw" alt="" fetchPriority="high" />
+        </picture>
         <div className={`${c.panelWrap} ${h.heroWrap}`}>
           <div className={`${c.panel} ${h.heroPanel}`} data-panel>
             <p className={c.num}>Digital solutions studio</p>
@@ -68,6 +70,26 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* The camera pushes in on the crystal (the cards have cleared), then holds on it. */}
+      <div className={`${c.block} ${c.move}`} data-film-block="push" style={{ height: "150svh" }} aria-hidden="true" />
+
+      <section className={`${c.block} ${c.hold}`} data-film-block="core" style={{ "--hold": "110svh" } as React.CSSProperties} aria-labelledby="core-title">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className={c.flatPlate} src="/assets/cinematic/home-push-end-1280.webp" alt="" loading="lazy" />
+        <div className={`${c.panelWrap} ${h.heroWrap} ${h.coreWrap}`}>
+          <div className={`${c.panel} ${h.heroPanel}`} data-panel>
+            <p className={c.num}>What we build</p>
+            <h2 id="core-title" className={c.title}>
+              Six services, planned as one system.
+            </h2>
+            <p className={c.lede}>Your website, apps, business software and automations are planned together, so they share their data and grow as one.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Into the crystal's core, and out onto the drawing of the building (01 Innovate). */}
+      <div className={`${c.block} ${c.move}`} data-film-block="dive" style={{ height: "170svh" }} aria-hidden="true" />
+
       {STAGE_COPY.map((st, i) => (
         <Fragment key={st.id}>
           {i > 0 && (
@@ -78,7 +100,7 @@ export default function HomePage() {
           <section className={`${c.block} ${c.hold}`} data-film-block={st.id} style={{ "--hold": st.hold } as React.CSSProperties} aria-labelledby={`stage-${st.id}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className={c.flatPlate} src={`/assets/cinematic/${st.plate}-1280.webp`} alt="" loading="lazy" />
-            <div className={c.panelWrap}>
+            <div className={`${c.panelWrap} ${c.water}`}>
               <div className={c.panel} data-panel>
                 <p className={c.num}>{st.n}</p>
                 <h2 id={`stage-${st.id}`} className={c.title}>
@@ -98,7 +120,7 @@ export default function HomePage() {
       <section className={`${c.block} ${c.hold}`} data-film-block="launch" style={{ "--hold": "190svh" } as React.CSSProperties} aria-labelledby="what-we-build">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={c.flatPlate} src="/assets/cinematic/home-launch-end-1280.webp" alt="" loading="lazy" />
-        <div className={c.panelWrap}>
+        <div className={`${c.panelWrap} ${c.water}`}>
           <div className={c.panel} data-panel>
             <p className={c.num}>04 · Transform</p>
             <h2 id="what-we-build" className={c.title}>

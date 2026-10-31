@@ -58,5 +58,5 @@ Without a transport the brief says plainly it was not sent (HTTP 503) and offers
 ## Deployment
 Hosted on Vercel (framework preset Next.js, no extra settings). The only server code is `POST /api/inquiry`; its rate limiter is in-memory per instance (`src/lib/inquiry/rateLimit.ts`), so back it with a shared store if abuse becomes a concern. Before going live on the real domain, complete `reports/CONTENT_APPROVAL_CHECKLIST.md` and set `NEXT_PUBLIC_ALLOW_INDEXING=true` there only.
 
-## Previous landing page (v1)
-The first home page (a crystal "Omniwebora" core on a terrace with a push-in film) was replaced by the current story film. Its rendered media is kept in `public/assets/cinematic/` (`h00-hero-*`, `h01/`, `h01-end-*`, `r01-pullback-*`) and described in `src/content/heroWorld.ts`, so it can be rebuilt if wanted. The original v1 component code predates this repository.
+## Home opening
+Home opens on the crystal: the golden-hour terrace still (`h00-hero-*`) with the Omniwebora mark in the crystal's core and the six services as glass cards around it (`src/components/home/HomeOpening.tsx`; the cards are laid out per screen so they never cover the crystal or the words). On scroll the camera pushes in (`home-push/`), holds, flies into the core (`home-dive/`) and comes out on the drawing of the building, chapter 01. The same film runs on phones (portrait framing); reduced motion gets the stacked layout.

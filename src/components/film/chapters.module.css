@@ -995,3 +995,143 @@
     color: #fff;
   }
 }
+
+/* ---------- Phone film (Home opts in with .phoneFilm on the film root) ----------
+   The chapters run over the sticky stage as on desktop: each chapter's words are pinned at the bottom
+   of the screen on a soft shade (white type), and only the current chapter's words are shown; they
+   crossfade in place. Must match PHONE_FILM_QUERY in FlatOnly.tsx. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 1023.98px), (prefers-reduced-motion: no-preference) and (max-aspect-ratio: 1249/1000) {
+  .phoneFilm .flatPlate {
+    display: none;
+  }
+
+  .phoneFilm .move {
+    display: block;
+    height: 130svh;
+  }
+
+  .phoneFilm .moveLine {
+    display: none;
+  }
+
+  .phoneFilm .hold {
+    height: calc(var(--hold, 300svh) + 100svh);
+    margin-bottom: -100svh;
+    padding: 0;
+    background: none;
+  }
+
+  .phoneFilm .hold:last-child {
+    margin-bottom: 0;
+  }
+
+  .phoneFilm .panelWrap {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: flex-end;
+    height: 100svh;
+    padding: var(--header-h) 20px calc(28px + env(safe-area-inset-bottom));
+    isolation: isolate;
+    pointer-events: none;
+  }
+
+  /* a soft shade rising from the bottom edge (no box), so white words read on any scene */
+  .phoneFilm .panelWrap::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: -1;
+    height: 68%;
+    background: linear-gradient(0deg, rgb(8 14 30 / 0.88), rgb(8 14 30 / 0.62) 42%, transparent);
+    pointer-events: none;
+  }
+
+  .phoneFilm .hold .panel {
+    width: 100%;
+    max-width: 34rem;
+    margin: 0;
+    padding: 0;
+    gap: 12px;
+    background: none;
+    box-shadow: none;
+    color: #fff;
+    text-shadow: 0 1px 14px rgb(0 0 0 / 0.35);
+    pointer-events: auto;
+  }
+
+  .phoneFilm .panel .title {
+    font-size: clamp(1.75rem, 1.2rem + 2.6vw, 2.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .phoneFilm .panel .lede {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .phoneFilm .panel .story div:not(:nth-child(2)) {
+    display: none;
+  }
+
+  .phoneFilm[data-engine] .panelWrap {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s linear 0.35s;
+  }
+
+  .phoneFilm[data-engine] [data-current] > .panelWrap {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.7s ease 0.1s,
+      visibility 0s;
+  }
+}
+
+/* ---------- Words in the water (owner, 2026-10-31) ----------
+   Where the building itself is the picture (Home 01–04), the words sit below it, in the water:
+   the kicker and title on the left, the line beside them, never over the building or its labels. */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  .panelWrap.water {
+    align-items: flex-end;
+    padding: 0 clamp(24px, 3.2vw, 56px) 4.5svh;
+  }
+
+  .panelWrap.water::before {
+    inset: auto 0 0 0;
+    width: 100% !important;
+    height: 36%;
+    background: linear-gradient(0deg, rgb(8 12 24 / 0.7), rgb(8 12 24 / 0.38) 60%, transparent);
+    mask-image: none;
+  }
+
+  .panelWrap.water .panel {
+    max-width: none;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 34rem);
+    justify-content: start;
+    column-gap: clamp(28px, 4vw, 72px);
+    align-items: end;
+    width: min(100%, 1180px);
+  }
+
+  .panelWrap.water .panel > :not(.lede):not(.title) {
+    grid-column: 1 / -1;
+  }
+
+  .panelWrap.water .panel .title {
+    grid-column: 1;
+    font-size: clamp(2rem, 1rem + 1.9vw, 3.3rem);
+  }
+
+  .panelWrap.water .panel .lede {
+    grid-column: 2;
+    max-width: 34rem;
+    margin: 0;
+    padding-bottom: 0.35em;
+  }
+}

@@ -191,7 +191,7 @@ test.describe("home", () => {
     await expect(page).toHaveURL(/\/solutions#custom-software$/);
   });
 
-  test("desktop: the drawing becomes the building and the film reaches every chapter", async ({ page, request, isMobile }) => {
+  test("desktop: the crystal opens the film, the drawing becomes the building, every chapter is reached", async ({ page, request, isMobile }) => {
     const html = await (await request.get("/")).text();
     for (const slug of ["web-development", "mobile-apps", "custom-software", "business-automation", "digital-marketing", "enterprise-platforms"])
       expect(html).toContain(`href="/solutions#${slug}"`);
@@ -200,10 +200,16 @@ test.describe("home", () => {
     const film = page.locator("[data-film][aria-label='Ideas we bring to life']");
     await expect(film).toHaveAttribute("data-film", "on");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Ideas we bring");
-    for (const id of ["innovate", "design", "build", "launch", "idea", "launched", "invite"]) {
+    // 00: the crystal with the mark in its core and the six services around it; gone once the drawing is reached
+    const crystal = page.locator("[data-opening]");
+    await expect(crystal).toHaveAttribute("data-on", "true");
+    await expect(crystal.locator("[data-card]")).toHaveCount(6);
+    await expect(crystal.getByText("Omniwebora")).toBeVisible();
+    for (const id of ["push", "core", "dive", "innovate", "design", "build", "launch", "idea", "launched", "invite"]) {
       await page.locator(`[data-film-block="${id}"]`).evaluate((el) => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + 40, behavior: "instant" }));
       await expect(film).toHaveAttribute("data-block", id);
     }
+    await expect(crystal).toHaveAttribute("data-on", "false");
     // the lit bays are links into their rooms
     await page.locator('[data-film-block="launch"]').evaluate((el) => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + el.getBoundingClientRect().height * 0.3, behavior: "instant" }));
     await expect(page.locator('a[href="/solutions#mobile-apps"][data-on="true"]')).toHaveCount(1);
@@ -220,13 +226,22 @@ test.describe("home", () => {
     await ctx.close();
   });
 
-  test("mobile: stacked chapters with tappable services and no sideways scroll", async ({ page, isMobile }) => {
+  test("mobile: the Home film runs on the phone, no sideways scroll, the services stay tappable", async ({ page, isMobile }) => {
     test.skip(!isMobile, "mobile layout");
     await page.goto("/");
-    await expect(page.locator("[data-film]").first()).toHaveAttribute("data-film", "off");
-    await expect(page.getByRole("list", { name: "What we build" }).getByRole("link")).toHaveCount(6);
+    const film = page.locator("[data-film][aria-label='Ideas we bring to life']");
+    await expect(film).toHaveAttribute("data-film", "on");
+    await expect(page.locator('[data-film="on"][data-engine]')).toBeAttached();
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
-    await page.getByRole("list", { name: "What we build" }).getByRole("link", { name: /Business Automation/ }).tap();
+    for (const id of ["core", "innovate", "launch"]) {
+      await page.locator(`[data-film-block="${id}"]`).evaluate((el) => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + 4, behavior: "instant" }));
+      await expect(film).toHaveAttribute("data-block", id);
+    }
+    await expect(page.locator('[data-film-block="launch"][data-current]')).toHaveCount(1);
+    const services = page.getByRole("list", { name: "What we build" }).getByRole("link");
+    await expect(services).toHaveCount(6);
+    await services.filter({ hasText: "Business Automation" }).tap();
     await expect(page).toHaveURL(/\/solutions#business-automation$/);
   });
 });

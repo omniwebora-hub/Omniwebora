@@ -41,6 +41,10 @@ SEGMENTS = [
     {"id": "sol-auto-mkt", "clip": "S15_auto_to_marketing.mp4", "frames": 64, "screen_end": True},
     {"id": "sol-mkt-ent", "clip": "S16_marketing_to_ent.mp4", "frames": 64, "screen_end": True},
     {"id": "sol-finale", "clip": "S17_mezz_to_terrace.mp4", "frames": 64},
+    # Home opening (2026-10-30, owner reference): the v1 crystal push-in (H01), then into the crystal's
+    # core and out onto the drawing (HDV, ends on the exact K1 frame so 01 Innovate joins without a cut)
+    {"id": "home-push", "clip": "H01_dolly_minimax.mp4", "frames": 64},
+    {"id": "home-dive", "clip": "HDV_core_to_draw.mp4", "frames": 64, "trim_end": 0.22, "end_still": "K1_blueprint.png", "end_fade": 0.16},
     # Home "Ideas we bring to life" (design/HOME_SCRIPT.md): drawing → study model → built → lit,
     # then in through the centre bay (H11 reversed) to the product wall
     {"id": "home-design", "clip": "HB_draw_to_model.mp4", "frames": 64},
@@ -66,7 +70,6 @@ SEGMENTS = [
 # stills whose frame holds several displays: name → how many
 MULTI = {"h02-wall": (3, 0.15), "l01-lab": (3, 0.0)}
 STILLS = [
-    ("public/assets/cinematic/h01-end-2560.webp", "h01-end"),
     ("H02_product_wall.png", "h02-wall"),
     ("S08n_terrace_night.png", "s08-night"),
     ("P01_model_basic.png", "p01-basic"),
@@ -173,7 +176,7 @@ def main() -> None:
         path = RAW / src if (RAW / src).exists() else ROOT / src
         img = Image.open(path).convert("RGB")
         for w, q in ((2560, 78), (1920, 78), (1280, 76)):
-            if not (OUT / f"{name}-{w}.webp").exists() or not only:
+            if not only:  # with ONLY, stills are only measured, never (re)written
                 save(img, OUT / f"{name}-{w}.webp", w, q)
         meta[name] = {"screen": display_rect(img, 0.06 if "mobile" in name else 0.15)}
         if name in MULTI:
@@ -184,7 +187,26 @@ def main() -> None:
         with tempfile.TemporaryDirectory() as tmp:
             subprocess.run([ffmpeg, "-hide_banner", "-loglevel", "error", "-i", str(RAW / seg["clip"]), "-an", f"{tmp}/f%04d.png"], check=True)
             files = sorted(Path(tmp).glob("f*.png"))
-            if seg.get("trim_start"):
+            if seg.get("trim_end"):
+                files = files[: int(len(files) * (1 - seg["trim_end"]))]
+            if seg.get("end_still"):
+                # dissolve the clip's last frames into the exact still the next chapter holds
+                still = Image.open(RAW / seg["end_still"]).convert("RGB")
+                size = Image.open(files[0]).size
+                still = np.asarray(still.resize(size, Image.LANCZOS)).astype(np.float32)
+                k0 = int(len(files) * (1 - seg["end_fade"]))
+                for k in range(k0, len(files)):
+                    t = (k - k0 + 1) / (len(files) - k0)
+                    t = t * t * (3 - 2 * t)
+                    fr = np.asarray(Image.open(files[k]).convert("RGB")).astype(np.float32)
+                    Image.fromarray((fr * (1 - t) + still * t + 0.5).clip(0, 255).astype(np.uint8)).save(files[k])
+                # re-encode from the kept (and dissolved) frames
+                kept = Path(tmp) / "kept"
+                kept.mkdir()
+                for k, f in enumerate(files):
+                    shutil.copy(f, kept / f"k{k:04d}.png")
+                src_video = ["-framerate", str(FPS), "-i", str(kept / "k%04d.png")]
+            elif seg.get("trim_start"):
                 files = files[int(len(files) * seg["trim_start"]) :]
                 # the video files are re-encoded from the kept frames
                 trimmed = Path(tmp) / "trimmed"
@@ -192,7 +214,7 @@ def main() -> None:
                 for k, f in enumerate(files):
                     shutil.copy(f, trimmed / f"t{k:04d}.png")
                 src_video = ["-framerate", str(FPS), "-i", str(trimmed / "t%04d.png")]
-            else:
+            elif not seg.get("end_still"):
                 src_video = ["-i", str(RAW / seg["clip"])]
             n = seg["frames"]
             picks = [round(i * (len(files) - 1) / (n - 1)) for i in range(n)]
