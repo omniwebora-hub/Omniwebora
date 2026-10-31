@@ -424,7 +424,7 @@
 }
 
 
-/* ---------- the opening: "Ideas we bring to life." over the drawing ---------- */
+/* ---------- the opening: "Ideas we bring to life." beside the crystal (owner reference) ---------- */
 .heroTitle {
   font-family: var(--font-display);
   font-size: var(--step-7);
@@ -444,30 +444,54 @@
 }
 
 @media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
-  /* a deeper shade under the opening words, so the drawing's lines never compete with them */
+  /* The golden-hour terrace is bright: ink words on a soft, shapeless light wash (no box). */
   .heroWrap::before {
-    width: min(64vw, 940px) !important;
-    background: linear-gradient(90deg, rgb(8 12 26 / 0.74), rgb(8 12 26 / 0.52) 48%, transparent) !important;
+    width: min(62vw, 920px) !important;
+    background: linear-gradient(90deg, rgb(252 248 241 / 0.8), rgb(252 248 241 / 0.5) 52%, transparent) !important;
   }
 
   .heroPanel {
-    width: min(44vw, 44rem) !important;
+    width: min(40vw, 40rem) !important;
     gap: 20px !important;
+    color: var(--ink) !important;
+    text-shadow: 0 0 18px rgb(252 248 241 / 0.9) !important;
+  }
+
+  .heroPanel :is(p, h2) {
+    color: #1d2433 !important;
+  }
+
+  .heroPanel > p:first-child {
+    color: #6a4f22 !important;
+  }
+
+  .heroPanel a:not(:global(.btn)) {
+    color: var(--ink) !important;
   }
 
   .heroTitle {
-    color: #fff;
-    font-size: clamp(3.4rem, 1.4rem + 4.8vw, 6.6rem);
-    text-shadow: 0 4px 30px rgb(0 0 0 / 0.35);
+    color: var(--ink);
+    font-size: clamp(3.2rem, 1.3rem + 4.4vw, 6.2rem);
+  }
+
+  /* the line under the title stays a calm measure, leaving the crystal its room */
+  .heroPanel > p:not(:first-child) {
+    max-width: 30rem;
   }
 
   .heroTitle span {
-    color: #f3d6a0;
+    color: #7a5a24;
   }
 
   .heroPanel :global(.btn-primary) {
-    background: #fff;
-    color: var(--ink);
+    background: var(--ink);
+    color: #fff;
+    text-shadow: none;
+  }
+
+  /* the hold on the crystal: the words lower left, like the reference's second line */
+  .coreWrap .heroPanel {
+    width: min(40vw, 36rem) !important;
   }
 
   .cue {
@@ -479,13 +503,13 @@
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgb(255 255 255 / 0.85);
+    color: #1d2433 !important;
   }
 
   .cue span {
     width: 40px;
     height: 1px;
-    background: rgb(255 255 255 / 0.75);
+    background: #1d2433;
   }
 
   /* the service list is the facade's windows in the film */
@@ -606,4 +630,125 @@
   .nightPanel :global(.kicker) {
     color: rgb(255 255 255 / 0.66);
   }
+}
+
+/* ---------- Phone film (see chapters.module.css .phoneFilm): Home's own wrappers ----------
+   Words at the bottom on the shade; the facade labels and the stage rail are desktop-sized, so on a
+   portrait screen the services and stages are told in the words instead. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 1023.98px), (prefers-reduced-motion: no-preference) and (max-aspect-ratio: 1249/1000) {
+  .home .bay,
+  .home .timeline {
+    display: none;
+  }
+
+  .home .screen {
+    overflow: hidden;
+    border-radius: 3px;
+    background: #fbf8f2;
+  }
+
+  .home .heroTitle {
+    font-size: clamp(2.6rem, 1.6rem + 6vw, 3.6rem);
+  }
+
+  .home .heroPanel > p:first-child,
+  .home .heroPanel .cue,
+  .home .heroPanel > p:nth-of-type(2) {
+    display: none;
+  }
+
+  .home .heroPanel > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 20px;
+  }
+
+  /* the six services: two short columns of names (each a link into its room) */
+  .home .services {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 18px;
+  }
+
+  .home .services li + li {
+    border-top: 0;
+  }
+
+  .home .services a {
+    padding: 7px 0;
+    border-top: 1px solid rgb(255 255 255 / 0.18);
+    font-size: 1.02rem;
+  }
+
+  .home .services a span {
+    display: none;
+  }
+
+  .home .stripWrap,
+  .home .nightWrap {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: flex-end;
+    height: 100svh;
+    padding: var(--header-h) 20px calc(28px + env(safe-area-inset-bottom));
+    isolation: isolate;
+    pointer-events: none;
+  }
+
+  .home .stripWrap::before,
+  .home .nightWrap::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: -1;
+    height: 66%;
+    background: linear-gradient(0deg, rgb(8 14 30 / 0.88), rgb(8 14 30 / 0.6) 45%, transparent);
+    pointer-events: none;
+  }
+
+  .home .strip,
+  .home .nightPanel {
+    width: 100%;
+    max-width: 34rem;
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    color: #fff;
+    pointer-events: auto;
+  }
+
+  .home .strip :is(h2, p, dd, dt),
+  .home .nightPanel :is(h2, p, li, b) {
+    color: #fff;
+  }
+
+  .home .strip > dl,
+  .home .nightPanel .stageList {
+    display: none;
+  }
+
+  .home[data-engine] .stripWrap,
+  .home[data-engine] .nightWrap {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.35s ease,
+      visibility 0s linear 0.35s;
+  }
+
+  .home[data-engine] [data-current] > .stripWrap,
+  .home[data-engine] [data-current] > .nightWrap {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity 0.7s ease 0.1s,
+      visibility 0s;
+  }
+}
+
+/* Phones and reduced motion (no film): the opening picture centred on the crystal. */
+.heroPlate {
+  object-position: 72% 50%;
 }

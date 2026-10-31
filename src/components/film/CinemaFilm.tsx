@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FilmEngine, smoothstep, type EngineKind, type FilmBlock, type FilmSegment } from "./engine";
-import { useFilmMode } from "./FlatOnly";
+import { FilmEngine, smoothstep, type EngineKind, type FilmBlock, type FilmFrame, type FilmSegment } from "./engine";
+import { useFilmMode, usePhoneFilm } from "./FlatOnly";
 import s from "./SolutionsFilm.module.css";
 
 /**
@@ -23,8 +23,13 @@ export type CinemaBlock = FilmBlock & {
   dollySteps?: (Rect | null)[];
   /** Where a dolly frames its target: centre (x, y) and max share of the viewport (w, h). */
   frame?: { x: number; y: number; w: number; h: number };
+  /** Portrait windows (phone film): the plate x (fraction) to keep in the middle of the screen. */
+  focus?: number;
 };
 export type Active = { block: string; step: number; p: number };
+/** Per-frame hook for page-specific direct DOM writes (index of the current block and its progress). */
+/** Per-frame page hook. On landscape screens it may return a sideways camera shift (px) for this frame. */
+export type FrameHook = (f: { index: number; block: CinemaBlock; p: number; geo: FilmFrame["geo"] }) => number | void;
 
 export function CinemaFilm({
   blocks,
@@ -34,6 +39,8 @@ export function CinemaFilm({
   children,
   label,
   className,
+  onFrame,
+  phone = false,
 }: {
   blocks: CinemaBlock[];
   segments: Record<string, FilmSegment>;
@@ -44,9 +51,19 @@ export function CinemaFilm({
   label?: string;
   /** Extra class on the root (e.g. Home's hand-off from the hero). */
   className?: string;
+  /** Called on every rendered frame (after the overlays), e.g. to drive an opening by scroll. */
+  onFrame?: FrameHook;
+  /** Also run the film on phones and tablets (portrait framing; reduced motion stays stacked). */
+  phone?: boolean;
 }) {
   const root = useRef<HTMLDivElement>(null);
-  const film = useFilmMode();
+  const hook = useRef(onFrame);
+  useEffect(() => {
+    hook.current = onFrame;
+  }, [onFrame]);
+  const desktop = useFilmMode();
+  const phoneFilm = usePhoneFilm();
+  const film = desktop || (phone && phoneFilm);
   const [active, setActive] = useState<Active>({ block: blocks[0].id, step: 0, p: 0 });
 
   useEffect(() => {
@@ -102,12 +119,34 @@ export function CinemaFilm({
           if (n.dataset.live !== live) n.dataset.live = live;
         }
 
+        // Portrait: pan the plate so the chapter's subject stays mid-screen (eased across camera moves).
+        let pan = 0;
+        if (geo.W / geo.H < 1.25 && geo.pw > geo.W) {
+          const focusOf = (i: number) => blocks[i]?.focus ?? 0.5;
+          let fx = b.focus ?? 0.5;
+          if (b.kind === "seg") {
+            let a = index - 1;
+            while (a > 0 && blocks[a].kind === "seg") a--;
+            let c = index + 1;
+            while (c < blocks.length - 1 && blocks[c].kind === "seg") c++;
+            fx = focusOf(a) + (focusOf(c) - focusOf(a)) * smoothstep(0, 1, p);
+          }
+          const room = (geo.pw - geo.W) / 2;
+          pan = Math.max(-room, Math.min(room, (0.5 - fx) * geo.pw));
+        }
+        // The page's hook runs before the camera is placed, so it can frame its chapter (landscape).
+        const asked = hook.current?.({ index, block: b, p, geo });
+        if (typeof asked === "number" && geo.W / geo.H >= 1.25) {
+          const room = (geo.pw - geo.W) / 2;
+          pan = Math.max(-room, Math.min(room, asked));
+        }
+
         fr = b.frame ?? { x: 0.62, y: 0.53, w: 0.6, h: 0.7 };
         const steps = b.steps ?? 1;
         const step = Math.min(steps - 1, Math.floor(Math.min(1, Math.max(0, (p - 0.12) / 0.76)) * steps));
 
         // Camera: a single dolly, or a glide between per-step targets (2.5D, the plate is frontal).
-        let t = "none";
+        let t = pan ? `translate3d(${pan.toFixed(1)}px, 0, 0)` : "none";
         if (b.dolly) {
           const e = smoothstep(0.05, 0.3, p) * (1 - smoothstep(0.72, 0.95, p));
           const { z, tx, ty } = zoomTo(b.dolly, geo);
@@ -117,12 +156,12 @@ export function CinemaFilm({
           const f = Math.min(1, Math.max(0, (p - 0.12) / 0.76)) * steps;
           const i = Math.min(steps - 1, Math.floor(f));
           const k = smoothstep(0.55, 1, f - i);
-          const pose = (r: Rect | null) => (r ? zoomTo(r, geo) : { z: 1, tx: 0, ty: 0 });
+          const pose = (r: Rect | null) => (r ? zoomTo(r, geo) : { z: 1, tx: pan, ty: 0 });
           const a = pose(b.dollySteps[i] ?? null);
           const c = pose(b.dollySteps[Math.min(steps - 1, i + 1)] ?? null);
           const out = 1 - smoothstep(0.9, 1, p);
           const z = 1 + ((a.z + (c.z - a.z) * k) - 1) * out;
-          const tx = (a.tx + (c.tx - a.tx) * k) * out;
+          const tx = (a.tx + (c.tx - a.tx) * k) * out + pan * (1 - out);
           const ty = (a.ty + (c.ty - a.ty) * k) * out;
           t = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${z.toFixed(4)})`;
         }

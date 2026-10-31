@@ -9,7 +9,11 @@ One fixed vantage on the terrace for the first four scenes (the subject transfor
 
 | # | Scene | Picture (Higgsfield) | On screen (HTML, stays in place, fades) | Meaning |
 |---|---|---|---|---|
-| 1 | **Arrival: the idea** (hero, at rest) | Blue hour before sunrise. On the empty terrace by the bay stands only a fine drawing of the building: thin luminous lines in the air, reflected in the pool. (K1) | Kicker, "Ideas we bring to life.", one line, Contact Us / Explore Our Solutions | Every product starts as an idea |
+| 0 | **Arrival: the crystal** (hero, at rest; owner reference 2026-10-30) | The v1 golden-hour terrace: the faceted glass crystal on its marble and gold pedestal (H00), the Omniwebora mark and name glowing in its deep-blue core (SVG, camera-matched) | Kicker, "Ideas we bring to life." (ink, light wash), one line, Contact Us / Explore our solutions; the six services as light glass cards around the crystal (they clear on the first scroll) | The idea |
+| 0a | **Push-in** (`push`) | Clip H01: the camera moves in on the crystal | none | |
+| 0b | **The core** (`core`) | Hold on the crystal (H01's last frame) | "Six services, planned as one system." | One plan for all six |
+| 0c | **Into the core** (`dive`) | Clip HDV: into the deep-blue core, the drawing's lines appear inside it, out onto the blue-hour terrace facing the drawing (dissolves into the exact K1 frame) | none | The idea becomes the drawing |
+| 1 | **The drawing** (the first screen before 2026-10-30; now reached from the crystal) | Blue hour before sunrise. On the empty terrace by the bay stands only a fine drawing of the building: thin luminous lines in the air, reflected in the pool. (K1) | Kicker, "Ideas we bring to life.", one line, Contact Us / Explore Our Solutions | Every product starts as an idea |
 | 2 | **Innovate** | Same frame. Six bay outlines are labelled with the six services | "01 Innovate: we draw it before we build it." | Discovery: the plan, all six parts |
 | 3 | **Design** | Clip: the lines thicken into a full-size ivory study model (K2), morning sun | "02 Design: flows and screens you can react to before anything is built." | Design |
 | 4 | **Build** | Clip: the model becomes stone, brass and glass, lights still off (K3) | "03 Build: websites, apps and systems, engineered piece by piece." | Develop / Integrate |

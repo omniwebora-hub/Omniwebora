@@ -40,3 +40,19 @@ Credits: 246.25 → 185.5 (3 × 4.25 + 4 × 12 = 60.75). Retired: the crystal he
 | L02 | Eye-level view along the planning table in the studio (L01 + A01 refs) | GPT Image 2.5, 4K, high | `e0634d8f` | Accepted | `l02-table-eye-*.webp` (How We Work opening) |
 | L10 | Clip: eye level → crane up to top-down over the table | MiniMax H3, 6 s, start L02 / end L01 | `ba0912b1` | Accepted | `plan-arrive/` |
 Credits after this pass: 185.5 → 169.25 (4.25 + 12).
+
+### Home opening: the crystal returns (owner reference), 2026-10-30 (Higgsfield MCP)
+First pass (superseded the same day by the owner's reference image): the crystal composited into K1 and split into layers in code.
+| ID | Asset | Model | Job | Status | Output |
+|---|---|---|---|---|---|
+| K0a | K1 + the v1 crystal floating in front of the 4th arch | GPT Image 2.5, 16:9 (×2) | `53b029a5`, `20eadb70` | Rejected | n/a |
+| K0 | Same, crystal at 70 % across | GPT Image 2.5, 16:9 (×2) | `173de8be`, `1edb0240` | Superseded (not shipped) | n/a |
+| K0u | K0 upscaled | Bytedance upscale, 4K | `8a15cd4b` | Superseded (not shipped) | n/a |
+
+Final: the v1 crystal landing (H00 still + H01 push-in, unchanged media) opens the film, then a new clip flies into the crystal's core and comes out on the drawing.
+| ID | Asset | Model | Job | Status | Output |
+|---|---|---|---|---|---|
+| H01 | v1 push-in on the crystal, re-encoded for the film engine | (existing clip `H01_dolly_minimax.mp4`) | `2608f30c` | Accepted | `home-push/`, `home-push-end-*` (the hold on the crystal) |
+| HDV | Clip: into the crystal's deep-blue core, the drawing's lines appear inside it, out onto the blue-hour terrace facing the drawing | MiniMax H3, 6 s, start = h01-end, end = K1 (×2) | `ba8f6f8a` (accepted), `c5ea41e2` (spare) | Accepted | raw `HDV_core_to_draw.mp4` → `home-dive/` (last 22 % of static hold trimmed; the last 16 % dissolves into the exact K1 frame, so 01 Innovate joins without a cut) |
+
+Uploaded references: K1 `ca8ef377-68fa-42ad-a42d-bb125f413518`, H00 `74385f85-2132-4810-b203-eb2531810ef5`, h01-end `d91098af-608e-4c14-90f5-cbb05443cf1d`. Credits: 169.25 → ≈ 142.25 (4 stills × 0.25, one upscale × 2, two 6 s MiniMax H3 clips × 12).

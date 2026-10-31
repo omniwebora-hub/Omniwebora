@@ -271,6 +271,8 @@ export class FilmEngine {
   private written = new Map<HTMLElement, Partial<Record<"opacity" | "transform", string>>>();
   private lastIndex = -1;
   private currentIndex = -1;
+  /** Which segments around the playhead are kept loaded (chapters behind, ahead). */
+  private reach: [number, number] = [-2, 4];
   readonly stats = makeStats();
 
   constructor(opts: Options) {
@@ -278,10 +280,13 @@ export class FilmEngine {
     const { root, layer, segments, kind } = this.o;
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const plateW = Math.max(window.innerWidth, (window.innerHeight * 16) / 9) * dpr;
+    // Phones and tablets (portrait or narrow): the 1280 encode is plenty for the visible crop.
+    const small = window.innerWidth < 1024 || window.innerWidth < window.innerHeight;
+    this.reach = small ? [-1, 2] : [-2, 4];
     for (const s of Object.values(segments)) {
       const m =
         kind === "video"
-          ? new VideoMedia(s, `${s.base}/${plateW > 1450 ? "v1600" : "v1280"}.mp4`, this.stats, this.wake)
+          ? new VideoMedia(s, `${s.base}/${plateW > 1450 && !small ? "v1600" : "v1280"}.mp4`, this.stats, this.wake)
           : new FrameMedia(s, plateW > 1300 ? "lg" : "md", this.stats, this.wake);
       m.el.className = "film-media";
       m.el.style.opacity = "0";
@@ -414,8 +419,8 @@ export class FilmEngine {
       blocks.forEach((bk, i) => {
         if (!bk.seg) return;
         const d = (i - idx) * dir;
-        if (d >= -2 && d <= 4) wanted.push(bk.seg);
-        else if (Math.abs(i - idx) > 5) this.media[bk.seg].release();
+        if (d >= this.reach[0] && d <= this.reach[1]) wanted.push(bk.seg);
+        else if (Math.abs(i - idx) > this.reach[1] + 1) this.media[bk.seg].release();
       });
       wanted.sort((a, b) => Math.abs(this.segIndex(a) - idx) - Math.abs(this.segIndex(b) - idx));
       this.prepQueue = wanted;
