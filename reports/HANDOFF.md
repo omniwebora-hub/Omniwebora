@@ -412,3 +412,11 @@ Owner: "overlapping… ensure all of that… if the text comes above in sky or b
 - **Words in the water**: Home 01 Innovate, 02 Design, 03 Build and 04 Transform put their words below the building (`.panelWrap.water`: title left, line beside it, bottom shade), so they never cross the building or its six window labels. **Industries**: the district card is a band in the water under the skyline (title, what changes, modules and links); no district or label is covered, so markers no longer fade out.
 - **Cleanup**: the retired v1 frame sequence (`h01/`, `h01-end`), the pull-back stills and 39 unused clip start frames removed; `heroWorld.ts` keeps only what the site uses (stills, crystal rest, the six cards); unit tests updated. The separate worktree was merged into `main` and removed: `main` is the only version.
 - Tests: tsc ✓, eslint ✓, build ✓, Vitest 33/33, Playwright 65 passed / 7 skipped / 0 failed.
+
+### 2026-11-02 (session 5, part 3): crystal motion and text transitions
+Owner: "so many issues with the crystal moving… text movements and transitions check and push."
+- **The mark swam off the crystal**: it followed H01_TRACK (56 samples from the retired v1 frame sequence), which does not match the 158-frame `home-push` clip. New `src/content/homePushTrack.ts` from `scripts/cinematic/track_crystal.py` (scale by template matching, position from the dark core's centre fitted smoothly; checked on close-ups). The mark now reads the **frame actually on screen** (`FilmFrame.shown`, from `requestVideoFrameCallback`; the engine wakes on each new picture), so it stays locked while a seek catches up.
+- **No sliding camera**: the sideways framing that balances the first screen is now constant for the whole Home film (it used to ease back during the dive, sliding the footage). Overlays are in plate coordinates, so everything stays aligned.
+- **Crystal hold words** end before the crystal's gold ring on every screen (`--core-room`, measured per screen by the opening).
+- **Text transitions are sequential**: the old chapter's words fade out (0.32 s), then the new ones fade in (0.6 s); never two chapters' words on screen at once.
+- QA: `node qa/opening-frames.mjs [base] [WxH]` (the opening frame by frame with the camera and mark transforms). Tests: Vitest 33/33, Playwright 65 passed / 7 skipped / 0 failed.

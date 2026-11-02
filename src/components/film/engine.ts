@@ -25,7 +25,9 @@ export type FilmSegment = {
 };
 export type FilmBlock = { id: string; kind: "hold" | "seg"; seg?: string; still?: string };
 export type FilmGeometry = { W: number; H: number; pw: number; ph: number; px: number; py: number };
-export type FilmFrame = { index: number; block: FilmBlock; next?: FilmBlock; p: number; moving: boolean; geo: FilmGeometry };
+/** `shown`: for a clip, the progress (0–1) of the frame actually on screen (video), so overlays that
+ *  follow the picture stay locked to it while a seek is still catching up. */
+export type FilmFrame = { index: number; block: FilmBlock; next?: FilmBlock; p: number; shown?: number; moving: boolean; geo: FilmGeometry };
 export type EngineKind = "video" | "frames";
 
 type Options = {
@@ -79,6 +81,8 @@ interface Media {
   /** Show progress p; returns false if no frame of this segment can be shown yet. */
   show(p: number): boolean;
   decodedBytes(): number;
+  /** Progress (0–1) of the frame on screen, when known. */
+  shown?(): number | undefined;
 }
 
 class VideoMedia implements Media {
@@ -125,6 +129,8 @@ class VideoMedia implements Media {
         if (this.shownMedia >= 0) this.stats.steps.push(Math.abs(idx - this.shownMedia) / (this.seg.videoFrames - 1));
         this.shownMedia = idx;
         this.stats.presented++;
+        // a new picture: let the page move anything that follows it
+        this.wake();
       }
       if (this.state !== "idle") v.requestVideoFrameCallback(onFrame);
     };
@@ -132,6 +138,10 @@ class VideoMedia implements Media {
     this.el = v;
   }
   private rvfc: VideoFrameRequestCallback;
+
+  shown() {
+    return this.shownMedia >= 0 ? clamp01(this.shownMedia / Math.max(1, this.seg.videoFrames - 1)) : undefined;
+  }
 
   prepare() {
     if (this.state !== "idle") return;
@@ -452,7 +462,8 @@ export class FilmEngine {
     if (!still && b.kind === "hold") this.stats.blankFrames++;
     for (const [k, n] of Object.entries(this.stills)) this.set(n, "opacity", k === still ? "1" : "0");
 
-    this.o.onFrame({ index: idx, block: b, next: blocks[idx + 1], p, moving, geo: this.geo });
+    const shown = b.kind === "seg" ? this.media[b.seg!]?.shown?.() : undefined;
+    this.o.onFrame({ index: idx, block: b, next: blocks[idx + 1], p, shown, moving, geo: this.geo });
   }
 
   private prepQueue: string[] = [];

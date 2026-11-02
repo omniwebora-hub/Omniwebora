@@ -29,7 +29,7 @@ export type CinemaBlock = FilmBlock & {
 export type Active = { block: string; step: number; p: number };
 /** Per-frame hook for page-specific direct DOM writes (index of the current block and its progress). */
 /** Per-frame page hook. On landscape screens it may return a sideways camera shift (px) for this frame. */
-export type FrameHook = (f: { index: number; block: CinemaBlock; p: number; geo: FilmFrame["geo"] }) => number | void;
+export type FrameHook = (f: { index: number; block: CinemaBlock; p: number; shown?: number; geo: FilmFrame["geo"] }) => number | void;
 
 export function CinemaFilm({
   blocks,
@@ -97,7 +97,7 @@ export function CinemaFilm({
       blocks,
       segments,
       kind,
-      onFrame: ({ index, block, next, p, moving, geo }) => {
+      onFrame: ({ index, block, next, p, shown, moving, geo }) => {
         const b = block as CinemaBlock;
         const prev = index > 0 ? blocks[index - 1] : undefined;
         // Interfaces designed at a fixed width are scaled to their display (only on layout change).
@@ -135,7 +135,7 @@ export function CinemaFilm({
           pan = Math.max(-room, Math.min(room, (0.5 - fx) * geo.pw));
         }
         // The page's hook runs before the camera is placed, so it can frame its chapter (landscape).
-        const asked = hook.current?.({ index, block: b, p, geo });
+        const asked = hook.current?.({ index, block: b, p, shown, geo });
         if (typeof asked === "number" && geo.W / geo.H >= 1.25) {
           const room = (geo.pw - geo.W) / 2;
           pan = Math.max(-room, Math.min(room, asked));

@@ -756,8 +756,8 @@
     opacity: 0;
     visibility: hidden;
     transition:
-      opacity 0.4s ease,
-      visibility 0s linear 0.4s;
+      opacity 0.32s ease,
+      visibility 0s linear 0.32s;
   }
 
   [data-engine] [data-current] > .panelWrap,
@@ -766,13 +766,13 @@
     opacity: 1;
     visibility: visible;
     transition:
-      opacity 0.75s ease 0.15s,
+      opacity 0.6s ease 0.32s,
       visibility 0s;
   }
 
   [data-engine] .panelWrap .panel {
     translate: 0 14px;
-    transition: translate 0.9s var(--ease-out) 0.1s;
+    transition: translate 0.8s var(--ease-out) 0.32s;
   }
 
   [data-engine] [data-current] > .panelWrap .panel {

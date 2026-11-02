@@ -3,7 +3,7 @@
 import { smoothstep } from "@/components/film/engine";
 import type { FrameHook } from "@/components/film/CinemaFilm";
 import { heroPanels } from "@/content/heroWorld";
-import { H01_TRACK } from "@/content/cinematic.generated";
+import { HOME_PUSH_TRACK } from "@/content/homePushTrack";
 import { solutionBySlug } from "@/content/solutions";
 import s from "./HomeOpening.module.css";
 
@@ -14,7 +14,8 @@ import s from "./HomeOpening.module.css";
  * v1 push-in, H01), holds, then flies into the core and comes out on the drawing of the building:
  * 01 Innovate and the rest of the story follow unchanged.
  *
- * The mark rides the crystal frame by frame (H01_TRACK, the cube measured in every frame of the clip).
+ * The mark rides the crystal frame by frame (HOME_PUSH_TRACK: the crystal measured in every frame of the
+ * clip), indexed by the frame actually on screen, so it never swims while the video catches up.
  * Per frame only transforms and opacities are written, element by element.
  */
 
@@ -22,10 +23,13 @@ import s from "./HomeOpening.module.css";
 export const BAY_X = [0.211, 0.336, 0.459, 0.583, 0.707, 0.832] as const;
 export const BAY = { y: 0.192, w: 0.081, h: 0.484 } as const;
 
-const REST = H01_TRACK[0];
+const TRACK = HOME_PUSH_TRACK;
+const REST = TRACK[0];
 /** The crystal's glass at rest, left and right edges as plate fractions (measured on h00-hero). */
 const GLASS = { l: 0.625, r: 0.86 } as const;
-const END = H01_TRACK[H01_TRACK.length - 1];
+/** The crystal on the hold after the push-in: the left tip of its gold ring, as a plate fraction. */
+const CORE_GLASS_L = 0.335;
+const END = TRACK[TRACK.length - 1];
 
 /** The existing mark (Logo.tsx), drawn in light for the crystal's core. */
 function CoreMark() {
@@ -171,7 +175,7 @@ export function openingDriver(ids: { arrive: string; push: string; core: string;
   let wordsRight = 0;
   let pan = 0;
 
-  return ({ block, p, geo }) => {
+  return ({ block, p, shown, geo }) => {
     if (!root?.isConnected) {
       root = document.querySelector<HTMLElement>("[data-opening]");
       core = root?.querySelector<HTMLElement>('[data-part="core"]') ?? null;
@@ -181,36 +185,15 @@ export function openingDriver(ids: { arrive: string; push: string; core: string;
       layout = "";
     }
     if (!root || !core || !cardBox) return;
-    const order = [ids.arrive, ids.push, ids.core, ids.dive];
-    const at = order.indexOf(block.id);
-    const on = at >= 0;
-    if (root.dataset.on !== String(on)) root.dataset.on = String(on);
-    if (!on) return;
     const { pw, ph, W, H } = geo;
     const portrait = W / H < 1.25;
-    if (root.dataset.portrait !== String(portrait)) root.dataset.portrait = String(portrait);
 
-    // The mark rides the crystal: its tracked centre and height in the push-in, held after it.
-    let t: readonly [number, number, number] = REST;
-    if (at === 1) {
-      const f = p * (H01_TRACK.length - 1);
-      const i = Math.min(H01_TRACK.length - 2, Math.floor(f));
-      const k = f - i;
-      const a = H01_TRACK[i];
-      const b = H01_TRACK[i + 1];
-      t = [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
-    } else if (at >= 2) t = END;
-    // into the core: the mark swells a little and is gone before the camera reaches the glass
-    const dive = at === 3 ? smoothstep(0, 0.1, p) : 0;
-    const sc = (t[2] / REST[2]) * (1 + 0.5 * dive);
-    set(core, "transform", `translate(${(t[0] * pw).toFixed(1)}px, ${(t[1] * ph).toFixed(1)}px) scale(${fx(sc)})`);
-    set(core, "opacity", fx(1 - dive));
-    if (portrait) return;
-
-    // Landscape framing: shift the plate sideways so the space left of the crystal (after the words)
-    // and right of it are equal; eased back to centre while the camera flies into the core.
-    if (layout !== `${Math.round(pw)}x${Math.round(ph)}x${Math.round(W)}x${Math.round(H)}`) {
-      layout = `${Math.round(pw)}x${Math.round(ph)}x${Math.round(W)}x${Math.round(H)}`;
+    // Landscape framing for the whole film: the plate is shifted sideways once per screen size so the
+    // space left of the crystal (after the words) and right of it are equal. It never changes while
+    // scrolling, so nothing slides; every overlay is in plate coordinates and moves with it.
+    const key = `${Math.round(pw)}x${Math.round(ph)}x${Math.round(W)}x${Math.round(H)}`;
+    if (!portrait && key !== layout) {
+      layout = key;
       const words = document.querySelectorAll<HTMLElement>('[data-film-block="arrive"] [data-panel] > *');
       wordsRight = Math.max(0, ...Array.from(words, (w) => w.getBoundingClientRect().right));
       const px0 = (W - pw) / 2;
@@ -218,7 +201,35 @@ export function openingDriver(ids: { arrive: string; push: string; core: string;
       const room = (pw - W) / 2;
       pan = Math.max(-room, Math.min(room, left - px0));
       placeCards();
+      // The crystal hold's words end before the glass: their width, for CSS (--core-room).
+      const film = root.closest<HTMLElement>("[data-film]");
+      const pad = Math.min(56, Math.max(24, W * 0.032));
+      film?.style.setProperty("--core-room", `${Math.max(240, Math.round(CORE_GLASS_L * pw + px0 + pan - pad - 32))}px`);
     }
+
+    const order = [ids.arrive, ids.push, ids.core, ids.dive];
+    const at = order.indexOf(block.id);
+    const on = at >= 0;
+    if (root.dataset.on !== String(on)) root.dataset.on = String(on);
+    if (root.dataset.portrait !== String(portrait)) root.dataset.portrait = String(portrait);
+    if (!on) return portrait ? undefined : pan;
+
+    // The mark rides the crystal: its tracked centre and height in the push-in, held after it.
+    let t: readonly [number, number, number] = REST;
+    if (at === 1) {
+      const f = (shown ?? p) * (TRACK.length - 1);
+      const i = Math.min(TRACK.length - 2, Math.floor(f));
+      const k = f - i;
+      const a = TRACK[i];
+      const b = TRACK[i + 1];
+      t = [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+    } else if (at >= 2) t = END;
+    // into the core: the mark swells a little and is gone before the camera reaches the glass
+    const dive = at === 3 ? smoothstep(0, 0.1, p) : 0;
+    const sc = (t[2] / REST[2]) * (1 + 0.5 * dive);
+    set(core, "transform", `translate(${(t[0] * pw).toFixed(1)}px, ${(t[1] * ph).toFixed(1)}px) scale(${fx(sc)})`);
+    set(core, "opacity", fx(1 - dive));
+    if (portrait) return undefined;
 
     // The cards clear as the scroll begins, before the camera moves.
     const clear = at === 0 ? smoothstep(0.35, 0.85, p) : 1;
@@ -228,7 +239,7 @@ export function openingDriver(ids: { arrive: string; push: string; core: string;
       const out = (heroPanels[i].side === "left" ? -1 : 1) * clear * 40;
       set(n, "translate", `${out.toFixed(1)}px 0`);
     });
-    return at === 3 ? pan * (1 - smoothstep(0, 0.6, p)) : pan;
+    return pan;
 
     /** Each side's three cards fill the space between the words (or the window edge) and the crystal,
      *  stacked around the crystal's centre; never over the crystal, the words or each other. */
