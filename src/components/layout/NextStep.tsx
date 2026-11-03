@@ -16,7 +16,7 @@ export function NextStep() {
     ? { kicker: "Next", title: "Tell us what you’re building.", cta: "Contact us", href: "/contact" }
     : { kicker: "Next · Solutions", title: "Walk through the six rooms.", cta: "Explore Solutions", href: "/solutions" };
   return (
-    <div className={`container ${styles.next}`}>
+    <div className={`container ${styles.next}`} data-next-step>
       <p className={styles.nextKicker}>{next.kicker}</p>
       <Link href={next.href} className={styles.nextLink}>
         <span>{next.title}</span>

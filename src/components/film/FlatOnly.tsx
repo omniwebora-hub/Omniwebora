@@ -14,13 +14,26 @@ const subscribeTo = (q: string) => (cb: () => void) => {
   mq.addEventListener("change", cb);
   return () => mq.removeEventListener("change", cb);
 };
+/** Tall screens (phones, portrait tablets): films that have a portrait cut show it here. */
+export const PORTRAIT_QUERY = "(max-aspect-ratio: 1/1)";
+
 const subscribe = subscribeTo(FILM_QUERY);
+const subscribePortrait = subscribeTo(PORTRAIT_QUERY);
 const subscribePhone = subscribeTo(PHONE_FILM_QUERY);
 
 export function useFilmMode() {
   return useSyncExternalStore(
     subscribe,
     () => window.matchMedia(FILM_QUERY).matches,
+    () => false,
+  );
+}
+
+/** True on a screen taller than wide: the portrait cut of a film (9:16 footage) is shown there. */
+export function usePortraitCut() {
+  return useSyncExternalStore(
+    subscribePortrait,
+    () => window.matchMedia(PORTRAIT_QUERY).matches,
     () => false,
   );
 }

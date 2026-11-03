@@ -4,7 +4,8 @@ import { useState } from "react";
 import { FILM } from "@/content/film.generated";
 import { ROOMS } from "@/content/gallery";
 import type { SolutionSlug } from "@/content/solutions";
-import { CinemaFilm, plateRect, type CinemaBlock, type Rect } from "@/components/film/CinemaFilm";
+import { CinemaFilm, plateRect, type CinemaBlock, type PortraitCut, type Rect } from "@/components/film/CinemaFilm";
+import { PB, pscreen } from "@/components/film/portrait";
 import { ARRIVE, DESIGN } from "@/components/film/SolutionsFilm";
 import { WebDisplay } from "@/components/displays/WebDisplay";
 import { PhoneApp } from "@/components/displays/PhoneApp";
@@ -43,14 +44,23 @@ export function RoomFilm({ slug, chapters, children }: { slug: SolutionSlug; cha
   });
   const [pick, setPick] = useState<{ key: string; value: number } | null>(null);
 
-  const [, , w, h] = screen;
-  const radius = design.r ? `${design.r * 100}% / ${((design.r * w * 16) / (h * 9)) * 100}%` : undefined;
+  // Portrait cut: the room filmed at 9:16. One steady framing for the whole page, the display in the
+  // upper part of the screen above the words, so nothing moves as the chapters hand over.
+  const pScreen = pscreen(ARRIVE[slug]);
+  const portrait: PortraitCut | undefined = pScreen
+    ? {
+        segments: {},
+        stills: { room: `${PB}/${ARRIVE[slug]}-end` },
+        blocks: Object.fromEntries(chapters.map((id) => [id, { dolly: pScreen, frame: { x: 0.5, y: 0.34, w: 0.9, h: 0.36 }, dollyHold: true }])),
+      }
+    : undefined;
 
   return (
     <CinemaFilm
       blocks={blocks}
       segments={{}}
       stills={{ room: `/assets/cinematic/${ARRIVE[slug]}-end` }}
+      portrait={portrait}
       label={`The ${room.slug.replace(/-/g, " ")} room`}
       overlays={(a) => {
         // Scroll plays the interface through its steps on the demo chapter; elsewhere it rests on the
@@ -59,6 +69,9 @@ export function RoomFilm({ slug, chapters, children }: { slug: SolutionSlug; cha
         const scrolled = a.block === "demo" ? a.step : a.block === "intro" ? 0 : room.steps.length - 1;
         const step = pick?.key === key ? pick.value : scrolled;
         const go = (value: number) => setPick({ key, value });
+        const r = a.cut === "portrait" && pScreen ? pScreen : screen;
+        const shape = (r[2] * (a.cut === "portrait" ? 9 / 16 : 16 / 9)) / r[3];
+        const radius = design.r ? `${design.r * 100}% / ${design.r * shape * 100}%` : undefined;
         const ui: Record<SolutionSlug, React.ReactNode> = {
           "web-development": <WebDisplay step={step} go={go} />,
           "mobile-apps": <PhoneApp step={step} go={go} />,
@@ -68,8 +81,8 @@ export function RoomFilm({ slug, chapters, children }: { slug: SolutionSlug; cha
           "enterprise-platforms": <PlatformDisplay step={step} />,
         };
         return (
-          <div className={f.overlay} data-show={chapters.join(" ")} style={{ ...plateRect(screen), borderRadius: radius, overflow: "hidden" }}>
-            <div className={f.overlayInner} data-design={design.w} style={{ width: design.w, height: design.w / ((w * 16) / (h * 9)) }}>
+          <div className={f.overlay} data-show={chapters.join(" ")} style={{ ...plateRect(r), borderRadius: radius, overflow: "hidden" }}>
+            <div className={f.overlayInner} data-design={design.w} style={{ width: design.w, height: design.w / shape }}>
               {ui[slug]}
             </div>
           </div>

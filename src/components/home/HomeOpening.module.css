@@ -10,46 +10,6 @@
   visibility: hidden;
 }
 
-/* The mark and name in the crystal's deep-blue core. Sized for the crystal at rest (its height is
-   28.4 % of the plate); the driver moves and scales it with the camera. */
-.core {
-  position: absolute;
-  left: 0;
-  top: 0;
-  /* scale about the crystal's centre (the anchor), not the box corner */
-  transform-origin: 0 0;
-  will-change: transform, opacity;
-}
-
-.coreIn {
-  display: grid;
-  justify-items: center;
-  gap: calc(var(--ph) * 0.006);
-  width: calc(var(--ph) * 0.2);
-  translate: -50% -50%;
-  color: #fff;
-  animation: coreIn 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s backwards;
-}
-
-.markSvg {
-  width: calc(var(--ph) * 0.052);
-  height: calc(var(--ph) * 0.052);
-  color: #8fc3ff;
-  filter: drop-shadow(0 0 calc(var(--ph) * 0.006) rgb(120 180 255 / 0.95)) drop-shadow(0 0 calc(var(--ph) * 0.018) rgb(70 140 255 / 0.7));
-}
-
-.word {
-  font-family: var(--font-text);
-  font-size: calc(var(--ph) * 0.0215);
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: #fff;
-  text-shadow:
-    0 0 calc(var(--ph) * 0.008) rgb(140 190 255 / 0.9),
-    0 0 calc(var(--ph) * 0.02) rgb(70 130 255 / 0.6);
-  white-space: nowrap;
-}
-
 /* The six services: light glass cards around the crystal (owner reference), name and one line. */
 .cards {
   position: absolute;
@@ -142,17 +102,11 @@
   outline: none;
 }
 
-/* Portrait (phones): no room beside the crystal; the mark stays, the cards do not. */
+/* Portrait (phones): no room beside the crystal for the cards. */
 .root[data-portrait="true"] .cards {
   display: none;
 }
 
-@keyframes coreIn {
-  from {
-    opacity: 0;
-    scale: 0.85;
-  }
-}
 
 @keyframes cardIn {
   from {

@@ -647,8 +647,9 @@
     background: #fbf8f2;
   }
 
+  /* the opening's words sit under the crystal, not over it: a compact title and one row of actions */
   .home .heroTitle {
-    font-size: clamp(2.6rem, 1.6rem + 6vw, 3.6rem);
+    font-size: clamp(2.1rem, 1.2rem + 4.4vw, 2.9rem);
   }
 
   .home .heroPanel > p:first-child,
@@ -661,7 +662,18 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 10px 20px;
+    gap: 10px 16px;
+  }
+
+  .home .heroPanel > div :global(.btn) {
+    min-height: 46px;
+    padding-inline: 18px;
+    font-size: 0.95rem;
+  }
+
+  .home .heroPanel > div a:not(:global(.btn)) {
+    font-size: 0.95rem;
+    white-space: nowrap;
   }
 
   /* the six services: two short columns of names (each a link into its room) */
@@ -691,7 +703,8 @@
     display: flex;
     align-items: flex-end;
     height: 100svh;
-    padding: var(--header-h) 20px calc(28px + env(safe-area-inset-bottom));
+    /* room under the words for the chapter buttons */
+    padding: var(--header-h) 20px calc(80px + env(safe-area-inset-bottom));
     isolation: isolate;
     pointer-events: none;
   }
@@ -761,5 +774,21 @@
 
   .coreWrap .heroPanel h2 {
     font-size: clamp(1.8rem, 1rem + 1.5vw, 2.8rem);
+  }
+}
+
+/* The same dissolve as every chapter (chapters.module.css): words come into focus in place and leave
+   the way they came. */
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  [data-engine] .stripWrap > *,
+  [data-engine] .nightWrap > * {
+    filter: blur(8px);
+    transition: filter 0.32s ease;
+  }
+
+  [data-engine] [data-current] > .stripWrap > *,
+  [data-engine] [data-current] > .nightWrap > * {
+    filter: none;
+    transition: filter 0.7s ease 0.32s;
   }
 }

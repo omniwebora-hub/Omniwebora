@@ -56,3 +56,23 @@ Final: the v1 crystal landing (H00 still + H01 push-in, unchanged media) opens t
 | HDV | Clip: into the crystal's deep-blue core, the drawing's lines appear inside it, out onto the blue-hour terrace facing the drawing | MiniMax H3, 6 s, start = h01-end, end = K1 (×2) | `ba8f6f8a` (accepted), `c5ea41e2` (spare) | Accepted | raw `HDV_core_to_draw.mp4` → `home-dive/` (last 22 % of static hold trimmed; the last 16 % dissolves into the exact K1 frame, so 01 Innovate joins without a cut) |
 
 Uploaded references: K1 `ca8ef377-68fa-42ad-a42d-bb125f413518`, H00 `74385f85-2132-4810-b203-eb2531810ef5`, h01-end `d91098af-608e-4c14-90f5-cbb05443cf1d`. Credits: 169.25 → ≈ 142.25 (4 stills × 0.25, one upscale × 2, two 6 s MiniMax H3 clips × 12).
+
+### Portrait cut (9:16, for phones and tall screens), 2026-11-03/04 (Higgsfield CLI)
+Raw files in `assets/higgsfield/raw/portrait/`; web assets in `public/assets/cinematic/portrait/` via `scripts/cinematic/build_portrait.py` (1080×1920 and 720×1280 short-GOP scrub videos; stills at 720/1080/1440 px).
+| Asset | Model | Notes |
+|---|---|---|
+| PH00 crystal at rest, PH01 crystal close, PK1 drawing, PK2 study model, PK3 built (lights off), PS08 lit, PS08N night, PH02 product wall (in depth: phone front, tablet middle, display on the wall; third attempt), PP01/PP02/PP03 pricing model | GPT Image 2.5, 9:16, 2k, high (2.75 each) | re-composed from the landscape keyframes, same light and materials; building frames share one framing |
+| Home clips: push, dive, design, build, launch, wall→terrace (also reversed for the walk-in), dusk→night | MiniMax H3, 9:16, 6 s (12 each) | start/end keyframes as above; all accepted first time |
+| Pricing clips: basic→standard, standard→premium | MiniMax H3, 9:16, 5 s (10 each) | locked camera, the model grows in place |
+Credits: 142.25 → 2.5 (13 keyframes × 2.75 + 7 clips × 12 + 2 clips × 10 = 139.75). Reframing existing clips was priced at 87 credits per 6 s at 1080p, so the scenes were re-generated instead.
+
+Second round, 2026-11-04 (owner top-up to 200 credits; 186 at the start of this round):
+| Asset | Model | Notes |
+|---|---|---|
+| PS00 gallery, PS01 web alcove, PS03 phone niche, PS02 ops room, PS04 study, PS07 marketing studio | GPT Image 2.5, 9:16, 2k, high (2.75 each) | made in the previous round (counted there); all accepted |
+| PS06 enterprise mezzanine, PA01 studio table, PC01 dusk pavilion, PA10 drafting table (paper above tablet, top-down), PL01 planning table (tablet, laptop, tablet in one column, top-down), PL02 table at eye level | GPT Image 2.5, 9:16, 2k, high (2.75 each) | all accepted first time |
+| Solutions clips: gallery→web, web→phone, phone→ops, ops→study, study→marketing, marketing→mezzanine, mezzanine→terrace facade | MiniMax H3, 9:16, 5 s (10 each) | accepted; ops→study is half a dissolve, half a glide |
+| About in (studio→drafting table), About out (table→pavilion), Contact (terrace→pavilion), How We Work (eye level→top-down) | MiniMax H3, 9:16, 5 s (10 each) | accepted |
+Display rects for every room, the tablet and the three planning devices are measured from each clip's last frame by the build; the cream paper on the drafting table is set in `StudioFilm.tsx` (measured with a lower brightness threshold). Higgsfield runs at most 3 MiniMax jobs at once; 4 of the first batch were refused (no charge) and re-run through a queue.
+| PL01b planning table re-arranged (two tablets side by side above the laptop, open marble below) + its clip (eye level → top-down) | GPT Image 2.5 (2.75) + MiniMax H3, 5 s (10) | replaces PL01/PL10 on the site: with all three devices stacked down the frame, the stages tablet sat under the words and could not be lifted above them |
+Credits: 186 → 46.75 (7 keyframes × 2.75 + 12 clips × 10 = 139.25).

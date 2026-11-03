@@ -23,7 +23,9 @@ export type FilmSegment = {
   /** How much of the segment the clip takes to fade in over the previous still (default 4 %). */
   fade?: number;
 };
-export type FilmBlock = { id: string; kind: "hold" | "seg"; seg?: string; still?: string };
+/** `stops`: where the chapter-step buttons rest in a hold, as progress through it (default: once the
+ *  camera has settled, 0.32). A hold with several steps lists one per step. */
+export type FilmBlock = { id: string; kind: "hold" | "seg"; seg?: string; still?: string; stops?: number[] };
 export type FilmGeometry = { W: number; H: number; pw: number; ph: number; px: number; py: number };
 /** `shown`: for a clip, the progress (0–1) of the frame actually on screen (video), so overlays that
  *  follow the picture stay locked to it while a seek is still catching up. */
@@ -40,10 +42,16 @@ type Options = {
   kind: EngineKind;
   /** Easing time constant in seconds (hero scrub ≈ 0.6 s catch-up ≈ τ 0.16 s). */
   tau?: number;
+  /** Plate aspect (width / height): 16 / 9, or 9 / 16 for a film's portrait cut. */
+  aspect?: number;
   onFrame: (f: FilmFrame) => void;
 };
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+
+/** The films running on the page (one per page), for the chapter buttons (ChapterNav). */
+export const runningFilms = new Set<FilmEngine>();
+const announce = () => window.dispatchEvent(new Event("omni:films"));
 export const smoothstep = (a: number, b: number, v: number) => {
   const t = clamp01((v - a) / (b - a));
   return t * t * (3 - 2 * t);
@@ -281,22 +289,26 @@ export class FilmEngine {
   private written = new Map<HTMLElement, Partial<Record<"opacity" | "transform", string>>>();
   private lastIndex = -1;
   private currentIndex = -1;
+  private leaveAt = Infinity;
   /** Which segments around the playhead are kept loaded (chapters behind, ahead). */
   private reach: [number, number] = [-2, 4];
   readonly stats = makeStats();
 
   constructor(opts: Options) {
-    this.o = { tau: 0.16, ...opts };
+    this.o = { tau: 0.16, aspect: 16 / 9, ...opts };
     const { root, layer, segments, kind } = this.o;
+    const tall = this.o.aspect! < 1;
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    const plateW = Math.max(window.innerWidth, (window.innerHeight * 16) / 9) * dpr;
-    // Phones and tablets (portrait or narrow): the 1280 encode is plenty for the visible crop.
+    const plateW = Math.max(window.innerWidth, window.innerHeight * this.o.aspect!) * dpr;
+    // Phones and tablets (portrait or narrow) keep fewer clips warm. The portrait cut's larger encode is
+    // 1080×1920: phones with dense screens get it, so the picture stays sharp at full width.
     const small = window.innerWidth < 1024 || window.innerWidth < window.innerHeight;
     this.reach = small ? [-1, 2] : [-2, 4];
+    const big = tall ? (window.devicePixelRatio || 1) >= 2 || plateW > 760 : plateW > 1450 && !small;
     for (const s of Object.values(segments)) {
       const m =
         kind === "video"
-          ? new VideoMedia(s, `${s.base}/${plateW > 1450 && !small ? "v1600" : "v1280"}.mp4`, this.stats, this.wake)
+          ? new VideoMedia(s, `${s.base}/${big ? "v1600" : "v1280"}.mp4`, this.stats, this.wake)
           : new FrameMedia(s, plateW > 1300 ? "lg" : "md", this.stats, this.wake);
       m.el.className = "film-media";
       m.el.style.opacity = "0";
@@ -317,6 +329,26 @@ export class FilmEngine {
     this.measure();
     this.cur = this.target = this.local(window.scrollY);
     this.wake();
+    runningFilms.add(this);
+    announce();
+  }
+
+  /** Document scroll positions where each chapter (and each step of a multi-step chapter) rests:
+   *  words shown, camera settled. Camera moves have none: the buttons play through them. */
+  stops(): number[] {
+    const out: number[] = [];
+    this.o.blocks.forEach((b, i) => {
+      if (b.kind !== "hold") return;
+      const len = Math.max(1, this.heights[i] - this.geo.H * 0.15);
+      const ps = i === 0 && !b.stops ? [0] : (b.stops ?? [0.32]);
+      for (const p of ps) out.push(Math.round(this.rootTop + this.tops[i] + p * len));
+    });
+    return out;
+  }
+
+  /** Where the film ends: the bottom of its root, in document coordinates. */
+  end(): number {
+    return this.rootTop + this.o.root.offsetHeight;
   }
 
   private local(y: number) {
@@ -328,8 +360,8 @@ export class FilmEngine {
     const g = this.geo;
     g.W = r.width;
     g.H = r.height;
-    g.pw = Math.max(r.width, (r.height * 16) / 9);
-    g.ph = (g.pw * 9) / 16;
+    g.pw = Math.max(r.width, r.height * this.o.aspect!);
+    g.ph = g.pw / this.o.aspect!;
     g.px = (r.width - g.pw) / 2;
     g.py = (r.height - g.ph) / 2;
     this.rootTop = this.o.root.getBoundingClientRect().top + window.scrollY;
@@ -341,6 +373,8 @@ export class FilmEngine {
     // bottom of the viewport (its words go before the stage starts to scroll away, never with it).
     const n = this.heights.length - 1;
     if (n >= 0) this.heights[n] = Math.max(g.H * 0.5, this.heights[n] - g.H * 0.85);
+    // where the stage starts to leave with the page (local scroll position)
+    this.leaveAt = this.o.root.offsetHeight - g.H;
     this.target = this.local(window.scrollY);
     this.cur = this.target;
     this.lastIndex = -1;
@@ -412,7 +446,12 @@ export class FilmEngine {
     // Exactly one chapter is "current" (its words are shown in place; CSS crossfades on change).
     // Before the first chapter or past the end of the last, none is.
     const last = blocks.length - 1;
-    const current = y < this.tops[0] - this.geo.H * 0.5 || (idx === last && p >= 1) ? -1 : idx;
+    // The last chapter's words must be gone before the stage starts to leave with the page; judged on
+    // the real scroll position too (the eased camera trails it), with a little room for the dissolve.
+    const pReal = clamp01((this.target - this.tops[last]) / Math.max(1, this.heights[last] - this.geo.H * 0.15));
+    // (and, for a short last chapter, at least a third of a screen before the stage leaves)
+    const ended = idx === last && (p >= 0.9 || pReal >= 0.9 || this.target >= this.leaveAt - this.geo.H * 0.33);
+    const current = y < this.tops[0] - this.geo.H * 0.5 || ended ? -1 : idx;
     if (current !== this.currentIndex) {
       this.blockEls[this.currentIndex]?.removeAttribute("data-current");
       if (current >= 0) this.blockEls[current].setAttribute("data-current", "");
@@ -516,6 +555,8 @@ export class FilmEngine {
 
   destroy() {
     this.dead = true;
+    runningFilms.delete(this);
+    announce();
     this.blockEls[this.currentIndex]?.removeAttribute("data-current");
     cancelAnimationFrame(this.raf);
     this.ro.disconnect();

@@ -51,3 +51,8 @@
     background: #b59258;
   }
 }
+
+/* Portrait cut: the words name each plan; the scale would sit under the header on a phone. */
+:global([data-cut="portrait"]) .scale {
+  display: none;
+}

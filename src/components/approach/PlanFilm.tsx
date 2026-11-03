@@ -4,7 +4,8 @@ import Link from "next/link";
 import { FILM } from "@/content/film.generated";
 import { stages } from "@/content/approach";
 import { MAX_WANTS, planFor, TRADES, WANTS } from "@/content/planner";
-import { CinemaFilm, plateRect, type CinemaBlock, type Rect } from "@/components/film/CinemaFilm";
+import { CinemaFilm, plateRect, type CinemaBlock, type PortraitCut, type Rect } from "@/components/film/CinemaFilm";
+import { PB, pscreens, psegs } from "@/components/film/portrait";
 import { usePlanner, useSendPlan } from "./plannerState";
 import f from "@/components/film/SolutionsFilm.module.css";
 import x from "@/components/displays/displays.module.css";
@@ -38,7 +39,28 @@ export const PLAN_BLOCKS: CinemaBlock[] = [
 const ALL = PLAN_BLOCKS.filter((b) => b.kind === "hold" && b.id !== "studio").map((b) => b.id).join(" ");
 const FILMS = FILM as unknown as Record<string, { frames: number; videoFrames: number; fps: number } | undefined>;
 const SEGMENTS = { "plan-arrive": { id: "plan-arrive", base: "/assets/cinematic/plan-arrive", ...(FILMS["plan-arrive"] ?? { frames: 0, videoFrames: 0, fps: 24 }) } };
-const design = (w: number, r: Rect) => ({ width: w, height: (w * r[3] * 9) / (r[2] * 16) });
+const design = (w: number, r: Rect, ar = 16 / 9) => ({ width: w, height: (w * r[3]) / (r[2] * ar) });
+/**
+ * Portrait cut (phones): eye level at the table, then the camera cranes up over the same three devices,
+ * re-arranged for the tall frame: the two tablets side by side above the laptop, open marble below for
+ * the words. Each device is brought into the upper part of the screen on its chapter; the closing
+ * chapters rest on the whole table, their words on the marble.
+ */
+const P_SEGMENTS = psegs(["plan-arrive"]);
+const P_SCREENS = pscreens("plan-arrive");
+const P_FRAME = { x: 0.5, y: 0.33, w: 0.84, h: 0.38 };
+const PORTRAIT: PortraitCut | undefined =
+  P_SEGMENTS && P_SCREENS?.length === 3
+    ? {
+        segments: P_SEGMENTS,
+        stills: { studio: `${PB}/plan-arrive-start`, table: `${PB}/plan-arrive-end` },
+        blocks: {
+          trade: { dolly: P_SCREENS[0], frame: P_FRAME },
+          wants: { dolly: P_SCREENS[1], frame: P_FRAME },
+          stages: { dolly: P_SCREENS[2], frame: P_FRAME },
+        },
+      }
+    : undefined;
 
 export function PlanFilm({ children }: { children: React.ReactNode }) {
   return (
@@ -47,22 +69,26 @@ export function PlanFilm({ children }: { children: React.ReactNode }) {
       segments={SEGMENTS}
       stills={{ studio: "/assets/cinematic/l02-table-eye", table: "/assets/cinematic/l01-lab" }}
       label="The planning table"
+      portrait={PORTRAIT}
       overlays={(a) => {
         const stage = a.block === "stages" ? a.step : a.block === "send" ? stages.length - 1 : -1;
+        const tall = a.cut === "portrait" && P_SCREENS;
+        const [LEFT_R, LAPTOP_R, RIGHT_R] = tall ? P_SCREENS : [LEFT, LAPTOP, RIGHT];
+        const ar = tall ? 9 / 16 : 16 / 9;
         return (
           <>
-            <div className={`${f.overlay} ${s.device}`} data-show={ALL} style={plateRect(LEFT)}>
-              <div className={f.overlayInner} data-design={720} style={design(720, LEFT)}>
+            <div className={`${f.overlay} ${s.device}`} data-show={ALL} style={plateRect(LEFT_R)}>
+              <div className={f.overlayInner} data-design={720} style={design(720, LEFT_R, ar)}>
                 <TradeScreen focus={a.block === "trade"} />
               </div>
             </div>
-            <div className={`${f.overlay} ${s.device}`} data-show={ALL} style={plateRect(LAPTOP)}>
-              <div className={f.overlayInner} data-design={1000} style={design(1000, LAPTOP)}>
+            <div className={`${f.overlay} ${s.device}`} data-show={ALL} style={plateRect(LAPTOP_R)}>
+              <div className={f.overlayInner} data-design={1000} style={design(1000, LAPTOP_R, ar)}>
                 <WantsScreen focus={a.block === "wants"} />
               </div>
             </div>
-            <div className={`${f.overlay} ${s.device}`} data-show={ALL} style={plateRect(RIGHT)}>
-              <div className={f.overlayInner} data-design={720} style={design(720, RIGHT)}>
+            <div className={`${f.overlay} ${s.device}`} data-show={ALL} style={plateRect(RIGHT_R)}>
+              <div className={f.overlayInner} data-design={720} style={design(720, RIGHT_R, ar)}>
                 <PlanScreen stage={stage} />
               </div>
             </div>

@@ -60,7 +60,7 @@ export default function PricingPage() {
                     <>
                       <Breadcrumbs items={[{ name: "Pricing", path: "/pricing" }]} />
                       <h1 className={c.title}>The right plan starts with the right scope.</h1>
-                      <p className={c.lede}>Websites come in three plans. Everything else is shaped to your requirements and sent as a written proposal.</p>
+                      <p className={`${c.lede} ${s.introLede}`}>Websites come in three plans. Everything else is shaped to your requirements and sent as a written proposal.</p>
                     </>
                   )}
                   <p className={c.num}>
@@ -107,7 +107,7 @@ export default function PricingPage() {
               <h2 id="others-title" className={c.title}>
                 Quoted on your requirements.
               </h2>
-              <p className={c.lede}>Apps, ERP and CRM, automation, marketing and enterprise platforms are shaped to what you need and sent as a written proposal. This is what we would ask first.</p>
+              <p className={`${c.lede} ${s.introLede}`}>Apps, ERP and CRM, automation, marketing and enterprise platforms are shaped to what you need and sent as a written proposal. This is what we would ask first.</p>
               <div className={c.cols}>
                 {solutions
                   .filter((sol) => sol.slug !== "web-development")

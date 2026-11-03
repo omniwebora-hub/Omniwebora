@@ -5,6 +5,7 @@ import { Hanken_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ChapterNav } from "@/components/film/ChapterNav";
 import { ClientBoot } from "@/components/layout/ClientBoot";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { organizationJsonLd } from "@/lib/seo";
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ViewTransition default="page">{children}</ViewTransition>
         </main>
         <Footer />
+        <ChapterNav />
         <ClientBoot />
         <JsonLd data={organizationJsonLd()} />
         {plausibleDomain && (

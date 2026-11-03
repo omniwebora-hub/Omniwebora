@@ -730,8 +730,8 @@
    Camera-move pills ("Step inside…") are gone: the picture says it. */
 @media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
   .hold {
-    height: calc(var(--hold, 300svh) + 100svh);
-    margin-bottom: -100svh;
+    height: calc(var(--hold, 300svh) + 200svh);
+    margin-bottom: -200svh;
   }
 
   /* The last chapter has no next one to run under; its words are read for its full length, then
@@ -742,8 +742,8 @@
   }
 
   .intro {
-    height: 215svh;
-    margin-bottom: -100svh;
+    height: 315svh;
+    margin-bottom: -200svh;
   }
 
   .moveLine {
@@ -770,13 +770,20 @@
       visibility 0s;
   }
 
-  [data-engine] .panelWrap .panel {
-    translate: 0 14px;
-    transition: translate 0.8s var(--ease-out) 0.32s;
+  /* One dissolve, the same both ways: the words come into focus where they are and leave the way they
+     came (soft focus and fade). Nothing moves. */
+  [data-engine] .panelWrap .panel,
+  [data-engine] .introInner,
+  [data-engine] .outroInner {
+    filter: blur(8px);
+    transition: filter 0.32s ease;
   }
 
-  [data-engine] [data-current] > .panelWrap .panel {
-    translate: 0 0;
+  [data-engine] [data-current] > .panelWrap .panel,
+  [data-engine] [data-current] > .introInner,
+  [data-engine] [data-current] > .outroInner {
+    filter: none;
+    transition: filter 0.7s ease 0.32s;
   }
 
   /* The message carries: a statement-size title and a calm, generous line. */
@@ -1005,9 +1012,12 @@
     display: none;
   }
 
+  /* Phones scroll in shorter strokes (owner, 2026-11-04: "make it easier to scroll in phone"): camera
+     moves and chapters are about a quarter shorter than on wide screens; the chapter buttons step
+     through them too. */
   .phoneFilm .move {
     display: block;
-    height: 130svh;
+    height: 105svh;
   }
 
   .phoneFilm .moveLine {
@@ -1015,13 +1025,14 @@
   }
 
   .phoneFilm .hold {
-    height: calc(var(--hold, 300svh) + 100svh);
-    margin-bottom: -100svh;
+    height: calc(var(--hold, 300svh) * 0.76 + 200svh);
+    margin-bottom: -200svh;
     padding: 0;
     background: none;
   }
 
   .phoneFilm .hold:last-child {
+    height: calc(var(--hold, 300svh) * 0.76 + 100svh);
     margin-bottom: 0;
   }
 
@@ -1031,7 +1042,8 @@
     display: flex;
     align-items: flex-end;
     height: 100svh;
-    padding: var(--header-h) 20px calc(28px + env(safe-area-inset-bottom));
+    /* room under the words for the chapter buttons */
+    padding: var(--header-h) 20px calc(80px + env(safe-area-inset-bottom));
     isolation: isolate;
     pointer-events: none;
   }
@@ -1090,6 +1102,16 @@
       opacity 0.7s ease 0.1s,
       visibility 0s;
   }
+
+  .phoneFilm[data-engine] .panelWrap .panel {
+    filter: blur(6px);
+    transition: filter 0.35s ease;
+  }
+
+  .phoneFilm[data-engine] [data-current] > .panelWrap .panel {
+    filter: none;
+    transition: filter 0.7s ease 0.1s;
+  }
 }
 
 /* ---------- Words in the water (owner, 2026-10-31) ----------
@@ -1098,7 +1120,8 @@
 @media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
   .panelWrap.water {
     align-items: flex-end;
-    padding: 0 clamp(24px, 3.2vw, 56px) 4.5svh;
+    /* the right end stays clear for the chapter buttons */
+    padding: 0 calc(clamp(24px, 3.2vw, 56px) + 230px) 4.5svh clamp(24px, 3.2vw, 56px);
   }
 
   .panelWrap.water::before {
@@ -1148,7 +1171,7 @@
     display: flex;
     align-items: flex-end;
     height: 100svh;
-    padding: var(--header-h) 20px calc(28px + env(safe-area-inset-bottom));
+    padding: var(--header-h) 20px calc(80px + env(safe-area-inset-bottom));
     background: linear-gradient(0deg, rgb(8 14 30 / 0.85), rgb(8 14 30 / 0.5) 40%, transparent 70%);
   }
 
@@ -1167,7 +1190,7 @@
   .phoneFilm .intro {
     min-height: 100svh;
     align-items: end;
-    padding: var(--header-h) 20px calc(32px + env(safe-area-inset-bottom));
+    padding: var(--header-h) 20px calc(84px + env(safe-area-inset-bottom));
     overflow: visible;
   }
 
@@ -1175,12 +1198,51 @@
     background: linear-gradient(0deg, rgb(8 14 30 / 0.88), rgb(8 14 30 / 0.5) 45%, transparent 75%);
   }
 
+  /* The closing words stay where they are and dissolve like every chapter's; they never scroll up. */
   .phoneFilm .outro {
+    height: 160svh;
+    padding: 0;
+    background: none;
+  }
+
+  .phoneFilm .outroInner {
+    position: sticky;
+    top: 0;
+    display: grid;
     min-height: 100svh;
-    display: flex;
-    align-items: flex-end;
-    padding: 0 0 calc(32px + env(safe-area-inset-bottom));
-    background: linear-gradient(0deg, rgb(8 14 30 / 0.88), rgb(8 14 30 / 0.5) 45%, transparent 75%);
+    align-content: end;
+    padding: var(--header-h) 20px calc(84px + env(safe-area-inset-bottom));
+    isolation: isolate;
+  }
+
+  .phoneFilm .outroInner::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: -1;
+    height: 75%;
+    background: linear-gradient(0deg, rgb(8 14 30 / 0.88), rgb(8 14 30 / 0.5) 45%, transparent);
+    pointer-events: none;
+  }
+
+  .phoneFilm[data-engine] .outroInner {
+    opacity: 0;
+    visibility: hidden;
+    filter: blur(6px);
+    transition:
+      opacity 0.35s ease,
+      filter 0.35s ease,
+      visibility 0s linear 0.35s;
+  }
+
+  .phoneFilm[data-engine] [data-current] > .outroInner {
+    opacity: 1;
+    visibility: visible;
+    filter: none;
+    transition:
+      opacity 0.7s ease 0.1s,
+      filter 0.7s ease 0.1s,
+      visibility 0s;
   }
 }
 

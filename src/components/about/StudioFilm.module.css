@@ -1,4 +1,5 @@
-@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+/* The drafting table overlays (only rendered while the film runs: wide screens and phones). */
+@media (prefers-reduced-motion: no-preference) {
   .paper {
     mix-blend-mode: multiply;
   }

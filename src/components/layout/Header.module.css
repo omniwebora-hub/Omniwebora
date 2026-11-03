@@ -553,6 +553,10 @@ button.navLink[data-current] {
     color: #fff;
   }
 
+  :global(html:has([data-film="on"], [data-scene])) .bar > a:first-child {
+    --logo-gold: linear-gradient(180deg, #f3d9a4 0%, #dcb36c 60%, #c0914a 100%);
+  }
+
   :global(html:has([data-film="on"], [data-scene])) .navLink::after {
     background: #f3dfb5;
   }

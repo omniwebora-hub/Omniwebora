@@ -9,14 +9,13 @@ import s from "./HomeOpening.module.css";
 
 /**
  * Home opening (owner reference, 2026-10-30): the glass crystal on its marble and gold pedestal on the
- * golden-hour terrace, the Omniwebora mark and name glowing in its deep-blue core, the six services as
- * light glass cards around it. On scroll the cards clear and the camera pushes in on the crystal (the
- * v1 push-in, H01), holds, then flies into the core and comes out on the drawing of the building:
- * 01 Innovate and the rest of the story follow unchanged.
+ * golden-hour terrace, the six services as light glass cards around it. On scroll the cards clear and
+ * the camera pushes in on the crystal (the v1 push-in, H01), holds, then flies into the core and comes
+ * out on the drawing of the building: 01 Innovate and the rest of the story follow unchanged.
  *
- * The mark rides the crystal frame by frame (HOME_PUSH_TRACK: the crystal measured in every frame of the
- * clip), indexed by the frame actually on screen, so it never swims while the video catches up.
- * Per frame only transforms and opacities are written, element by element.
+ * The crystal's core is left as filmed (owner, 2026-11-04): no mark or name is laid over it, since a
+ * flat overlay never sits seamlessly inside the moving glass. Per frame only transforms and opacities
+ * are written, element by element.
  */
 
 /** The six arched bays (plate fractions), shared with HomeFilm's Innovate / Transform overlays. */
@@ -29,21 +28,6 @@ const REST = TRACK[0];
 const GLASS = { l: 0.625, r: 0.86 } as const;
 /** The crystal on the hold after the push-in: the left tip of its gold ring, as a plate fraction. */
 const CORE_GLASS_L = 0.335;
-const END = TRACK[TRACK.length - 1];
-
-/** The existing mark (Logo.tsx), drawn in light for the crystal's core. */
-function CoreMark() {
-  return (
-    <svg className={s.markSvg} viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-      <g fill="none" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round">
-        <path d="M14.2 19.6a7.6 7.6 0 1 1 11.6 0" />
-        <path d="M20 29.6a7.6 7.6 0 1 1-8.4-12.4" />
-        <path d="M28.4 17.2A7.6 7.6 0 1 1 20 29.6" />
-        <path d="M16.4 25.4 20 22l3.6 3.4" />
-      </g>
-    </svg>
-  );
-}
 
 /**
  * A small drawn preview of each service on its card (owner reference: a site, apps, a dashboard, a
@@ -128,12 +112,6 @@ function Preview({ slug }: { slug: string }) {
 export function HomeOpening() {
   return (
     <div className={s.root} data-opening>
-      <div className={s.core} data-part="core" aria-hidden="true">
-        <div className={s.coreIn}>
-          <CoreMark />
-          <span className={s.word}>Omniwebora</span>
-        </div>
-      </div>
       <ul className={s.cards} data-part="cards" aria-label="Our six services">
         {heroPanels.map((p, i) => {
           const sol = solutionBySlug(p.slug)!;
@@ -160,7 +138,6 @@ const fx = (v: number, d = 3) => v.toFixed(d);
  */
 export function openingDriver(ids: { arrive: string; push: string; core: string; dive: string }): FrameHook {
   let root: HTMLElement | null = null;
-  let core: HTMLElement | null = null;
   let cards: HTMLElement[] = [];
   let cardBox: HTMLElement | null = null;
   const written = new Map<HTMLElement, Record<string, string>>();
@@ -175,16 +152,15 @@ export function openingDriver(ids: { arrive: string; push: string; core: string;
   let wordsRight = 0;
   let pan = 0;
 
-  return ({ block, p, shown, geo }) => {
+  return ({ block, p, geo }) => {
     if (!root?.isConnected) {
       root = document.querySelector<HTMLElement>("[data-opening]");
-      core = root?.querySelector<HTMLElement>('[data-part="core"]') ?? null;
       cardBox = root?.querySelector<HTMLElement>('[data-part="cards"]') ?? null;
       cards = root ? Array.from(root.querySelectorAll<HTMLElement>("[data-card]")) : [];
       written.clear();
       layout = "";
     }
-    if (!root || !core || !cardBox) return;
+    if (!root || !cardBox) return;
     const { pw, ph, W, H } = geo;
     const portrait = W / H < 1.25;
 
@@ -214,21 +190,6 @@ export function openingDriver(ids: { arrive: string; push: string; core: string;
     if (root.dataset.portrait !== String(portrait)) root.dataset.portrait = String(portrait);
     if (!on) return portrait ? undefined : pan;
 
-    // The mark rides the crystal: its tracked centre and height in the push-in, held after it.
-    let t: readonly [number, number, number] = REST;
-    if (at === 1) {
-      const f = (shown ?? p) * (TRACK.length - 1);
-      const i = Math.min(TRACK.length - 2, Math.floor(f));
-      const k = f - i;
-      const a = TRACK[i];
-      const b = TRACK[i + 1];
-      t = [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
-    } else if (at >= 2) t = END;
-    // into the core: the mark swells a little and is gone before the camera reaches the glass
-    const dive = at === 3 ? smoothstep(0, 0.1, p) : 0;
-    const sc = (t[2] / REST[2]) * (1 + 0.5 * dive);
-    set(core, "transform", `translate(${(t[0] * pw).toFixed(1)}px, ${(t[1] * ph).toFixed(1)}px) scale(${fx(sc)})`);
-    set(core, "opacity", fx(1 - dive));
     if (portrait) return undefined;
 
     // The cards clear as the scroll begins, before the camera moves.

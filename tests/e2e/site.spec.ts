@@ -200,11 +200,12 @@ test.describe("home", () => {
     const film = page.locator("[data-film][aria-label='Ideas we bring to life']");
     await expect(film).toHaveAttribute("data-film", "on");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Ideas we bring");
-    // 00: the crystal with the mark in its core and the six services around it; gone once the drawing is reached
+    // 00: the crystal with the six services around it; gone once the drawing is reached
     const crystal = page.locator("[data-opening]");
     await expect(crystal).toHaveAttribute("data-on", "true");
     await expect(crystal.locator("[data-card]")).toHaveCount(6);
-    await expect(crystal.getByText("Omniwebora")).toBeVisible();
+    // the crystal's core is left as filmed: no mark or name laid over the glass
+    await expect(crystal.locator('[data-part="core"]')).toHaveCount(0);
     for (const id of ["push", "core", "dive", "innovate", "design", "build", "launch", "idea", "launched", "invite"]) {
       await page.locator(`[data-film-block="${id}"]`).evaluate((el) => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + 40, behavior: "instant" }));
       await expect(film).toHaveAttribute("data-block", id);

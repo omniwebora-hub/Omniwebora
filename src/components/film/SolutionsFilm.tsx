@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FILM } from "@/content/film.generated";
 import { ROOMS } from "@/content/gallery";
 import { solutionBySlug, type SolutionSlug } from "@/content/solutions";
 import { FilmEngine, smoothstep, type EngineKind, type FilmBlock, type FilmSegment } from "./engine";
-import { useFilmMode, usePhoneFilm } from "./FlatOnly";
+import { useFilmMode, usePhoneFilm, usePortraitCut } from "./FlatOnly";
+import { PB, pscreen, psegs } from "./portrait";
 import c from "./chapters.module.css";
 import { WebDisplay } from "@/components/displays/WebDisplay";
 import { PhoneApp } from "@/components/displays/PhoneApp";
@@ -47,8 +48,17 @@ const SEGMENTS = Object.fromEntries([...Object.values(ARRIVE), "sol-finale" as c
 const BAYS = [0.211, 0.336, 0.459, 0.583, 0.707, 0.832].map((x) => [x, 0.192, 0.081, 0.484] as const);
 const STILLS = { gallery: "/assets/cinematic/s00-gallery", ...Object.fromEntries(ROOMS.map((r) => [r.slug, `/assets/cinematic/${ARRIVE[r.slug]}-end`])), finale: "/assets/cinematic/sol-finale-end" };
 const SCREEN = Object.fromEntries(ROOMS.map((r) => [r.slug, FILM[ARRIVE[r.slug]].screenEnd as readonly number[]])) as Record<SolutionSlug, readonly number[]>;
-const srcSet = (b: string) => `${b}-1280.webp 1280w, ${b}-1920.webp 1920w, ${b}-2560.webp 2560w`;
-const SIZES = "(min-aspect-ratio: 16/9) 100vw, 178vh";
+/**
+ * The portrait cut (phones and other tall screens): the gallery and its rooms filmed again at 9:16,
+ * each room's display measured in its own frame. Used only once every clip is built.
+ */
+const P_SEGMENTS = psegs([...Object.values(ARRIVE), "sol-finale"]);
+const P_SCREEN = Object.fromEntries(ROOMS.map((r) => [r.slug, pscreen(ARRIVE[r.slug])])) as Record<SolutionSlug, readonly number[] | undefined>;
+const PORTRAIT_OK = !!P_SEGMENTS && ROOMS.every((r) => P_SCREEN[r.slug]);
+const P_STILLS = { gallery: `${PB}/s00-gallery`, ...Object.fromEntries(ROOMS.map((r) => [r.slug, `${PB}/${ARRIVE[r.slug]}-end`])), finale: `${PB}/sol-finale-end` };
+const W_LAND = [1280, 1920, 2560] as const;
+const W_TALL = [720, 1080, 1440] as const;
+const srcSet = (b: string, ws: readonly number[]) => ws.map((w) => `${b}-${w}.webp ${w}w`).join(", ");
 const solutionShort = Object.fromEntries(ROOMS.map((r) => [r.slug, solutionBySlug(r.slug)!.short])) as Record<SolutionSlug, string>;
 
 type Block = FilmBlock & { room?: SolutionSlug };
@@ -56,7 +66,8 @@ const BLOCKS: Block[] = [
   { id: "intro", kind: "hold", still: "gallery" },
   ...ROOMS.flatMap((r): Block[] => [
     { id: `to-${r.slug}`, kind: "seg", seg: ARRIVE[r.slug] },
-    { id: r.slug, kind: "hold", still: r.slug, room: r.slug },
+    // the chapter buttons rest on each step of the room's interface (steps run over p 0.3–0.72)
+    { id: r.slug, kind: "hold", still: r.slug, room: r.slug, stops: r.steps.map((_, k) => 0.3 + (0.42 * (k + 0.5)) / r.steps.length) },
   ]),
   { id: "to-finale", kind: "seg", seg: "sol-finale" },
   { id: "outro", kind: "hold", still: "finale" },
@@ -73,6 +84,10 @@ export function SolutionsFilm({ children }: { children: React.ReactNode }) {
   const desktop = useFilmMode();
   const phone = usePhoneFilm();
   const film = desktop || phone;
+  const tall = usePortraitCut();
+  const cut = film && tall && PORTRAIT_OK ? "portrait" : "landscape";
+  const screenRects = useMemo(() => (cut === "portrait" ? (P_SCREEN as Record<SolutionSlug, readonly number[]>) : SCREEN), [cut]);
+  const ar = cut === "portrait" ? 9 / 16 : 16 / 9;
   const [active, setActive] = useState<{ block: string; step: number }>({ block: "intro", step: 0 });
   const [override, setOverride] = useState<{ key: string; value: string | number } | null>(null);
 
@@ -89,13 +104,15 @@ export function SolutionsFilm({ children }: { children: React.ReactNode }) {
 
     let scaled = { W: 0, pw: 0 };
     let last = { block: "", step: -1 };
+    const SCREEN = screenRects;
     const engine = new FilmEngine({
       root: el,
       stage,
       layer,
       blocks: BLOCKS,
-      segments: SEGMENTS,
+      segments: cut === "portrait" ? P_SEGMENTS! : SEGMENTS,
       kind,
+      aspect: cut === "portrait" ? 9 / 16 : 16 / 9,
       onFrame: ({ block: b, next, p, moving, geo }) => {
         const room = (b as Block).room;
         if (geo.W !== scaled.W || geo.pw !== scaled.pw) {
@@ -116,7 +133,29 @@ export function SolutionsFilm({ children }: { children: React.ReactNode }) {
           if (n.dataset.on !== on) n.dataset.on = on;
           if (n.dataset.live !== live) n.dataset.live = live;
         }
-        if (geo.W / geo.H < 1.25) {
+        if (cut === "portrait") {
+          // Portrait cut: each room was filmed for the tall frame, so the camera only settles its display
+          // in the upper part of the screen (above the words), a little closer where it is small;
+          // between rooms it eases from one framing to the next while the clip plays.
+          const poseOf = (blk: Block | undefined) => {
+            if (!blk?.room) return { cx: 0.5, cy: 0.5, z: 1, y: 0.5 };
+            const [x, y, w, h] = SCREEN[blk.room];
+            return { cx: x + w / 2, cy: y + h / 2, z: Math.max(1, Math.min(1.35, (0.92 * geo.W) / (w * geo.pw), (0.34 * geo.H) / (h * geo.ph))), y: 0.29 };
+          };
+          let f = poseOf(b as Block);
+          if (b.kind === "seg") {
+            const i = BLOCKS.indexOf(b as Block);
+            const a = poseOf(BLOCKS[i - 1]);
+            const z = poseOf(BLOCKS[i + 1]);
+            const k = smoothstep(0, 1, p);
+            const mix = (u: number, v: number) => u + (v - u) * k;
+            f = { cx: mix(a.cx, z.cx), cy: mix(a.cy, z.cy), z: mix(a.z, z.z), y: mix(a.y, z.y) };
+          }
+          const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+          const tx = clamp(geo.W / 2 - geo.px - f.z * f.cx * geo.pw, geo.W - geo.px - f.z * geo.pw, -geo.px);
+          const ty = clamp(geo.H * f.y - geo.py - f.z * f.cy * geo.ph, geo.H - geo.py - f.z * geo.ph, -geo.py);
+          engine.set(camera, "transform", `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${f.z.toFixed(4)})`);
+        } else if (geo.W / geo.H < 1.25) {
           // Portrait (phones): keep each room's wall screen mid-screen; push in where the screen is small
           // enough to stay whole (the phone on its stand), eased between rooms across the clips.
           const focusOf = (blk: Block | undefined) => {
@@ -170,7 +209,7 @@ export function SolutionsFilm({ children }: { children: React.ReactNode }) {
       camera.style.transform = "";
       delete window.__filmStats;
     };
-  }, [film]);
+  }, [film, cut, screenRects]);
 
   const key = `${active.block}:${active.step}`;
   const stepOf = (slug: SolutionSlug) => (active.block === slug ? active.step : 0);
@@ -192,30 +231,32 @@ export function SolutionsFilm({ children }: { children: React.ReactNode }) {
 
 
   return (
-    <div ref={root} className={`${s.film} ${s.phoneFilm} ${c.phoneFilm}`} data-film={film ? "on" : "off"}>
+    <div ref={root} className={`${s.film} ${s.phoneFilm} ${c.phoneFilm}`} data-film={film ? "on" : "off"} data-cut={film ? cut : undefined} data-gallery>
       <div className={s.stage} data-stage aria-hidden={film ? undefined : true}>
         <div className={s.plate}>
           <div className={s.camera} data-camera>
-            {Object.entries(STILLS).map(([k, b], i) =>
-              i === 0 || film ? (
+            {Object.entries(cut === "portrait" ? P_STILLS : STILLS).map(([k, b], i) => {
+              const ws = cut === "portrait" ? W_TALL : W_LAND;
+              return i === 0 || film ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img key={k} className={s.still} data-still={k} src={`${b}-1920.webp`} srcSet={srcSet(b)} sizes={SIZES} alt="" decoding="async" fetchPriority={i === 0 ? "high" : "low"} style={i ? { opacity: 0 } : undefined} />
-              ) : null,
-            )}
+                <img key={`${cut}-${k}`} className={s.still} data-still={k} src={`${b}-${ws[1]}.webp`} srcSet={srcSet(b, ws)} sizes={cut === "portrait" ? "max(100vw, 56.25vh)" : "(min-aspect-ratio: 16/9) 100vw, 178vh"} alt="" decoding="async" fetchPriority={i === 0 ? "high" : "low"} style={i ? { opacity: 0 } : undefined} />
+              ) : null;
+            })}
             <div className={s.media} data-media-layer />
             {film &&
               ROOMS.map((r) => {
-                const [, , w, h] = SCREEN[r.slug];
+                const [, , w, h] = screenRects[r.slug];
                 const d = DESIGN[r.slug];
                 return (
-                  <div key={r.slug} className={s.screen} data-screen={r.slug} style={{ ...rect(SCREEN[r.slug]), borderRadius: d.r ? `${d.r * 100}% / ${((d.r * w * 16) / (h * 9)) * 100}%` : undefined }}>
-                    <div className={s.screenInner} style={{ width: d.w, height: d.w / ((w * 16) / (h * 9)) }}>
+                  <div key={r.slug} className={s.screen} data-screen={r.slug} style={{ ...rect(screenRects[r.slug]), borderRadius: d.r ? `${d.r * 100}% / ${((d.r * w * ar) / h) * 100}%` : undefined }}>
+                    <div className={s.screenInner} style={{ width: d.w, height: d.w / ((w * ar) / h) }}>
                       {ui[r.slug]}
                     </div>
                   </div>
                 );
               })}
             {film &&
+              cut === "landscape" &&
               ROOMS.map((r, i) => (
                 <a key={r.slug} href={`#${r.slug}`} className={s.bay} data-bay style={{ ...rect(BAYS[i]), opacity: 0 }}>
                   <span className={s.bayGlow} aria-hidden="true" />

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FilmEngine, smoothstep, type EngineKind, type FilmBlock, type FilmFrame, type FilmSegment } from "./engine";
-import { useFilmMode, usePhoneFilm } from "./FlatOnly";
+import { useFilmMode, usePhoneFilm, usePortraitCut } from "./FlatOnly";
 import s from "./SolutionsFilm.module.css";
 import c from "./chapters.module.css";
 
@@ -26,8 +26,25 @@ export type CinemaBlock = FilmBlock & {
   frame?: { x: number; y: number; w: number; h: number };
   /** Portrait windows (phone film): the plate x (fraction) to keep in the middle of the screen. */
   focus?: number;
+  /** Hold the dolly for the whole chapter (a fixed framing, e.g. a portrait cut's subject lifted into
+   *  the upper screen); give the neighbouring chapters the same one so nothing moves at the joins. */
+  dollyHold?: boolean;
 };
-export type Active = { block: string; step: number; p: number };
+/** Which footage is on screen: the 16:9 landscape cut, or a film's 9:16 portrait cut on tall screens. */
+export type Cut = "landscape" | "portrait";
+export type Active = { block: string; step: number; p: number; cut: Cut };
+/**
+ * A film's portrait cut (owner, 2026-11-03): the same scenes re-composed and filmed for a 9:16 frame.
+ * Clips and stills replace the landscape ones on tall screens; `blocks` gives each chapter its portrait
+ * camera (dolly / dollySteps / frame in portrait plate fractions). Landscape-only framing (focus pans,
+ * landscape dollies) is dropped in the portrait cut.
+ */
+export type PortraitCut = {
+  segments: Record<string, FilmSegment>;
+  /** still key → base path (…-720/-1080/-1440.webp). */
+  stills: Record<string, string>;
+  blocks?: Record<string, Partial<CinemaBlock>>;
+};
 /** Per-frame hook for page-specific direct DOM writes (index of the current block and its progress). */
 /** Per-frame page hook. On landscape screens it may return a sideways camera shift (px) for this frame. */
 export type FrameHook = (f: { index: number; block: CinemaBlock; p: number; shown?: number; geo: FilmFrame["geo"] }) => number | void;
@@ -42,6 +59,7 @@ export function CinemaFilm({
   className,
   onFrame,
   phone = true,
+  portrait,
 }: {
   blocks: CinemaBlock[];
   segments: Record<string, FilmSegment>;
@@ -56,6 +74,8 @@ export function CinemaFilm({
   onFrame?: FrameHook;
   /** Run the film on phones and tablets too (portrait framing; reduced motion stays stacked). */
   phone?: boolean;
+  /** The portrait cut, shown on screens taller than wide. */
+  portrait?: PortraitCut;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const hook = useRef(onFrame);
@@ -65,7 +85,19 @@ export function CinemaFilm({
   const desktop = useFilmMode();
   const phoneFilm = usePhoneFilm();
   const film = desktop || (phone && phoneFilm);
-  const [active, setActive] = useState<Active>({ block: blocks[0].id, step: 0, p: 0 });
+  const tall = usePortraitCut();
+  const cut: Cut = film && tall && portrait ? "portrait" : "landscape";
+  // The portrait cut swaps footage and each chapter's camera; everything else is the same film.
+  const cutBlocks = useMemo(
+    () =>
+      cut === "portrait"
+        ? blocks.map((b) => ({ ...b, focus: undefined, dolly: undefined, dollySteps: undefined, frame: undefined, ...portrait?.blocks?.[b.id] }))
+        : blocks,
+    [cut, blocks, portrait],
+  );
+  const cutSegments = cut === "portrait" ? portrait!.segments : segments;
+  const cutStills = cut === "portrait" ? portrait!.stills : stills;
+  const [active, setActive] = useState<Active>({ block: blocks[0].id, step: 0, p: 0, cut: "landscape" });
 
   useEffect(() => {
     if (!film) return;
@@ -91,13 +123,18 @@ export function CinemaFilm({
       return { z, tx: clamp(tx, geo.W - geo.px - z * geo.pw, -geo.px), ty: clamp(ty, geo.H - geo.py - z * geo.ph, -geo.py) };
     };
 
+    // Chapter buttons rest on each step of a multi-step chapter, mid-step (where its camera has settled).
+    const blocks = cutBlocks.map((b) =>
+      b.kind === "hold" && (b.steps ?? 1) > 1 && !b.stops ? { ...b, stops: Array.from({ length: b.steps! }, (_, k) => 0.12 + (0.76 * (k + 0.5)) / b.steps!) } : b,
+    );
     const engine = new FilmEngine({
       root: el,
       stage,
       layer,
       blocks,
-      segments,
+      segments: cutSegments,
       kind,
+      aspect: cut === "portrait" ? 9 / 16 : 16 / 9,
       onFrame: ({ index, block, next, p, shown, moving, geo }) => {
         const b = block as CinemaBlock;
         const prev = index > 0 ? blocks[index - 1] : undefined;
@@ -122,7 +159,7 @@ export function CinemaFilm({
 
         // Portrait: pan the plate so the chapter's subject stays mid-screen (eased across camera moves).
         let pan = 0;
-        if (geo.W / geo.H < 1.25 && geo.pw > geo.W) {
+        if (cut === "landscape" && geo.W / geo.H < 1.25 && geo.pw > geo.W) {
           const focusOf = (i: number) => blocks[i]?.focus ?? 0.5;
           let fx = b.focus ?? 0.5;
           if (b.kind === "seg") {
@@ -151,7 +188,7 @@ export function CinemaFilm({
         // Camera: a single dolly, or a glide between per-step targets (2.5D, the plate is frontal).
         let t = pan ? `translate3d(${pan.toFixed(1)}px, 0, 0)` : "none";
         if (b.dolly) {
-          const e = smoothstep(0.05, 0.3, p) * (1 - smoothstep(0.72, 0.95, p));
+          const e = b.dollyHold ? 1 : smoothstep(0.05, 0.3, p) * (1 - smoothstep(0.72, 0.95, p));
           const { z, tx, ty } = zoomTo(b.dolly, geo);
           t = `translate3d(${(tx * e).toFixed(1)}px, ${(ty * e).toFixed(1)}px, 0) scale(${(1 + (z - 1) * e).toFixed(4)})`;
         } else if (b.dollySteps) {
@@ -176,7 +213,7 @@ export function CinemaFilm({
         if (b.id !== last.block || step !== last.step || b.kind === "seg") {
           // Camera moves report progress so overlays can follow them (throttled to 2 % steps).
           const pr = b.kind === "seg" ? Math.round(p * 50) / 50 : 0;
-          setActive((prev) => (prev.block === b.id && prev.step === step && prev.p === pr ? prev : { block: b.id, step, p: pr }));
+          setActive((prev) => (prev.block === b.id && prev.step === step && prev.p === pr && prev.cut === cut ? prev : { block: b.id, step, p: pr, cut }));
         }
         if (b.id !== last.block) el.dataset.block = b.id;
         last = { block: b.id, step };
@@ -190,14 +227,17 @@ export function CinemaFilm({
       camera.style.transform = "";
       delete window.__filmStats;
     };
-  }, [film, blocks, segments]);
+  }, [film, cut, cutBlocks, cutSegments]);
 
-  const keys = Object.keys(stills);
+  const keys = Object.keys(cutStills);
+  // Portrait stills are 720 / 1080 / 1440 px wide (files named by width); landscape 1280 / 1920 / 2560.
+  const W3 = cut === "portrait" ? ([720, 1080, 1440] as const) : ([1280, 1920, 2560] as const);
   return (
     <div
       ref={root}
       className={[s.film, phone ? `${s.phoneFilm} ${c.phoneFilm}` : "", className ?? ""].filter(Boolean).join(" ")}
       data-film={film ? "on" : "off"}
+      data-cut={film ? cut : undefined}
       aria-label={label}
     >
       <div className={s.stage} data-stage aria-hidden={film ? undefined : true}>
@@ -207,12 +247,12 @@ export function CinemaFilm({
               i === 0 || film ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  key={k}
+                  key={`${cut}-${k}`}
                   className={s.still}
                   data-still={k}
-                  src={`${stills[k]}-1920.webp`}
-                  srcSet={`${stills[k]}-1280.webp 1280w, ${stills[k]}-1920.webp 1920w, ${stills[k]}-2560.webp 2560w`}
-                  sizes="(min-aspect-ratio: 16/9) 100vw, 178vh"
+                  src={`${cutStills[k]}-${W3[1]}.webp`}
+                  srcSet={W3.map((w) => `${cutStills[k]}-${w}.webp ${w}w`).join(", ")}
+                  sizes={cut === "portrait" ? "max(100vw, 56.25vh)" : "(min-aspect-ratio: 16/9) 100vw, 178vh"}
                   alt=""
                   decoding="async"
                   fetchPriority={i === 0 ? "high" : "low"}
@@ -221,7 +261,7 @@ export function CinemaFilm({
               ) : null,
             )}
             <div className={s.media} data-media-layer />
-            {film && overlays?.(active)}
+            {film && overlays?.({ ...active, cut })}
           </div>
         </div>
         <span className={s.veil} data-veil />

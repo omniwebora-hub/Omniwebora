@@ -459,3 +459,17 @@
     color: #e8cf9e;
   }
 }
+
+/* ---------- Portrait cut (owner, 2026-11-03: footage made for tall screens, not a crop) ----------
+   Where a film has portrait footage and the screen is taller than wide, CinemaFilm switches to the 9:16
+   plate (data-cut="portrait"): the plate covers the screen with almost nothing cropped. */
+.film[data-cut="portrait"] .plate {
+  --pw: max(100cqw, calc(100cqh * 9 / 16)) !important;
+  --ph: calc(var(--pw) * 16 / 9) !important;
+}
+
+/* Gallery, portrait cut: each room's words stay below its display. The "On the wall" note (what the
+   display shows) is left out on phones, where the display itself is right above the words. */
+.film[data-gallery][data-cut="portrait"] :global([data-panel]) dl {
+  display: none;
+}

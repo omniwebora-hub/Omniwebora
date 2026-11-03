@@ -1,7 +1,8 @@
 "use client";
 
 import { FILM } from "@/content/film.generated";
-import { CinemaFilm, plateRect, type CinemaBlock, type Rect } from "@/components/film/CinemaFilm";
+import { CinemaFilm, plateRect, type CinemaBlock, type PortraitCut, type Rect } from "@/components/film/CinemaFilm";
+import { PB, pscreens, psegs } from "@/components/film/portrait";
 import type { FilmSegment } from "@/components/film/engine";
 import { IdeaTablet } from "@/components/displays/IdeaWall";
 import f from "@/components/film/SolutionsFilm.module.css";
@@ -34,6 +35,34 @@ export const STUDIO_BLOCKS: CinemaBlock[] = [
   { id: "meet", kind: "hold", still: "pavilion" },
 ];
 
+/**
+ * Portrait cut (phones): the studio, the drafting table seen from above (the paper above the tablet)
+ * and the dusk pavilion, filmed at 9:16. The camera settles on the paper, then the tablet, each in the
+ * upper part of the screen above the words; on the pavilion it holds one steady view, lifted so the
+ * pavilion clears the words.
+ */
+const P_SEGMENTS = psegs(["about-in", "about-out"]);
+/** The cream sheet on the portrait table (measured by eye-level threshold; the tablet is detected). */
+const P_PAPER: Rect = [0.2417, 0.108, 0.5135, 0.39];
+const P_TABLET = pscreens("about-in")?.[0];
+const P_FRAME = { x: 0.5, y: 0.33, w: 0.88, h: 0.42 };
+const P_PAVILION = { dolly: [0.3, 0.33, 0.5, 0.3] as Rect, frame: { x: 0.5, y: 0.36, w: 1, h: 0.36 }, dollyHold: true };
+const PORTRAIT: PortraitCut | undefined =
+  P_SEGMENTS && P_TABLET
+    ? {
+        segments: P_SEGMENTS,
+        stills: { studio: `${PB}/about-in-start`, table: `${PB}/about-in-end`, pavilion: `${PB}/about-out-end` },
+        blocks: {
+          craft: { dollySteps: [P_PAPER, P_PAPER, P_PAPER, P_TABLET], frame: P_FRAME },
+          solve: P_PAVILION,
+          breadth: P_PAVILION,
+          way: P_PAVILION,
+          who: P_PAVILION,
+          meet: P_PAVILION,
+        },
+      }
+    : undefined;
+
 export function StudioFilm({ children }: { children: React.ReactNode }) {
   return (
     <CinemaFilm
@@ -41,20 +70,27 @@ export function StudioFilm({ children }: { children: React.ReactNode }) {
       segments={SEGMENTS}
       stills={{ studio: "/assets/cinematic/about-in-start", table: "/assets/cinematic/about-in-end", pavilion: "/assets/cinematic/about-out-end" }}
       label="How projects take shape"
-      overlays={(a) => (
-        <>
-          <div className={`${f.overlay} ${s.paper}`} data-show="craft" style={plateRect(PAPER)}>
-            <div className={f.overlayInner} data-design={700} style={{ width: 700, height: (700 * PAPER[3] * 9) / (PAPER[2] * 16) }}>
-              <Sketch step={a.step} />
+      portrait={PORTRAIT}
+      overlays={(a) => {
+        const tall = a.cut === "portrait" && P_TABLET;
+        const paper = tall ? P_PAPER : PAPER;
+        const tablet = tall ? P_TABLET : TABLET;
+        const ar = tall ? 9 / 16 : 16 / 9;
+        return (
+          <>
+            <div className={`${f.overlay} ${s.paper}`} data-show="craft" style={plateRect(paper)}>
+              <div className={f.overlayInner} data-design={700} style={{ width: 700, height: (700 * paper[3]) / (paper[2] * ar) }}>
+                <Sketch step={a.step} />
+              </div>
             </div>
-          </div>
-          <div className={`${f.overlay} ${s.tablet}`} data-show="craft" style={plateRect(TABLET)}>
-            <div className={f.overlayInner} data-design={640} style={{ width: 640, height: (640 * TABLET[3] * 9) / (TABLET[2] * 16) }}>
-              {a.step >= 3 ? <IdeaTablet step={3} /> : <div className={s.off} />}
+            <div className={`${f.overlay} ${s.tablet}`} data-show="craft" style={plateRect(tablet)}>
+              <div className={f.overlayInner} data-design={640} style={{ width: 640, height: (640 * tablet[3]) / (tablet[2] * ar) }}>
+                {a.step >= 3 ? <IdeaTablet step={3} /> : <div className={s.off} />}
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        );
+      }}
     >
       {children}
     </CinemaFilm>

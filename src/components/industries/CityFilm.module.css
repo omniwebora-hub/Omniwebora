@@ -228,7 +228,8 @@
   .card,
   .film[data-side="right"] .card {
     left: clamp(24px, 3.2vw, 56px);
-    right: clamp(24px, 3.2vw, 56px);
+    /* the right end stays clear for the chapter buttons */
+    right: calc(clamp(24px, 3.2vw, 56px) + 230px);
     top: auto;
     bottom: 5svh;
     width: auto;
@@ -300,7 +301,8 @@
   .film[data-side="right"] .card {
     left: 20px;
     right: 20px;
-    bottom: calc(24px + env(safe-area-inset-bottom));
+    /* room underneath for the chapter buttons */
+    bottom: calc(80px + env(safe-area-inset-bottom));
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;

@@ -102,3 +102,9 @@
     border-top: 1px solid var(--line);
   }
 }
+
+/* Portrait cut (phones): the first chapter keeps to the title and the plan, so the model stays clear
+   above the words; "Every other service" says the same thing a chapter later. */
+:global([data-cut="portrait"]) .introLede {
+  display: none;
+}

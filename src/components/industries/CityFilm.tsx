@@ -45,7 +45,8 @@ export function CityFilm({ children }: { children: React.ReactNode }) {
       root: el,
       stage,
       layer: track,
-      blocks: [{ id: "city", kind: "hold" }],
+      // chapter buttons: the opening, each district once the pan has settled on it, the closing invitation
+      blocks: [{ id: "city", kind: "hold", stops: [0, ...industries.map((_, i) => 0.08 + (0.84 * (i + 0.3)) / n), 0.96] }],
       segments: {},
       kind: "video",
       onFrame: ({ p, geo }) => {

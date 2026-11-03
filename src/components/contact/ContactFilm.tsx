@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { FILM } from "@/content/film.generated";
-import { CinemaFilm, type CinemaBlock } from "@/components/film/CinemaFilm";
+import { CinemaFilm, type CinemaBlock, type PortraitCut } from "@/components/film/CinemaFilm";
+import { PB, psegs } from "@/components/film/portrait";
 import type { FilmSegment } from "@/components/film/engine";
 import s from "@/app/contact/contact.module.css";
 
@@ -25,6 +26,12 @@ export const CONTACT_BLOCKS: CinemaBlock[] = [
   { id: "arrive", kind: "seg", seg: "contact-arrive" },
   { id: "brief", kind: "hold", still: "pavilion" },
 ];
+
+/** Portrait cut (phones): the same arrival filmed at 9:16, from the terrace to the pavilion at dusk. */
+const P_SEGMENTS = psegs(["contact-arrive"]);
+const PORTRAIT: PortraitCut | undefined = P_SEGMENTS
+  ? { segments: P_SEGMENTS, stills: { terrace: `${PB}/contact-arrive-start`, pavilion: `${PB}/contact-arrive-end` } }
+  : undefined;
 
 export function ContactFilm({ children }: { children: React.ReactNode }) {
   const wrap = useRef<HTMLDivElement>(null);
@@ -65,6 +72,7 @@ export function ContactFilm({ children }: { children: React.ReactNode }) {
         segments={SEGMENTS}
         stills={{ terrace: "/assets/cinematic/s08-terrace", pavilion: "/assets/cinematic/contact-arrive-end" }}
         label="Contact us"
+        portrait={PORTRAIT}
       >
         {children}
       </CinemaFilm>
