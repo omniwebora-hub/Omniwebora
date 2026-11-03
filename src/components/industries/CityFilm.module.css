@@ -10,7 +10,7 @@
   position: relative;
 }
 
-@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) {
   .stage {
     position: sticky;
     top: 0;
@@ -218,11 +218,13 @@
 }
 
 
+/* (The film runs wherever motion is allowed: wide screens and phones alike; phone layout at the end.) */
+
 /* ---------- The card in the water (owner, 2026-10-31) ----------
    The districts stand on the skyline; their words sit below them in the water, as one calm band
    across the screen (title, what changes, then the example modules and links). Nothing covers a
    district or its label, so no marker needs hiding. */
-@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) {
   .card,
   .film[data-side="right"] .card {
     left: clamp(24px, 3.2vw, 56px);
@@ -287,5 +289,52 @@
       opacity: 0;
       transform: translateY(10px);
     }
+  }
+}
+
+/* ---------- Phones: the same film in portrait ----------
+   The panorama pans district by district (each centred); the card is a short stack at the bottom,
+   in the water, on the shade: kicker, name, what changes, the solution links. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 1023.98px), (prefers-reduced-motion: no-preference) and (max-aspect-ratio: 1249/1000) {
+  .card,
+  .film[data-side="right"] .card {
+    left: 20px;
+    right: 20px;
+    bottom: calc(24px + env(safe-area-inset-bottom));
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .card > .kicker,
+  .card > h3,
+  .card > .context,
+  .card > .links,
+  .card > .links:nth-child(4) {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .card > .modules {
+    display: none;
+  }
+
+  .card h3 {
+    font-size: 1.7rem;
+  }
+
+  .context {
+    font-size: 0.95rem;
+  }
+
+  .stage::after,
+  .film[data-side="right"] .stage::after {
+    height: 62%;
+    background: linear-gradient(0deg, rgb(8 10 22 / 0.86), rgb(8 10 22 / 0.55) 50%, transparent);
+  }
+
+  .spotLabel {
+    padding: 6px 10px;
+    font-size: 0.8rem;
   }
 }

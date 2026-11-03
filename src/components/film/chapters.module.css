@@ -1135,3 +1135,147 @@
     padding-bottom: 0.35em;
   }
 }
+
+/* Phone film: Industries (the panorama film) and the Solutions intro / outro sections. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 1023.98px), (prefers-reduced-motion: no-preference) and (max-aspect-ratio: 1249/1000) {
+  .phoneFilm .city {
+    height: 620svh;
+  }
+
+  .phoneFilm .cityIntro {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: flex-end;
+    height: 100svh;
+    padding: var(--header-h) 20px calc(28px + env(safe-area-inset-bottom));
+    background: linear-gradient(0deg, rgb(8 14 30 / 0.85), rgb(8 14 30 / 0.5) 40%, transparent 70%);
+  }
+
+  .phoneFilm .cityIntro[data-gone="true"] {
+    visibility: hidden;
+  }
+
+  .phoneFilm .cityIntro .panel {
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    color: #fff;
+  }
+
+  .phoneFilm .intro {
+    min-height: 100svh;
+    align-items: end;
+    padding: var(--header-h) 20px calc(32px + env(safe-area-inset-bottom));
+    overflow: visible;
+  }
+
+  .phoneFilm .intro::after {
+    background: linear-gradient(0deg, rgb(8 14 30 / 0.88), rgb(8 14 30 / 0.5) 45%, transparent 75%);
+  }
+
+  .phoneFilm .outro {
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 0 calc(32px + env(safe-area-inset-bottom));
+    background: linear-gradient(0deg, rgb(8 14 30 / 0.88), rgb(8 14 30 / 0.5) 45%, transparent 75%);
+  }
+}
+
+/* Phone film: every chapter's words use the phone's width (desktop column widths do not apply), lists
+   are one column and short enough to sit on one screen with the scene above them. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 1023.98px), (prefers-reduced-motion: no-preference) and (max-aspect-ratio: 1249/1000) {
+  .phoneFilm .hold .panel,
+  .phoneFilm .hold .panel.wide {
+    width: 100% !important;
+    max-width: 34rem;
+    max-height: calc(100svh - var(--header-h) - 56px);
+    overflow: hidden;
+  }
+
+  .phoneFilm .panel .title {
+    font-size: clamp(1.7rem, 1.1rem + 2.4vw, 2.3rem);
+  }
+
+  .phoneFilm .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px 16px;
+  }
+
+  .phoneFilm .cols > div {
+    gap: 2px;
+    padding-top: 8px;
+    border-top: 1px solid rgb(255 255 255 / 0.28);
+  }
+
+  .phoneFilm .cols h3 {
+    font-size: 0.95rem;
+    font-weight: 650;
+    color: #fff;
+  }
+
+  .phoneFilm .cols p,
+  .phoneFilm .cols ul {
+    display: none;
+  }
+
+  .phoneFilm .lines {
+    display: grid;
+    gap: 0;
+    list-style: none;
+  }
+
+  .phoneFilm .lines li {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    padding: 7px 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.2);
+    font-size: 0.92rem;
+  }
+
+  .phoneFilm .lines li:nth-child(n + 5) {
+    display: none;
+  }
+
+  .phoneFilm .capList {
+    columns: 1;
+  }
+
+  .phoneFilm .capList li:nth-child(n + 6) {
+    display: none;
+  }
+
+  .phoneFilm .faq summary {
+    padding: 10px 0;
+    font-size: 0.95rem;
+  }
+
+  .phoneFilm .faq details:nth-child(n + 4) {
+    display: none;
+  }
+
+  .phoneFilm .panel.storyAll .story div:nth-child(n + 3) {
+    display: none !important;
+  }
+
+  .phoneFilm .rooms {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .phoneFilm .rooms a {
+    padding: 10px 12px;
+  }
+
+  .phoneFilm .roomPitch,
+  .phoneFilm .rooms svg {
+    display: none;
+  }
+
+  .phoneFilm .roomName {
+    font-size: 0.98rem;
+  }
+}

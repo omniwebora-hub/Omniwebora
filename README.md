@@ -1,6 +1,6 @@
 # Omniwebora website
 
-Marketing and lead site for Omniwebora: six services (Website building, Mobile applications, Custom software: ERP & CRM, Business automation, Digital marketing, Enterprise platforms). Next.js 16 App Router, statically generated. On wide screens every page is a scroll-driven film in one building (Higgsfield footage, scrubbed by `src/components/film/engine.ts`) with live interfaces on its displays; on phones and with reduced motion the same chapters are stacked scenes.
+Marketing and lead site for Omniwebora: six services (Website building, Mobile applications, Custom software: ERP & CRM, Business automation, Digital marketing, Enterprise platforms). Next.js 16 App Router, statically generated. Every page is a scroll-driven film in one building (Higgsfield footage, scrubbed by `src/components/film/engine.ts`) with live interfaces on its displays, on wide screens and phones alike (portrait framing on phones); with reduced motion the same chapters are stacked scenes.
 
 **Start with `reports/HANDOFF.md`** (state, decisions, open owner items). Business facts: `content/FACT_REGISTER.md` (every claim on the site traces to it). Business source: `reference/brochure/`.
 
@@ -35,7 +35,9 @@ npm run test:e2e     # Playwright + axe (run `npm run build` first; first time: 
 
 QA helpers (against a production server, e.g. `npm start -- -p 3200`; in Git Bash prefix route arguments with `MSYS_NO_PATHCONV=1`):
 - `node qa/page-film.mjs http://localhost:3200 / /pricing`: every chapter of a film page at 1440×900.
-- `node qa/mobile-shots.mjs`: full-page phone screenshots of every route.
+- `node qa/phone-film.mjs http://localhost:3200 / /pricing`: every chapter of a page at iPhone size, flags words running under the header.
+- `node qa/mark-centre.mjs`: the Omniwebora mark vs the crystal's core on the opening.
+- `node qa/mobile-shots.mjs`: full-page phone screenshots (reduced-motion layout).
 - `node qa/brief-shots.mjs`: each step of the contact brief.
 - `node qa/overlap-check.mjs /solutions/web-development`: words vs wall displays, numerically.
 
@@ -59,4 +61,4 @@ Without a transport the brief says plainly it was not sent (HTTP 503) and offers
 Hosted on Vercel (framework preset Next.js, no extra settings). The only server code is `POST /api/inquiry`; its rate limiter is in-memory per instance (`src/lib/inquiry/rateLimit.ts`), so back it with a shared store if abuse becomes a concern. Before going live on the real domain, complete `reports/CONTENT_APPROVAL_CHECKLIST.md` and set `NEXT_PUBLIC_ALLOW_INDEXING=true` there only.
 
 ## Home opening
-Home opens on the crystal: the golden-hour terrace still (`h00-hero-*`) with the Omniwebora mark in the crystal's core and the six services as glass cards around it (`src/components/home/HomeOpening.tsx`; the cards are laid out per screen so they never cover the crystal or the words). On scroll the camera pushes in (`home-push/`), holds, flies into the core (`home-dive/`) and comes out on the drawing of the building, chapter 01. The same film runs on phones (portrait framing); reduced motion gets the stacked layout.
+Home opens on the crystal: the golden-hour terrace still (`h00-hero-*`) with the Omniwebora mark in the crystal's core and the six services as glass cards around it (`src/components/home/HomeOpening.tsx`; the cards are laid out per screen so they never cover the crystal or the words). On scroll the camera pushes in (`home-push/`), holds, flies into the core (`home-dive/`) and comes out on the drawing of the building, chapter 01. The same film runs on phones (portrait framing); reduced motion gets the stacked layout. The mark follows `src/content/homePushTrack.ts` (`scripts/cinematic/track_crystal.py`).

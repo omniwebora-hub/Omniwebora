@@ -35,12 +35,14 @@ export function usePhoneFilm() {
 }
 
 /**
- * Renders its children only outside film mode (phones, tablets, reduced motion), where the interfaces
- * sit inline under each chapter instead of on the display walls. Server-rendered, then unmounted on
- * film-mode desktops (CSS already hides it there, so nothing shifts).
+ * Renders its children only without the film (reduced motion), where the interfaces sit inline under
+ * each chapter instead of on the display walls. Server-rendered, then unmounted wherever a film runs
+ * (wide screens and phones; CSS already hides it there, so nothing shifts).
  */
 export function FlatOnly({ children }: { children: React.ReactNode }) {
-  return useFilmMode() ? null : <>{children}</>;
+  const desktop = useFilmMode();
+  const phone = usePhoneFilm();
+  return desktop || phone ? null : <>{children}</>;
 }
 
 /** The opposite: rendered only on film-mode desktops (nothing on the server), so an interactive tool

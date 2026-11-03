@@ -730,17 +730,17 @@
    No boxes: one column of white type on the dusk shade. The summary shrinks to a line under the
    steps; options are light glass chips; fields are quiet translucent wells. */
 @media not all and (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
-  :global([data-film="off"]) .studio {
+  :global([data-film]) .studio {
     grid-template-columns: 1fr;
     gap: 18px;
     color: #fff;
   }
 
-  :global([data-film="off"]) .form {
+  :global([data-film]) .form {
     gap: 18px;
   }
 
-  :global([data-film="off"]) .summary {
+  :global([data-film]) .summary {
     position: static;
     order: 2;
     gap: 6px;
@@ -752,87 +752,87 @@
     color: rgb(255 255 255 / 0.85);
   }
 
-  :global([data-film="off"]) .sumLabel,
-  :global([data-film="off"]) .sumList {
+  :global([data-film]) .sumLabel,
+  :global([data-film]) .sumList {
     display: none;
   }
 
-  :global([data-film="off"]) .sumLead {
+  :global([data-film]) .sumLead {
     font-family: var(--font-text);
     font-size: 0.98rem;
     line-height: 1.5;
     color: #fff;
   }
 
-  :global([data-film="off"]) .sumLead b {
+  :global([data-film]) .sumLead b {
     font-weight: 650;
     color: #fff;
   }
 
-  :global([data-film="off"]) .scope {
+  :global([data-film]) .scope {
     padding: 0;
     background: none;
   }
 
-  :global([data-film="off"]) .scope .sumLabel {
+  :global([data-film]) .scope .sumLabel {
     display: block;
     color: rgb(255 255 255 / 0.7);
   }
 
-  :global([data-film="off"]) .scope pre {
+  :global([data-film]) .scope pre {
     color: rgb(255 255 255 / 0.9);
   }
 
-  :global([data-film="off"]) .scope :global(.text-link) {
+  :global([data-film]) .scope :global(.text-link) {
     color: #fff;
     text-decoration: underline;
   }
 
-  :global([data-film="off"]) .next {
+  :global([data-film]) .next {
     font-size: 0.88rem;
     color: rgb(255 255 255 / 0.78);
   }
 
-  :global([data-film="off"]) .progress {
+  :global([data-film]) .progress {
     gap: 6px 16px;
     font-size: 0.8rem;
     letter-spacing: 0.04em;
     color: rgb(255 255 255 / 0.7);
   }
 
-  :global([data-film="off"]) .progress span {
+  :global([data-film]) .progress span {
     width: 22px;
     height: 22px;
     font-size: 0.72rem;
     box-shadow: inset 0 0 0 1.5px rgb(255 255 255 / 0.45);
   }
 
-  :global([data-film="off"]) .progress li[aria-current="step"] {
+  :global([data-film]) .progress li[aria-current="step"] {
     color: #fff;
   }
 
-  :global([data-film="off"]) .progress li[aria-current="step"] span,
-  :global([data-film="off"]) .progress li[data-done] span {
+  :global([data-film]) .progress li[aria-current="step"] span,
+  :global([data-film]) .progress li[data-done] span {
     background: #faf6ef;
     color: var(--ink);
   }
 
-  :global([data-film="off"]) .panel {
+  :global([data-film]) .panel {
     padding: 0;
     border-radius: 0;
     background: none;
     box-shadow: none;
   }
 
-  :global([data-film="off"]) .fieldset {
+  :global([data-film]) .fieldset {
     gap: 16px;
   }
 
-  :global([data-film="off"]) .fieldset > legend {
+  :global([data-film]) .fieldset > legend {
     margin-bottom: 16px;
   }
 
-  :global([data-film="off"]) .stepTitle {
+  :global([data-film]) .stepTitle {
     font-size: clamp(2rem, 1.2rem + 1.7vw, 3.1rem);
     line-height: 1.04;
     letter-spacing: -0.02em;
@@ -840,24 +840,24 @@
     text-shadow: 0 2px 24px rgb(0 0 0 / 0.25);
   }
 
-  :global([data-film="off"]) .optional,
-  :global([data-film="off"]) .hint {
+  :global([data-film]) .optional,
+  :global([data-film]) .hint {
     color: rgb(255 255 255 / 0.74);
   }
 
-  :global([data-film="off"]) .hint a,
-  :global([data-film="off"]) .consent a {
+  :global([data-film]) .hint a,
+  :global([data-film]) .consent a {
     color: #fff;
   }
 
-  :global([data-film="off"]) .cards {
+  :global([data-film]) .cards {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
   }
 
-  :global([data-film="off"]) .card span,
-  :global([data-film="off"]) .chip span {
+  :global([data-film]) .card span,
+  :global([data-film]) .chip span {
     min-height: 46px;
     padding: 0 18px;
     border-radius: 999px;
@@ -870,26 +870,26 @@
     -webkit-backdrop-filter: blur(6px);
   }
 
-  :global([data-film="off"]) .card:hover span,
-  :global([data-film="off"]) .chip:hover span {
+  :global([data-film]) .card:hover span,
+  :global([data-film]) .chip:hover span {
     border-color: #fff;
     background: rgb(255 255 255 / 0.16);
   }
 
-  :global([data-film="off"]) .card input:checked + span,
-  :global([data-film="off"]) .chip input:checked + span {
+  :global([data-film]) .card input:checked + span,
+  :global([data-film]) .chip input:checked + span {
     background: #faf6ef;
     border-color: #faf6ef;
     color: var(--ink);
   }
 
-  :global([data-film="off"]) .group legend,
-  :global([data-film="off"]) .field > label {
+  :global([data-film]) .group legend,
+  :global([data-film]) .field > label {
     color: #fff;
   }
 
-  :global([data-film="off"]) .field input,
-  :global([data-film="off"]) .field textarea {
+  :global([data-film]) .field input,
+  :global([data-film]) .field textarea {
     min-height: 46px;
     border-color: rgb(255 255 255 / 0.4);
     background: rgb(255 255 255 / 0.1);
@@ -898,66 +898,66 @@
     -webkit-backdrop-filter: blur(6px);
   }
 
-  :global([data-film="off"]) .field textarea {
+  :global([data-film]) .field textarea {
     height: 7.6em;
   }
 
-  :global([data-film="off"]) .grid {
+  :global([data-film]) .grid {
     gap: 12px 16px;
   }
 
-  :global([data-film="off"]) .field input:focus-visible,
-  :global([data-film="off"]) .field textarea:focus-visible {
+  :global([data-film]) .field input:focus-visible,
+  :global([data-film]) .field textarea:focus-visible {
     border-color: #fff;
     background: rgb(255 255 255 / 0.16);
   }
 
-  :global([data-film="off"]) .field [aria-invalid="true"] {
+  :global([data-film]) .field [aria-invalid="true"] {
     border-color: #ffb4a8;
   }
 
-  :global([data-film="off"]) .err {
+  :global([data-film]) .err {
     color: #ffc9bf;
   }
 
-  :global([data-film="off"]) .consent {
+  :global([data-film]) .consent {
     color: rgb(255 255 255 / 0.86);
   }
 
-  :global([data-film="off"]) .consent input {
+  :global([data-film]) .consent input {
     accent-color: #faf6ef;
   }
 
-  :global([data-film="off"]) .skip,
-  :global([data-film="off"]) .edit {
+  :global([data-film]) .skip,
+  :global([data-film]) .edit {
     color: #fff;
   }
 
-  :global([data-film="off"]) .review dt {
+  :global([data-film]) .review dt {
     color: rgb(255 255 255 / 0.7);
   }
 
-  :global([data-film="off"]) .review dd {
+  :global([data-film]) .review dd {
     color: #fff;
   }
 
-  :global([data-film="off"]) .error {
+  :global([data-film]) .error {
     background: rgb(179 38 30 / 0.32);
     color: #ffe1dc;
   }
 
   /* Buttons on the dusk shade: ivory primary, outlined secondary. */
-  :global([data-film="off"]) .actions :global(.btn-primary) {
+  :global([data-film]) .actions :global(.btn-primary) {
     background: #faf6ef;
     color: var(--ink);
     box-shadow: 0 14px 30px -16px rgb(0 0 0 / 0.6);
   }
 
-  :global([data-film="off"]) .actions :global(.btn-primary:hover) {
+  :global([data-film]) .actions :global(.btn-primary:hover) {
     background: #fff;
   }
 
-  :global([data-film="off"]) .actions :global(.btn-ghost) {
+  :global([data-film]) .actions :global(.btn-ghost) {
     background: rgb(255 255 255 / 0.08);
     border-color: rgb(255 255 255 / 0.5);
     color: #fff;

@@ -42,6 +42,8 @@ export function ContactFilm({ children }: { children: React.ReactNode }) {
     const onFocus = () =>
       requestAnimationFrame(() => {
         if (wrap.current?.querySelector("[data-film]")?.getAttribute("data-film") !== "on") return;
+        // only the pinned brief (wide screens); on phones the form scrolls like a page
+        if (brief.offsetHeight < window.innerHeight * 2) return;
         const top = brief.getBoundingClientRect().top + window.scrollY;
         const end = top + brief.offsetHeight - window.innerHeight;
         if (window.scrollY < top || window.scrollY > end) window.scrollTo({ top: Math.min(Math.max(window.scrollY, top + 8), end - 8), behavior: "instant" });

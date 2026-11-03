@@ -16,6 +16,8 @@
   position: absolute;
   left: 0;
   top: 0;
+  /* scale about the crystal's centre (the anchor), not the box corner */
+  transform-origin: 0 0;
   will-change: transform, opacity;
 }
 
@@ -24,7 +26,7 @@
   justify-items: center;
   gap: calc(var(--ph) * 0.006);
   width: calc(var(--ph) * 0.2);
-  translate: -50% -38%;
+  translate: -50% -50%;
   color: #fff;
   animation: coreIn 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s backwards;
 }

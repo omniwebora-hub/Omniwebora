@@ -5,7 +5,8 @@ import { FILM } from "@/content/film.generated";
 import { ROOMS } from "@/content/gallery";
 import { solutionBySlug, type SolutionSlug } from "@/content/solutions";
 import { FilmEngine, smoothstep, type EngineKind, type FilmBlock, type FilmSegment } from "./engine";
-import { useFilmMode } from "./FlatOnly";
+import { useFilmMode, usePhoneFilm } from "./FlatOnly";
+import c from "./chapters.module.css";
 import { WebDisplay } from "@/components/displays/WebDisplay";
 import { PhoneApp } from "@/components/displays/PhoneApp";
 import { OpsDisplay } from "@/components/displays/OpsDisplay";
@@ -69,7 +70,9 @@ declare global {
 
 export function SolutionsFilm({ children }: { children: React.ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
-  const film = useFilmMode();
+  const desktop = useFilmMode();
+  const phone = usePhoneFilm();
+  const film = desktop || phone;
   const [active, setActive] = useState<{ block: string; step: number }>({ block: "intro", step: 0 });
   const [override, setOverride] = useState<{ key: string; value: string | number } | null>(null);
 
@@ -113,7 +116,27 @@ export function SolutionsFilm({ children }: { children: React.ReactNode }) {
           if (n.dataset.on !== on) n.dataset.on = on;
           if (n.dataset.live !== live) n.dataset.live = live;
         }
-        if (room) {
+        if (geo.W / geo.H < 1.25) {
+          // Portrait (phones): keep each room's wall screen mid-screen; push in where the screen is small
+          // enough to stay whole (the phone on its stand), eased between rooms across the clips.
+          const focusOf = (blk: Block | undefined) => {
+            if (!blk?.room) return { x: 0.5, z: 1 };
+            const [x, , w, h] = SCREEN[blk.room];
+            return { x: x + w / 2, z: Math.max(1, Math.min(2.2, (0.9 * geo.W) / (w * geo.pw), (0.5 * geo.H) / (h * geo.ph))) };
+          };
+          let f = focusOf(b as Block);
+          if (b.kind === "seg") {
+            const i = BLOCKS.indexOf(b as Block);
+            const a = focusOf(BLOCKS[i - 1]);
+            const z = focusOf(BLOCKS[i + 1]);
+            const k = smoothstep(0, 1, p);
+            f = { x: a.x + (z.x - a.x) * k, z: a.z + (z.z - a.z) * k };
+          }
+          const sw = geo.pw * f.z;
+          const tx = Math.max(geo.W - geo.px - sw, Math.min(-geo.px, geo.W / 2 - geo.px - f.x * sw));
+          const ty = (geo.H - geo.ph * f.z) / 2 - geo.py;
+          engine.set(camera, "transform", `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${f.z.toFixed(4)})`);
+        } else if (room) {
           const [x, y, w, h] = SCREEN[room];
           const e = smoothstep(0.05, 0.3, p) * (1 - smoothstep(0.72, 0.95, p));
           const share = geo.W < 1280 ? 0.54 : 0.58;
@@ -169,7 +192,7 @@ export function SolutionsFilm({ children }: { children: React.ReactNode }) {
 
 
   return (
-    <div ref={root} className={s.film} data-film={film ? "on" : "off"}>
+    <div ref={root} className={`${s.film} ${s.phoneFilm} ${c.phoneFilm}`} data-film={film ? "on" : "off"}>
       <div className={s.stage} data-stage aria-hidden={film ? undefined : true}>
         <div className={s.plate}>
           <div className={s.camera} data-camera>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FilmEngine, smoothstep, type EngineKind, type FilmBlock, type FilmFrame, type FilmSegment } from "./engine";
 import { useFilmMode, usePhoneFilm } from "./FlatOnly";
 import s from "./SolutionsFilm.module.css";
+import c from "./chapters.module.css";
 
 /**
  * CinemaFilm: the reusable scroll film for any page (Home, Pricing, Contact …).
@@ -40,7 +41,7 @@ export function CinemaFilm({
   label,
   className,
   onFrame,
-  phone = false,
+  phone = true,
 }: {
   blocks: CinemaBlock[];
   segments: Record<string, FilmSegment>;
@@ -53,7 +54,7 @@ export function CinemaFilm({
   className?: string;
   /** Called on every rendered frame (after the overlays), e.g. to drive an opening by scroll. */
   onFrame?: FrameHook;
-  /** Also run the film on phones and tablets (portrait framing; reduced motion stays stacked). */
+  /** Run the film on phones and tablets too (portrait framing; reduced motion stays stacked). */
   phone?: boolean;
 }) {
   const root = useRef<HTMLDivElement>(null);
@@ -141,7 +142,9 @@ export function CinemaFilm({
           pan = Math.max(-room, Math.min(room, asked));
         }
 
-        fr = b.frame ?? { x: 0.62, y: 0.53, w: 0.6, h: 0.7 };
+        // Portrait (phones): a camera push frames its subject centred in the upper part of the screen,
+        // above the chapter's words.
+        fr = geo.W / geo.H < 1.25 ? { x: 0.5, y: 0.36, w: 0.92, h: 0.46 } : (b.frame ?? { x: 0.62, y: 0.53, w: 0.6, h: 0.7 });
         const steps = b.steps ?? 1;
         const step = Math.min(steps - 1, Math.floor(Math.min(1, Math.max(0, (p - 0.12) / 0.76)) * steps));
 
@@ -191,7 +194,12 @@ export function CinemaFilm({
 
   const keys = Object.keys(stills);
   return (
-    <div ref={root} className={className ? `${s.film} ${className}` : s.film} data-film={film ? "on" : "off"} aria-label={label}>
+    <div
+      ref={root}
+      className={[s.film, phone ? `${s.phoneFilm} ${c.phoneFilm}` : "", className ?? ""].filter(Boolean).join(" ")}
+      data-film={film ? "on" : "off"}
+      aria-label={label}
+    >
       <div className={s.stage} data-stage aria-hidden={film ? undefined : true}>
         <div className={s.plate}>
           <div className={s.camera} data-camera>

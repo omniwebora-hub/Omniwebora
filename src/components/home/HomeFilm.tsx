@@ -9,7 +9,6 @@ import type { FilmSegment } from "@/components/film/engine";
 import { PhoneApp } from "@/components/displays/PhoneApp";
 import { IdeaTablet, IdeaWide } from "@/components/displays/IdeaWall";
 import f from "@/components/film/SolutionsFilm.module.css";
-import c from "@/components/film/chapters.module.css";
 import { BAY, BAY_X, HomeOpening, openingDriver } from "./HomeOpening";
 import s from "./HomeFilm.module.css";
 
@@ -77,7 +76,7 @@ export function HomeFilm({ children }: { children: React.ReactNode }) {
       segments={SEGMENTS}
       stills={STILLS}
       label="Ideas we bring to life"
-      className={`${s.home} ${c.phoneFilm} ${f.phoneFilm}`}
+      className={s.home}
       overlays={(a) => {
         const step = a.block === "idea" ? a.step : 0;
         const stage = a.block === "dusk" ? Math.min(6, Math.floor(a.p * 7)) : a.block === "launched" ? 6 : -1;

@@ -451,8 +451,9 @@ body > header {
   }
 }
 
-/* Content that only exists without the film (phones, tablets, reduced motion). */
-@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+/* Content that only exists without the film: the film runs wherever motion is allowed (wide screens
+   and phones alike), so this is the reduced-motion layout. */
+@media (prefers-reduced-motion: no-preference) {
   .flat-only {
     display: none !important;
   }

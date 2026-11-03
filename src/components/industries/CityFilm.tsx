@@ -5,7 +5,8 @@ import Link from "next/link";
 import { industries } from "@/content/industries";
 import { solutionBySlug } from "@/content/solutions";
 import { FilmEngine, smoothstep } from "@/components/film/engine";
-import { useFilmMode } from "@/components/film/FlatOnly";
+import { useFilmMode, usePhoneFilm } from "@/components/film/FlatOnly";
+import c from "@/components/film/chapters.module.css";
 import s from "./CityFilm.module.css";
 
 /**
@@ -27,7 +28,9 @@ const SPOTS: Record<string, [number, number]> = {
 
 export function CityFilm({ children }: { children: React.ReactNode }) {
   const root = useRef<HTMLDivElement>(null);
-  const film = useFilmMode();
+  const desktop = useFilmMode();
+  const phone = usePhoneFilm();
+  const film = desktop || phone;
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -55,7 +58,7 @@ export function CityFilm({ children }: { children: React.ReactNode }) {
         // The pan never leaves the panorama; districts near its left edge are framed where they are.
         const at = (j: number) => {
           const x = SPOTS[industries[Math.min(n - 1, Math.max(0, j))].id][0] * imgW;
-          return Math.min(range, Math.max(0, x - geo.W * 0.62));
+          return Math.min(range, Math.max(0, x - geo.W * (geo.W / geo.H < 1.25 ? 0.5 : 0.62)));
         };
         const x = at(i) + (at(i + 1) - at(i)) * (i + 1 < n ? k : 0);
         const intro = smoothstep(0, 0.08, p);
@@ -79,13 +82,17 @@ export function CityFilm({ children }: { children: React.ReactNode }) {
         }
       },
     });
-    return () => engine.destroy();
+    el.dataset.engine = "video";
+    return () => {
+      engine.destroy();
+      delete el.dataset.engine;
+    };
   }, [film]);
 
   const closing = step === industries.length + 1;
   const active = step > 0 && !closing ? industries[step - 1] : null;
   return (
-    <div ref={root} className={s.film} data-film={film ? "on" : "off"}>
+    <div ref={root} className={`${s.film} ${c.phoneFilm}`} data-film={film ? "on" : "off"}>
       <div className={s.stage} data-stage aria-hidden={film ? undefined : true}>
         <div className={s.track} data-track>
           {/* eslint-disable-next-line @next/next/no-img-element */}

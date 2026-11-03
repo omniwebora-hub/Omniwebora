@@ -139,16 +139,19 @@
 }
 
 /* ---------- The planning table (film mode) ---------- */
-/* Chapters that only exist in the film: on phones, tablets and with reduced motion the full planner
+/* Chapters that only exist in the film (wide screens and phones): with reduced motion the full planner
    below does the same job, so they are not repeated. */
 .filmOnly {
   display: none;
 }
 
-@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) {
   .filmOnly {
     display: block;
   }
+}
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
 
   /* On the wide view of the table the copy sits on the open marble below the devices. */
   .low {

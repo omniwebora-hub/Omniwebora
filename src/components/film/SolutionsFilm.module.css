@@ -351,3 +351,111 @@
     pointer-events: auto;
   }
 }
+
+/* Phone film: the wall screens and the finale's lit windows, placed on the plate as on wide screens
+   (on a phone the plate is taller than the screen, so a wall screen renders large and readable,
+   cropped at its sides like a real wall display seen up close). */
+@media (prefers-reduced-motion: no-preference) and (max-width: 1023.98px), (prefers-reduced-motion: no-preference) and (max-aspect-ratio: 1249/1000) {
+  .phoneFilm .screen {
+    position: absolute;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    background: #fbf8f2;
+    border-radius: 2px;
+  }
+
+  /* Opacity is written per frame from scroll; data-on gates visibility/focus, data-live clicks. */
+  .phoneFilm .screen[data-on="true"] {
+    visibility: visible;
+  }
+
+  .phoneFilm .screen[data-live="true"] {
+    pointer-events: auto;
+  }
+
+  .phoneFilm .screenInner {
+    transform: scale(var(--s, 0.5));
+    transform-origin: 0 0;
+    overflow: hidden;
+  }
+
+  /* Interfaces on the walls never become scroll containers: the wheel must always move the page
+     (and the camera), never the content inside a display. Full scrolling demos live on detail pages. */
+  .phoneFilm .screenInner :global(*) {
+    overflow: hidden !important;
+  }
+
+  /* Finale: the six windows of the facade, each a way back into its room. */
+  .phoneFilm .bay {
+    position: absolute;
+    display: grid;
+    align-items: end;
+    justify-items: center;
+    border-radius: 999px 999px 6px 6px / 46% 46% 6px 6px;
+    pointer-events: none;
+    visibility: hidden;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .phoneFilm[data-bays="true"] .bay {
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  .phoneFilm .bayGlow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(70% 55% at 50% 60%, rgb(255 226 170 / 0.55), rgb(255 214 150 / 0.12) 70%, transparent);
+    box-shadow: inset 0 0 0 2px rgb(255 236 200 / 0.55);
+    opacity: 0.25;
+    transition:
+      opacity 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+
+  .phoneFilm .bay:hover .bayGlow,
+  .phoneFilm .bay:focus-visible .bayGlow {
+    opacity: 1;
+    box-shadow:
+      inset 0 0 0 2px rgb(255 236 200 / 0.95),
+      0 0 40px 6px rgb(255 214 150 / 0.45);
+  }
+
+  .phoneFilm .bay:focus-visible {
+    outline: none;
+  }
+
+  .phoneFilm .bayLabel {
+    position: relative;
+    margin-bottom: 8%;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.88);
+    box-shadow: 0 10px 24px -14px rgb(21 25 33 / 0.6);
+    font-size: clamp(0.66rem, 0.45rem + 0.35vw, 0.86rem);
+    font-weight: 700;
+    white-space: nowrap;
+    transition: transform 0.3s ease;
+  }
+
+  .phoneFilm .bayLabel small {
+    color: #7a5b28;
+    font-weight: 700;
+  }
+
+  .phoneFilm .bay:hover .bayLabel,
+  .phoneFilm .bay:focus-visible .bayLabel {
+    transform: translateY(-4px);
+    background: var(--ink);
+    color: var(--white);
+  }
+
+  .phoneFilm .bay:hover .bayLabel small,
+  .phoneFilm .bay:focus-visible .bayLabel small {
+    color: #e8cf9e;
+  }
+}

@@ -226,6 +226,16 @@ test.describe("home", () => {
     await ctx.close();
   });
 
+  test("mobile: every page is a scroll film on the phone, with no sideways scroll", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "mobile layout");
+    for (const route of ["/solutions", "/solutions/custom-software", "/industries", "/approach", "/pricing", "/about", "/contact"]) {
+      await page.goto(route);
+      await expect(page.locator('[data-film="on"][data-engine]').first(), route).toBeAttached();
+      await expect(page.getByRole("heading", { level: 1 }), route).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth), route).toBeLessThanOrEqual(0);
+    }
+  });
+
   test("mobile: the Home film runs on the phone, no sideways scroll, the services stay tappable", async ({ page, isMobile }) => {
     test.skip(!isMobile, "mobile layout");
     await page.goto("/");
