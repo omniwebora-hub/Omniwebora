@@ -73,6 +73,19 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
     track("contact_start", { prefilled: initialService ? "service" : fromPricing ? "pricing" : "none" });
   }, [initialService, fromPricing]);
 
+  // Fetch the validation code in the background once the page is idle, so "Review brief" answers at
+  // once instead of first downloading it (it stays out of the page's first load).
+  useEffect(() => {
+    const load = () => void import("@/lib/inquiry/schema");
+    const w = window as Window & { requestIdleCallback?: (cb: () => void) => number; cancelIdleCallback?: (h: number) => void };
+    if (w.requestIdleCallback) {
+      const h = w.requestIdleCallback(load);
+      return () => w.cancelIdleCallback?.(h);
+    }
+    const t = window.setTimeout(load, 800);
+    return () => window.clearTimeout(t);
+  }, []);
+
   // The scene behind the brief answers its progress (ContactFilm): the pavilion draws nearer and warmer.
   useEffect(() => {
     window.dispatchEvent(new CustomEvent("omni:brief", { detail: Math.min(1, (step + (service ? 1 : 0)) / 4) }));

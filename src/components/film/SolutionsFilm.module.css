@@ -195,10 +195,11 @@
     pointer-events: auto;
   }
 
+  /* the room's steps, right above the chapter buttons (never under them) */
   .steps {
     position: fixed;
-    right: clamp(20px, 3vw, 44px);
-    bottom: 28px;
+    right: clamp(20px, 2.6vw, 44px);
+    bottom: 92px;
     z-index: 2;
     display: flex;
     gap: 6px;

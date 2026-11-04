@@ -1,69 +1,37 @@
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  color: var(--ink);
   min-height: 44px;
   text-decoration: none;
 }
 
-.logo svg {
-  flex: none;
+.logo img {
+  display: block;
+  height: auto;
 }
 
-.text {
-  display: grid;
-  gap: 5px;
+.header img {
+  width: 212px;
 }
 
-.word {
-  font-family: var(--font-text);
-  font-weight: 700;
-  font-size: 1.36rem;
-  letter-spacing: -0.025em;
-  line-height: 1;
-  white-space: nowrap;
+@media (max-width: 1023px) {
+  .header img {
+    width: 170px;
+  }
 }
 
-/* "Omni" takes the logo's colour (navy, or white where the header sits over a scene) */
-.omni {
-  color: inherit;
+/* The footer shows the whole logo, tagline legible, on a light plaque (the artwork is made for a light
+   ground; the footer's night scene is dark). */
+.footer {
+  padding: 14px 20px;
+  border-radius: 16px;
+  background: rgb(250 248 243 / 0.94);
+  box-shadow:
+    0 18px 40px -24px rgb(0 0 0 / 0.6),
+    inset 0 1px 0 rgb(255 255 255 / 0.8);
 }
 
-/* "Webora" in brass, as in the owner's logo; a lighter brass on dark ground (--logo-gold) */
-.webora {
-  background: var(--logo-gold, linear-gradient(180deg, #c8963f 0%, #9e7027 55%, #7a5418 100%));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* "Vision for a connected world", between two fine brass rules */
-.tagline {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-text);
-  font-size: 0.56rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  line-height: 1;
-  text-transform: uppercase;
-  color: currentColor;
-  opacity: 0.78;
-  white-space: nowrap;
-}
-
-.tagline::before,
-.tagline::after {
-  content: "";
-  flex: 1;
-  min-width: 8px;
-  height: 1px;
-  background: var(--gold);
-}
-
-.onDark {
-  color: var(--porcelain);
-  --logo-gold: linear-gradient(180deg, #f0d39b 0%, #d9b06a 60%, #b98b45 100%);
+.footer img {
+  width: 300px;
+  max-width: 100%;
 }

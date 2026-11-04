@@ -284,9 +284,10 @@
     background: linear-gradient(var(--ink), transparent);
   }
 
+  /* (owner, 2026-11-04: "it should be easy to scroll") a camera move is one screen of scrolling */
   .move {
     display: block;
-    height: 170svh;
+    height: 100svh;
   }
 
   .moveLine {
@@ -729,20 +730,21 @@
    shown. A change of chapter is a calm crossfade with a slight settle, timed, never tied to scroll.
    Camera-move pills ("Step inside…") are gone: the picture says it. */
 @media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
+  /* Chapters run at a little over half their written length (--hold): one gesture reads a chapter. */
   .hold {
-    height: calc(var(--hold, 300svh) + 200svh);
+    height: calc(var(--hold, 300svh) * 0.55 + 200svh);
     margin-bottom: -200svh;
   }
 
   /* The last chapter has no next one to run under; its words are read for its full length, then
      they go just as the scene starts to leave (the engine ends it there). */
   .hold:last-child {
-    height: calc(var(--hold, 300svh) + 100svh);
+    height: calc(var(--hold, 300svh) * 0.55 + 100svh);
     margin-bottom: 0;
   }
 
   .intro {
-    height: 315svh;
+    height: 270svh;
     margin-bottom: -200svh;
   }
 
@@ -1012,12 +1014,11 @@
     display: none;
   }
 
-  /* Phones scroll in shorter strokes (owner, 2026-11-04: "make it easier to scroll in phone"): camera
-     moves and chapters are about a quarter shorter than on wide screens; the chapter buttons step
-     through them too. */
+  /* Phones scroll in short strokes (owner, 2026-11-04: "easier to scroll"): a camera move is under a
+     screen, chapters half their written length; the page settles on each chapter (ChapterNav). */
   .phoneFilm .move {
     display: block;
-    height: 105svh;
+    height: 80svh;
   }
 
   .phoneFilm .moveLine {
@@ -1025,14 +1026,14 @@
   }
 
   .phoneFilm .hold {
-    height: calc(var(--hold, 300svh) * 0.76 + 200svh);
+    height: calc(var(--hold, 300svh) * 0.5 + 200svh);
     margin-bottom: -200svh;
     padding: 0;
     background: none;
   }
 
   .phoneFilm .hold:last-child {
-    height: calc(var(--hold, 300svh) * 0.76 + 100svh);
+    height: calc(var(--hold, 300svh) * 0.5 + 100svh);
     margin-bottom: 0;
   }
 
@@ -1121,7 +1122,7 @@
   .panelWrap.water {
     align-items: flex-end;
     /* the right end stays clear for the chapter buttons */
-    padding: 0 calc(clamp(24px, 3.2vw, 56px) + 230px) 4.5svh clamp(24px, 3.2vw, 56px);
+    padding: 0 calc(clamp(24px, 3.2vw, 56px) + 260px) 4.5svh clamp(24px, 3.2vw, 56px);
   }
 
   .panelWrap.water::before {
@@ -1213,6 +1214,14 @@
     align-content: end;
     padding: var(--header-h) 20px calc(84px + env(safe-area-inset-bottom));
     isolation: isolate;
+  }
+
+  /* compact on phones: the title and the actions. The six rooms are one tap away in the Solutions
+     menu, so their boxed list is left out, and so is the line about choosing a window (the phone
+     footage has no window links). */
+  .phoneFilm .outroInner .rooms,
+  .phoneFilm .outroInner .outroLede {
+    display: none;
   }
 
   .phoneFilm .outroInner::before {

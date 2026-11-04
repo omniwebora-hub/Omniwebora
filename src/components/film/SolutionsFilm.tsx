@@ -66,8 +66,8 @@ const BLOCKS: Block[] = [
   { id: "intro", kind: "hold", still: "gallery" },
   ...ROOMS.flatMap((r): Block[] => [
     { id: `to-${r.slug}`, kind: "seg", seg: ARRIVE[r.slug] },
-    // the chapter buttons rest on each step of the room's interface (steps run over p 0.3–0.72)
-    { id: r.slug, kind: "hold", still: r.slug, room: r.slug, stops: r.steps.map((_, k) => 0.3 + (0.42 * (k + 0.5)) / r.steps.length) },
+    // the room's interface plays its steps by itself while the visitor rests (steps run over p 0.3–0.72)
+    { id: r.slug, kind: "hold", still: r.slug, room: r.slug, autoplay: true, stops: r.steps.map((_, k) => 0.3 + (0.42 * (k + 0.5)) / r.steps.length) },
   ]),
   { id: "to-finale", kind: "seg", seg: "sol-finale" },
   { id: "outro", kind: "hold", still: "finale" },

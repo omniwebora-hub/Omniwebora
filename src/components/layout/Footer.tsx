@@ -26,7 +26,7 @@ export function Footer() {
       <NextStep />
       <div className={`container ${styles.top}`}>
         <div className={styles.brand}>
-          <Logo onDark tagline />
+          <Logo size="footer" />
           <p className={styles.tagline}>{site.brochureTagline}</p>
           <p>{site.description}</p>
           <ContactLinks className={styles.direct} />

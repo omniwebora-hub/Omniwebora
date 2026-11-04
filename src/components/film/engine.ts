@@ -23,9 +23,13 @@ export type FilmSegment = {
   /** How much of the segment the clip takes to fade in over the previous still (default 4 %). */
   fade?: number;
 };
-/** `stops`: where the chapter-step buttons rest in a hold, as progress through it (default: once the
- *  camera has settled, 0.32). A hold with several steps lists one per step. */
-export type FilmBlock = { id: string; kind: "hold" | "seg"; seg?: string; still?: string; stops?: number[] };
+/** `stops`: where the page rests in a hold, as progress through it (default: once the camera has
+ *  settled, 0.32). A hold may list several. With `autoplay` they are steps of one chapter, which play
+ *  by themselves while the visitor rests (the product wall, a room's interface); without it each stop
+ *  is a chapter of its own (Industries' districts). */
+export type FilmBlock = { id: string; kind: "hold" | "seg"; seg?: string; still?: string; stops?: number[]; autoplay?: boolean };
+/** A resting place for the chapter buttons and scroll settling (document scroll position). */
+export type FilmStop = { y: number; chapter: number; step: number; steps: number };
 export type FilmGeometry = { W: number; H: number; pw: number; ph: number; px: number; py: number };
 /** `shown`: for a clip, the progress (0–1) of the frame actually on screen (video), so overlays that
  *  follow the picture stay locked to it while a seek is still catching up. */
@@ -335,13 +339,18 @@ export class FilmEngine {
 
   /** Document scroll positions where each chapter (and each step of a multi-step chapter) rests:
    *  words shown, camera settled. Camera moves have none: the buttons play through them. */
-  stops(): number[] {
-    const out: number[] = [];
+  stops(): FilmStop[] {
+    const out: FilmStop[] = [];
+    let chapter = -1;
     this.o.blocks.forEach((b, i) => {
-      if (b.kind !== "hold") return;
+      // a wordless pause (its block is aria-hidden) is not a chapter: the page glides through it
+      if (b.kind !== "hold" || this.blockEls[i]?.getAttribute("aria-hidden") === "true") return;
       const len = Math.max(1, this.heights[i] - this.geo.H * 0.15);
       const ps = i === 0 && !b.stops ? [0] : (b.stops ?? [0.32]);
-      for (const p of ps) out.push(Math.round(this.rootTop + this.tops[i] + p * len));
+      ps.forEach((p, k) => {
+        if (k === 0 || !b.autoplay) chapter++;
+        out.push({ y: Math.round(this.rootTop + this.tops[i] + p * len), chapter, step: b.autoplay ? k : 0, steps: b.autoplay ? ps.length : 1 });
+      });
     });
     return out;
   }

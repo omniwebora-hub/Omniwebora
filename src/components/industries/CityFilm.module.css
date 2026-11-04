@@ -229,7 +229,7 @@
   .film[data-side="right"] .card {
     left: clamp(24px, 3.2vw, 56px);
     /* the right end stays clear for the chapter buttons */
-    right: calc(clamp(24px, 3.2vw, 56px) + 230px);
+    right: calc(clamp(24px, 3.2vw, 56px) + 260px);
     top: auto;
     bottom: 5svh;
     width: auto;

@@ -50,10 +50,9 @@ export const site = {
   social: [] as { label: string; href: string; verified: boolean }[],
 
   logo: {
-    value: "/brand/omniwebora-mark.svg",
-    verified: false,
-    source: "Vector redraw of the mark shown in the client's visual reference",
-    todo: "Replace with the official logo files and confirm usage rights.",
+    value: "/brand/omniwebora-logo-960.webp",
+    verified: true,
+    source: "The owner's logo, supplied in chat on 2026-11-04 (assets/brand/omniwebora-logo-source.jpg), used unchanged",
   } satisfies Verifiable<string>,
 
   /**

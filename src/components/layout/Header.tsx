@@ -11,7 +11,9 @@ import { track } from "@/lib/analytics";
 import styles from "./Header.module.css";
 
 /** Routes whose hero is dark (ink): the transparent header uses light text until scrolled. */
-const DARK_HERO_ROUTES = new Set<string>(["/solutions/business-automation"]);
+/** Routes whose top is a dark (ink) hero, where the header starts transparent with light type. None now:
+ *  every page opens on a scene under the light frosted band, which carries the logo as designed. */
+const DARK_HERO_ROUTES = new Set<string>();
 
 const isActive = (pathname: string, href: string) => (href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`));
 
@@ -59,7 +61,7 @@ export function Header() {
   return (
     <header className={`${styles.header} ${solid ? styles.scrolled : ""} ${onDark ? styles.onDark : ""} ${glass ? styles.glass : ""}`}>
       <div className={`container ${styles.bar}`}>
-        <Logo onDark={onDark} />
+        <Logo />
 
         <nav aria-label="Primary" className={styles.nav}>
           <ul>

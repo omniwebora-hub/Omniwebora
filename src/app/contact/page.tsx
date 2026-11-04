@@ -37,11 +37,11 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <div className={`${c.block} ${c.move}`} data-film-block="arrive" style={{ height: "140svh" }} aria-hidden="true">
+      <div className={`${c.block} ${c.move}`} data-film-block="arrive" style={{ height: "100svh" }} aria-hidden="true">
         <p className={c.moveLine}>Along the terrace · somewhere quiet to talk</p>
       </div>
 
-      <section className={`${c.block} ${s.brief}`} data-film-block="brief" aria-label="Project brief">
+      <section className={`${c.block} ${s.brief}`} data-film-block="brief" data-free-scroll aria-label="Project brief">
         {/* The link target sits just inside the chapter, so a jump here (after the header offset) lands on it. */}
         <span id="brief" className={s.anchor} />
         <div className={s.card} data-panel>

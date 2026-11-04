@@ -71,7 +71,7 @@ export default function HomePage() {
       </section>
 
       {/* The camera pushes in on the crystal (the cards have cleared), then holds on it. */}
-      <div className={`${c.block} ${c.move}`} data-film-block="push" style={{ height: "150svh" }} aria-hidden="true" />
+      <div className={`${c.block} ${c.move}`} data-film-block="push" style={{ height: "100svh" }} aria-hidden="true" />
 
       <section className={`${c.block} ${c.hold}`} data-film-block="core" style={{ "--hold": "110svh" } as React.CSSProperties} aria-labelledby="core-title">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -88,7 +88,7 @@ export default function HomePage() {
       </section>
 
       {/* Into the crystal's core, and out onto the drawing of the building (01 Innovate). */}
-      <div className={`${c.block} ${c.move}`} data-film-block="dive" style={{ height: "170svh" }} aria-hidden="true" />
+      <div className={`${c.block} ${c.move}`} data-film-block="dive" style={{ height: "110svh" }} aria-hidden="true" />
 
       {STAGE_COPY.map((st, i) => (
         <Fragment key={st.id}>
@@ -179,7 +179,7 @@ export default function HomePage() {
         <p className={c.moveLine}>Back outside · it keeps running</p>
       </div>
       <div className={`${c.block} ${c.hold}`} data-film-block="evening" style={{ "--hold": "60svh" } as React.CSSProperties} aria-hidden="true" />
-      <div className={`${c.block} ${c.move}`} data-film-block="dusk" style={{ height: "290svh" }} aria-hidden="true">
+      <div className={`${c.block} ${c.move}`} data-film-block="dusk" style={{ height: "160svh" }} aria-hidden="true">
         <p className={c.moveLine}>After launch · the work continues</p>
       </div>
 

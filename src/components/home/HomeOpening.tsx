@@ -29,85 +29,6 @@ const GLASS = { l: 0.625, r: 0.86 } as const;
 /** The crystal on the hold after the push-in: the left tip of its gold ring, as a plate fraction. */
 const CORE_GLASS_L = 0.335;
 
-/**
- * A small drawn preview of each service on its card (owner reference: a site, apps, a dashboard, a
- * flow). Illustrative shapes only, no data. viewBox 200 x 64.
- */
-function Preview({ slug }: { slug: string }) {
-  const ink = "#16305e";
-  const blue = "#3d7be0";
-  const soft = "#c9d6ea";
-  switch (slug) {
-    case "web-development":
-      return (
-        <svg className={s.pv} viewBox="0 0 200 64" aria-hidden="true">
-          <rect x="1" y="1" width="198" height="62" rx="6" fill="#fff" stroke={soft} />
-          <circle cx="9" cy="8" r="2" fill={soft} />
-          <circle cx="16" cy="8" r="2" fill={soft} />
-          <circle cx="23" cy="8" r="2" fill={soft} />
-          <rect x="10" y="20" width="64" height="6" rx="2" fill={ink} />
-          <rect x="10" y="30" width="80" height="3" rx="1.5" fill={soft} />
-          <rect x="10" y="36" width="70" height="3" rx="1.5" fill={soft} />
-          <rect x="10" y="46" width="30" height="9" rx="4.5" fill={ink} />
-          <image href="/assets/cinematic/d01-colonnade-1280.webp" x="104" y="16" width="88" height="40" preserveAspectRatio="xMidYMid slice" />
-        </svg>
-      );
-    case "mobile-apps":
-      return (
-        <svg className={s.pv} viewBox="0 0 200 64" aria-hidden="true">
-          <rect x="52" y="2" width="40" height="60" rx="7" fill="#fff" stroke={soft} />
-          {[0, 1, 2].map((r) => [0, 1].map((c) => <rect key={`${r}${c}`} x={58 + c * 15} y={12 + r * 13} width="12" height="9" rx="2" fill={r === 1 && c === 0 ? blue : soft} />))}
-          <rect x="58" y="51" width="28" height="6" rx="3" fill={ink} />
-          <rect x="106" y="2" width="40" height="60" rx="7" fill={ink} />
-          <circle cx="126" cy="28" r="11" fill="none" stroke="#2c4a80" strokeWidth="4" />
-          <circle cx="126" cy="28" r="11" fill="none" stroke="#8fc3ff" strokeWidth="4" strokeDasharray="50 70" transform="rotate(-90 126 28)" />
-          <rect x="112" y="47" width="28" height="4" rx="2" fill="#2c4a80" />
-        </svg>
-      );
-    case "custom-software":
-      return (
-        <svg className={s.pv} viewBox="0 0 200 64" aria-hidden="true">
-          <rect x="1" y="1" width="198" height="62" rx="6" fill="#fff" stroke={soft} />
-          <rect x="1" y="1" width="30" height="62" rx="6" fill={ink} />
-          {[10, 20, 30].map((y) => <rect key={y} x="7" y={y} width="18" height="4" rx="2" fill="#2c4a80" />)}
-          {[22, 30, 26, 38, 34, 44, 48].map((h, i) => <rect key={i} x={44 + i * 20} y={56 - h} width="12" height={h} rx="2" fill={i === 6 ? blue : "#9fbbe8"} />)}
-        </svg>
-      );
-    case "business-automation":
-      return (
-        <svg className={s.pv} viewBox="0 0 200 64" aria-hidden="true">
-          <rect x="1" y="1" width="198" height="62" rx="6" fill="#fff" stroke={soft} />
-          <path d="M30 32 H170" stroke="#d9a65c" strokeWidth="2" strokeDasharray="4 4" />
-          {[30, 77, 123, 170].map((x, i) => (
-            <g key={x}>
-              <rect x={x - 16} y="22" width="32" height="20" rx="5" fill={i === 1 ? ink : "#fff"} stroke={i === 1 ? ink : soft} />
-              <rect x={x - 9} y="30" width="18" height="4" rx="2" fill={i === 1 ? "#8fc3ff" : soft} />
-            </g>
-          ))}
-        </svg>
-      );
-    case "digital-marketing":
-      return (
-        <svg className={s.pv} viewBox="0 0 200 64" aria-hidden="true">
-          <rect x="1" y="1" width="198" height="62" rx="6" fill="#fff" stroke={soft} />
-          <polyline points="12,50 40,44 64,46 90,34 116,36 142,24 168,20 188,12" fill="none" stroke={blue} strokeWidth="2.5" strokeLinejoin="round" />
-          <polyline points="12,54 40,52 64,50 90,47 116,45 142,42 168,40 188,36" fill="none" stroke={soft} strokeWidth="2" />
-          <circle cx="188" cy="12" r="3" fill={blue} />
-        </svg>
-      );
-    default:
-      return (
-        <svg className={s.pv} viewBox="0 0 200 64" aria-hidden="true">
-          {[0, 1, 2].map((i) => (
-            <g key={i} transform={`translate(${30 + i * 14} ${38 - i * 14})`}>
-              <path d="M0 10 L60 0 L120 10 L60 20 Z" fill={i === 2 ? ink : i === 1 ? "#5d86cf" : "#b9cdee"} stroke="#fff" strokeWidth="1" />
-            </g>
-          ))}
-        </svg>
-      );
-  }
-}
-
 /** The film overlay (plate coordinates; rendered inside CinemaFilm's camera). */
 export function HomeOpening() {
   return (
@@ -118,9 +39,9 @@ export function HomeOpening() {
           return (
             <li key={p.slug} className={s.card} data-card data-side={p.side} style={{ animationDelay: `${0.5 + i * 0.08}s` }}>
               <a href={`/solutions#${p.slug}`} tabIndex={-1}>
-                <b>{sol.name}</b>
+                {/* the short name keeps every card to one line of title, so all six read the same */}
+                <b>{sol.short}</b>
                 <span>{p.tagline}</span>
-                <Preview slug={p.slug} />
               </a>
             </li>
           );
@@ -202,8 +123,10 @@ export function openingDriver(ids: { arrive: string; push: string; core: string;
     });
     return pan;
 
-    /** Each side's three cards fill the space between the words (or the window edge) and the crystal,
-     *  stacked around the crystal's centre; never over the crystal, the words or each other. */
+    /** The six cards are one size (owner, 2026-11-04: "all these in different sizes, make it minimal"):
+     *  the width the narrower side allows, the height of the tallest card. Each side's three are stacked
+     *  around the crystal's centre, between the words (or the window edge) and the crystal; never over
+     *  the crystal, the words or each other. */
     function placeCards() {
       const wl = (pw - W) / 2 - pan; // the window's left edge in plate pixels
       const gap = 22;
@@ -213,26 +136,25 @@ export function openingDriver(ids: { arrive: string; push: string; core: string;
       } as const;
       const top = (ph - H) / 2 + 84; // below the header
       const bottom = (ph - H) / 2 + H - 24;
-      let fits = true;
+      const w = Math.min(230, sides.left[1] - sides.left[0], sides.right[1] - sides.right[0]);
+      let fits = w >= 136;
+      const links = cards.map((n) => n.firstElementChild as HTMLElement);
+      links.forEach((a) => {
+        set(a, "width", `${Math.round(w)}px`);
+        set(a, "minHeight", "");
+      });
+      const h = Math.max(...cards.map((n) => n.offsetHeight));
+      links.forEach((a) => set(a, "minHeight", `${h}px`));
+      const step = h + 14;
+      const total = step * 3 - 14;
+      const y0 = Math.max(top, Math.min(bottom - total, REST[1] * ph - total / 2));
+      if (y0 + total > bottom) fits = false;
       for (const side of ["left", "right"] as const) {
         const [x0, x1] = sides[side];
-        const w = Math.min(250, x1 - x0);
-        if (w < 140) fits = false;
-        const mine = cards.filter((_, i) => heroPanels[i].side === side);
-        mine.forEach((n) => {
-          set(n.firstElementChild as HTMLElement, "width", `${Math.round(w)}px`);
-          const compact = String(w < 175);
-          if (n.dataset.compact !== compact) n.dataset.compact = compact;
-        });
-        const hs = mine.map((n) => n.offsetHeight);
-        const total = hs.reduce((s, h) => s + h, 0) + 16 * (mine.length - 1);
-        let y = Math.max(top, Math.min(bottom - total, REST[1] * ph - total / 2));
-        if (y + total > bottom) fits = false;
         const x = side === "left" ? x1 - w : x0;
-        mine.forEach((n, k) => {
-          set(n, "transform", `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`);
-          y += hs[k] + 16;
-        });
+        cards
+          .filter((_, i) => heroPanels[i].side === side)
+          .forEach((n, k) => set(n, "transform", `translate(${x.toFixed(1)}px, ${(y0 + k * step).toFixed(1)}px)`));
       }
       // Too little room on this screen: no cards rather than cards over the crystal or the words.
       cardBox!.dataset.fits = String(fits);

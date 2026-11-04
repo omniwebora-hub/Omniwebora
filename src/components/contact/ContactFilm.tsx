@@ -24,7 +24,8 @@ const SEGMENTS: Record<string, FilmSegment> = {
 export const CONTACT_BLOCKS: CinemaBlock[] = [
   { id: "terrace", kind: "hold", still: "terrace" },
   { id: "arrive", kind: "seg", seg: "contact-arrive" },
-  { id: "brief", kind: "hold", still: "pavilion" },
+  // arriving rests at the start of the brief (on phones it is a form that scrolls like a page)
+  { id: "brief", kind: "hold", still: "pavilion", stops: [0.02] },
 ];
 
 /** Portrait cut (phones): the same arrival filmed at 9:16, from the terrace to the pavilion at dusk. */

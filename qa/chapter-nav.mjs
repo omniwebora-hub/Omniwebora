@@ -1,6 +1,6 @@
 // Chapter buttons QA (owner, 2026-11-04: "button type to go next and next"). On each film page, clicks
-// Next until the film ends and checks at every stop: the page moved forward, exactly one chapter is
-// current and its words are fully shown, and the buttons cover no visible words. Saves a screenshot per
+// Next until the film ends and checks at every stop: the page moved forward, at most one chapter is
+// current and its words are fully shown, and the buttons cover no visible text of any kind. Saves a screenshot per
 // stop to qa/screenshots/chapters/<device>/<page>-NN.png.
 // Usage: node qa/chapter-nav.mjs [base] [phone|desktop] /a /b …
 import { chromium, devices } from "@playwright/test";
@@ -75,12 +75,23 @@ for (const path of paths) {
         const r = visibleRect(el);
         return r.bottom - r.top > 4 && r.bottom > 0 && r.top < innerHeight && op(el) > 0.5;
       });
-      const overlap = navOn
-        ? words.filter((el) => {
-            const r = visibleRect(el);
-            return r.left < nr.right && r.right > nr.left && r.top < nr.bottom && r.bottom > nr.top;
-          }).map((el) => el.textContent.trim().slice(0, 40))
-        : [];
+      // anything with visible text under the buttons (chapter words, chips, a display's interface…),
+      // clipped by its scrolling/overflow ancestors; the footer is skipped (on wide screens it waits,
+      // covered, under the page until the film has ended, and the buttons leave before it shows)
+      const under = new Set();
+      if (navOn)
+        for (const el of document.querySelectorAll("body *")) {
+          if (el.closest("[data-chapter-nav], footer, script, style")) continue;
+          if (![...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim())) continue;
+          const r = visibleRect(el);
+          if (r.right - r.left < 2 || r.bottom - r.top < 2) continue;
+          if (!(r.left < nr.right && r.right > nr.left && r.top < nr.bottom && r.bottom > nr.top)) continue;
+          if (op(el) > 0.5) under.add(el);
+        }
+      const overlap = [...under, ...(navOn ? words : []).filter((el) => {
+        const r = visibleRect(el);
+        return r.left < nr.right && r.right > nr.left && r.top < nr.bottom && r.bottom > nr.top;
+      })].map((el) => el.textContent.trim().slice(0, 40)).filter((t, i, all) => all.indexOf(t) === i);
       // words of the current chapter (or, past the film's last chapter, any words on screen)
       // (Industries' district cards live on the stage, not inside the chapter)
       const scope = cur[0] ?? document.querySelector("[data-film]");
