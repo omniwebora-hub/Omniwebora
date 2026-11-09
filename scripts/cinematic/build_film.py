@@ -79,7 +79,6 @@ STILLS = [
     ("L02_table_eye.png", "l02-table-eye"),
     ("C01_contact_pavilion.png", "c01-pavilion"),
     ("A10_drafting_table.png", "a10-drafting"),
-    ("I01_city_panorama.png", "i01-city"),
     ("S00_gallery.png", "s00-gallery"),
     ("S01_web_alcove.png", "s01-web"),
     ("S03b_mobile_phone.png", "s03-mobile"),

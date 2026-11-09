@@ -28,65 +28,81 @@
   animation: cardIn 1s ease backwards;
 }
 
-/* One size for all six, minimal: a fine brass rule, the name, one line. */
+/* The six as icon cards (owner's reference, 2026-11-06): deep-blue glass edged in light, a glowing
+   blue line icon in its own tile, the name in bold white. One size for all six. */
 .card a {
+  container-type: inline-size;
   display: grid;
-  align-content: start;
-  gap: 4px;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
   width: 220px;
-  padding: 13px clamp(12px, 1.1vw, 16px) 14px;
-  border: 1px solid rgb(255 255 255 / 0.72);
-  border-radius: 14px;
-  background: rgb(255 255 255 / 0.68);
+  padding: 12px clamp(12px, 1.1vw, 16px);
+  border: 1px solid rgb(190 215 255 / 0.55);
+  border-radius: 16px;
+  background: linear-gradient(150deg, rgb(20 44 96 / 0.78), rgb(9 22 52 / 0.84));
   box-shadow:
-    0 16px 36px -28px rgb(40 30 10 / 0.55),
-    inset 0 1px 0 rgb(255 255 255 / 0.75);
-  backdrop-filter: blur(14px) saturate(1.2);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  color: var(--ink);
+    0 18px 40px -26px rgb(6 14 40 / 0.8),
+    0 0 0 1px rgb(255 255 255 / 0.06) inset,
+    0 0 22px -6px rgb(80 150 255 / 0.45);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  color: #fff;
   text-decoration: none;
   pointer-events: none;
-  transition: background-color 0.25s ease;
-}
-
-.card a::before {
-  content: "";
-  width: 18px;
-  height: 2px;
-  margin-bottom: 5px;
-  border-radius: 2px;
-  background: var(--gold);
+  transition:
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .cards[data-live="true"] .card a {
   pointer-events: auto;
 }
 
-.card b {
-  font-size: 0.94rem;
-  font-weight: 650;
-  line-height: 1.25;
-  letter-spacing: -0.005em;
+.icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: radial-gradient(circle at 50% 40%, rgb(70 140 255 / 0.32), rgb(30 70 160 / 0.18));
+  box-shadow: inset 0 0 0 1px rgb(150 195 255 / 0.35);
+  color: #8fc6ff;
 }
 
-.card span {
-  color: #3a4252;
-  font-size: 0.8rem;
-  line-height: 1.4;
+.icon svg {
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 0 4px rgb(100 170 255 / 0.85));
+}
+
+.card b {
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.005em;
+  text-shadow: 0 1px 10px rgb(0 0 0 / 0.35);
 }
 
 /* narrower screens (about 1280 wide): the same cards, a touch tighter */
-.card a {
-  container-type: inline-size;
-}
-
-@container (max-width: 165px) {
-  .card b {
-    font-size: 0.84rem;
+@container (max-width: 175px) {
+  .card a {
+    gap: 9px;
   }
 
-  .card span {
-    font-size: 0.72rem;
+  .icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .icon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .card b {
+    font-size: 0.86rem;
   }
 }
 
@@ -96,7 +112,11 @@
 
 .card a:hover,
 .card a:focus-visible {
-  background: rgb(255 255 255 / 0.86);
+  border-color: rgb(210 228 255 / 0.9);
+  box-shadow:
+    0 18px 40px -26px rgb(6 14 40 / 0.8),
+    0 0 0 1px rgb(255 255 255 / 0.1) inset,
+    0 0 30px -4px rgb(90 160 255 / 0.7);
   outline: none;
 }
 

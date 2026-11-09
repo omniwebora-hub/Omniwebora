@@ -476,32 +476,6 @@
   }
 }
 
-/* Industries: the intro screen over the panorama (scrolls away; the district cards take over). */
-.cityIntro {
-  position: relative;
-  z-index: 1;
-  padding: 0 var(--gutter, 20px) 32px;
-}
-
-@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
-  .city {
-    height: 620svh;
-  }
-
-  .cityIntro[data-gone="true"] {
-    visibility: hidden;
-  }
-
-  /* pinned for the whole film; CityFilm dissolves it in place before the first district */
-  .cityIntro {
-    position: sticky;
-    top: 0;
-    display: flex;
-    align-items: center;
-    height: 100svh;
-    padding: var(--header-h) 0 24px clamp(24px, 3.2vw, 56px);
-  }
-}
 
 /* ---------- Minimal chapter copy (owner, 2026-10-29): no boxes over the scenes. ----------
    White type on a soft, shapeless shade at the left edge; one line of story, then the action. */
@@ -967,23 +941,8 @@
   }
 }
 
-/* Phones: the Industries intro and the notes under the inline demos sit on the dark ground too. */
+/* Phones: the notes under the inline demos sit on the dark ground too. */
 @media not all and (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
-  .cityIntro {
-    padding-top: 32px;
-    background: var(--ink-deep);
-    color: #fff;
-  }
-
-  .cityIntro .lede,
-  .cityIntro p {
-    color: rgb(255 255 255 / 0.86);
-  }
-
-  .cityIntro .more {
-    color: #fff;
-  }
-
   /* An inline demo is an interface, shown on its own light surface (like a screen) inside the chapter. */
   .flatDemo {
     margin-top: 28px;
@@ -1160,34 +1119,8 @@
   }
 }
 
-/* Phone film: Industries (the panorama film) and the Solutions intro / outro sections. */
+/* Phone film: the Solutions intro / outro sections. */
 @media (prefers-reduced-motion: no-preference) and (max-width: 1023.98px), (prefers-reduced-motion: no-preference) and (max-aspect-ratio: 1249/1000) {
-  .phoneFilm .city {
-    height: 620svh;
-  }
-
-  .phoneFilm .cityIntro {
-    position: sticky;
-    top: 0;
-    display: flex;
-    align-items: flex-end;
-    height: 100svh;
-    padding: var(--header-h) 20px calc(80px + env(safe-area-inset-bottom));
-    background: linear-gradient(0deg, rgb(8 14 30 / 0.85), rgb(8 14 30 / 0.5) 40%, transparent 70%);
-  }
-
-  .phoneFilm .cityIntro[data-gone="true"] {
-    visibility: hidden;
-  }
-
-  .phoneFilm .cityIntro .panel {
-    margin: 0;
-    padding: 0;
-    background: none;
-    box-shadow: none;
-    color: #fff;
-  }
-
   .phoneFilm .intro {
     min-height: 100svh;
     align-items: end;

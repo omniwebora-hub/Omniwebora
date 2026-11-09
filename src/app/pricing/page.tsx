@@ -69,6 +69,7 @@ export default function PricingPage() {
                   <h2 id={`plan-${plan.id}`} className={c.title}>
                     {plan.name}
                   </h2>
+                  {plan.price && <p className={s.price}>{plan.price}</p>}
                   <dl className={c.story}>
                     <div>
                       <dt>Where it sits</dt>

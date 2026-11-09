@@ -3,7 +3,7 @@
 import { chromium, devices } from "@playwright/test";
 import fs from "node:fs";
 const base = process.argv[2] ?? "http://localhost:3200";
-const routes = ["/", "/solutions", "/solutions/web-development", "/industries", "/approach", "/pricing", "/about", "/contact"];
+const routes = ["/", "/solutions", "/solutions/web-development", "/approach", "/pricing", "/about", "/contact"];
 fs.mkdirSync("qa/screenshots/mobile", { recursive: true });
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ ...devices["iPhone 13"] });

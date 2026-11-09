@@ -9,7 +9,6 @@ const ROUTES = [
   "/solutions/business-automation",
   "/solutions/digital-marketing",
   "/solutions/enterprise-platforms",
-  "/industries",
   "/approach",
   "/pricing",
   "/about",
@@ -106,7 +105,7 @@ test.describe("navigation", () => {
     test.skip(!!isMobile, "desktop navigation");
     await page.goto("/about");
     const nav = page.getByRole("navigation", { name: "Primary" });
-    for (const [label, path] of [["Industries", "/industries"], ["How We Work", "/approach"], ["Pricing", "/pricing"], ["About", "/about"]] as const) {
+    for (const [label, path] of [["How We Work", "/approach"], ["Pricing", "/pricing"], ["About", "/about"]] as const) {
       await nav.getByRole("link", { name: label, exact: true }).click();
       await expect(page).toHaveURL(new RegExp(`${path}$`));
       await expect(nav.getByRole("link", { name: label, exact: true })).toHaveAttribute("aria-current", "page");
@@ -229,7 +228,7 @@ test.describe("home", () => {
 
   test("mobile: every page is a scroll film on the phone, with no sideways scroll", async ({ page, isMobile }) => {
     test.skip(!isMobile, "mobile layout");
-    for (const route of ["/solutions", "/solutions/custom-software", "/industries", "/approach", "/pricing", "/about", "/contact"]) {
+    for (const route of ["/solutions", "/solutions/custom-software", "/approach", "/pricing", "/about", "/contact"]) {
       await page.goto(route);
       await expect(page.locator('[data-film="on"][data-engine]').first(), route).toBeAttached();
       await expect(page.getByRole("heading", { level: 1 }), route).toBeVisible();

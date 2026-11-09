@@ -47,7 +47,8 @@ describe("content honesty", () => {
 
   it("never publishes the withheld brochure claims", () => {
     const pages = walk(SRC).filter((f) => /\.(tsx?)$/.test(f)).map((f) => fs.readFileSync(f, "utf8")).join("\n");
-    expect(pages).not.toMatch(/Most popular|Domain included|On-Time Delivery|Expert Team|free consultation/i);
+    // "Free consultation" is owner-approved since 2026-11-06 (FACT_REGISTER O07), so it is no longer listed.
+    expect(pages).not.toMatch(/Most popular|Domain included|On-Time Delivery|Expert Team/i);
   });
 
   it("has no testimonial or award language in content", () => {

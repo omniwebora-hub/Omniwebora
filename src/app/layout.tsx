@@ -12,12 +12,13 @@ import { organizationJsonLd } from "@/lib/seo";
 import { site } from "@/content/site";
 import "./globals.css";
 
-// Display serif: Newsreader's display cut (opsz 72) at weight 500 is the only instance the design
-// uses, so it is self-hosted as one static 24 KB file instead of the 129 KB variable font.
+// Display serif: Newsreader's display cut (opsz 72) at weight 600 (owner, 2026-11-09: the type read
+// too light) is the only instance the design uses, so it is self-hosted as one static 23 KB file
+// instead of the 129 KB variable font.
 // SIL Open Font License 1.1, see src/app/fonts/Newsreader-OFL.txt.
 const newsreader = localFont({
-  src: "./fonts/newsreader-display-500-latin.woff2",
-  weight: "500",
+  src: "./fonts/newsreader-display-600-latin.woff2",
+  weight: "600",
   style: "normal",
   variable: "--font-newsreader",
   display: "swap",

@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
       { source: "/work", destination: "/solutions", permanent: false },
       { source: "/concept-lab", destination: "/solutions", permanent: false },
       { source: "/process", destination: "/approach", permanent: true },
+      // Owner, 2026-11-06: the Industries page is removed.
+      { source: "/industries", destination: "/solutions", permanent: true },
     ];
   },
   async headers() {

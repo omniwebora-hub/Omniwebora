@@ -240,3 +240,20 @@
     animation: none;
   }
 }
+
+/* Page 1, eye level: one device's interface, mapped onto its screen in perspective (PlanFilm EYE). */
+.eye {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  overflow: hidden;
+  border-radius: 6px;
+  pointer-events: none;
+  backface-visibility: hidden;
+}
+
+.eye > * {
+  width: 100%;
+  height: 100%;
+}

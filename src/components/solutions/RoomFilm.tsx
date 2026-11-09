@@ -82,7 +82,9 @@ export function RoomFilm({ slug, chapters, children }: { slug: SolutionSlug; cha
         };
         return (
           <div className={f.overlay} data-show={chapters.join(" ")} style={{ ...plateRect(r), borderRadius: radius, overflow: "hidden" }}>
-            <div className={f.overlayInner} data-design={design.w} style={{ width: design.w, height: design.w / shape }}>
+            {/* On a phone the wall screen is drawn too small to tap: it is view-only there (the steps play
+                themselves, and the step buttons under it pick one). */}
+            <div className={f.overlayInner} data-design={design.w} style={{ width: design.w, height: design.w / shape }} inert={a.cut === "portrait"}>
               {ui[slug]}
             </div>
           </div>

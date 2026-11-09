@@ -50,7 +50,6 @@ export function Footer() {
         <nav aria-label="Explore" className={styles.col}>
           <h2 className={styles.colTitle}>Explore</h2>
           <ul>
-            <li><Link href="/industries">Industries</Link></li>
             <li><Link href="/approach">How we work</Link></li>
             <li><Link href="/pricing">Pricing</Link></li>
           </ul>

@@ -29,9 +29,12 @@ export default function ContactPage() {
               Tell us what you&rsquo;re building.
             </h1>
             <p className={c.lede}>Share the challenge, a rough idea or an existing process. We&rsquo;ll use your details to understand the scope and reply by email.</p>
-            <a href="#brief" className={c.more}>
-              Start the brief
-            </a>
+            {/* Owner, 2026-11-06: "Enquire with us" opens the form (the next chapter). */}
+            <div className={c.actions}>
+              <a href="#brief" className="btn btn-primary btn-small">
+                Enquire with us
+              </a>
+            </div>
             <ContactLinks />
           </div>
         </div>

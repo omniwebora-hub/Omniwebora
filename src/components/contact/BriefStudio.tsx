@@ -223,7 +223,7 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
           </div>
         )}
         <p className={s.next}>
-          We read every brief and reply by email to talk through scope and next steps. Plans are confirmed in a written proposal.
+          The first consultation is free. We read every enquiry and reply by email to talk through scope and next steps.
         </p>
       </aside>
 
@@ -235,6 +235,10 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
             </li>
           ))}
         </ol>
+        {/* Owner, 2026-11-06: say in the form that the consultation is free (FACT_REGISTER O07). */}
+        <p className={s.free}>
+          <span aria-hidden="true">✓</span> Free consultation
+        </p>
 
         <noscript>
           <p className={s.noscript}>This project brief needs JavaScript to send. Please enable it, or return later.</p>

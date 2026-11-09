@@ -145,7 +145,8 @@ export function CinemaFilm({
           el.querySelectorAll<HTMLElement>("[data-design]").forEach((d) => d.style.setProperty("--s", String(d.parentElement!.offsetWidth / Number(d.dataset.design))));
         }
         const leaving = next?.kind === "seg";
-        const fadeIn = smoothstep(0, 0.05, p);
+        // The film's first chapter is already on screen when the page opens: its overlays need no fade in.
+        const fadeIn = index === 0 ? 1 : smoothstep(0, 0.05, p);
         const fadeOut = leaving ? 1 - smoothstep(0.95, 1, p) : 1;
         for (const { n, ids } of shows) {
           // An overlay that was already up in the previous hold stays up across the join (no blink).

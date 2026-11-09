@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { StageExplorer } from "@/components/approach/StageExplorer";
 import { JourneyPlanner } from "@/components/approach/JourneyPlanner";
-import { PlanFilm, PlanCta } from "@/components/approach/PlanFilm";
+import { PlanFilm } from "@/components/approach/PlanFilm";
 import { PlannerProvider } from "@/components/approach/plannerState";
 import c from "@/components/film/chapters.module.css";
 import { CtaBand } from "@/components/sections/CtaBand";
@@ -17,20 +17,6 @@ export const metadata: Metadata = pageMetadata({
   path: "/approach",
 });
 
-const FAQ = [
-  {
-    q: "Do all seven stages apply to every project?",
-    a: "No. A small website moves through them quickly and may not need integration work; a platform repeats Develop and Integrate in cycles. The stages describe the work, not a fixed calendar.",
-  },
-  {
-    q: "How is scope handled when something changes?",
-    a: "Changes are discussed against the agreed scope before they are built, so cost and timing stay visible. Small adjustments can often be absorbed; larger ones become a new item on the roadmap.",
-  },
-  {
-    q: "Is maintenance included?",
-    a: "Maintenance and support are agreed in the proposal, as ad-hoc help or an ongoing arrangement.",
-  },
-];
 
 export default function ApproachPage() {
   return (
@@ -44,12 +30,9 @@ export default function ApproachPage() {
               <Breadcrumbs items={[{ name: "How we work", path: "/approach" }]} />
               <p className={c.num}>How we work</p>
               <h1 id="page-title" className={c.title}>
-                Planned around what you do, and what you want.
+                Planned around your business.
               </h1>
-              <p className={c.lede}>Seven stages, from first conversation to launch and beyond. Tell us what you do and what you want, and each one is written for you.</p>
-              <a href="#planner" className={c.more}>
-                Plan it on one page
-              </a>
+              <p className={c.lede}>Seven simple stages, from the first talk to launch and beyond.</p>
             </div>
           </div>
         </section>
@@ -59,49 +42,49 @@ export default function ApproachPage() {
         </div>
 
         <section className={`${c.block} ${c.hold} ${s.filmOnly}`} data-film-block="table" style={{ "--hold": "110svh" } as React.CSSProperties} aria-labelledby="table-title">
-          <div className={`${c.panelWrap} ${s.low}`}>
+          <div className={`${c.panelWrap} ${c.water}`}>
             <div className={c.panel} data-panel>
               <p className={c.num}>The planning table</p>
               <h2 id="table-title" className={c.title}>
                 Three screens, one plan: yours.
               </h2>
-              <p className={c.lede}>Tell the tablet what you do, the laptop what you want, and watch the seven stages rewrite themselves on the last screen.</p>
+              <p className={c.lede}>Tell us what you do and what you want. We write your plan.</p>
             </div>
           </div>
         </section>
 
         <section className={`${c.block} ${c.hold} ${s.filmOnly}`} data-film-block="trade" style={{ "--hold": "170svh" } as React.CSSProperties} aria-labelledby="plan-trade">
-          <div className={c.panelWrap}>
+          <div className={`${c.panelWrap} ${c.water}`}>
             <div className={c.panel} data-panel>
               <p className={c.num}>01 · What you do</p>
               <h2 id="plan-trade" className={c.title}>
-                Start with how your business works.
+                Start with your business.
               </h2>
-              <p className={c.lede}>Pick the closest one on the tablet. It only changes the words of your plan, never the care that goes into it.</p>
+              <p className={c.lede}>Pick the closest one on the tablet.</p>
             </div>
           </div>
         </section>
 
         <section className={`${c.block} ${c.hold} ${s.filmOnly}`} data-film-block="wants" style={{ "--hold": "170svh" } as React.CSSProperties} aria-labelledby="plan-wants">
-          <div className={c.panelWrap}>
+          <div className={`${c.panelWrap} ${c.water}`}>
             <div className={c.panel} data-panel>
               <p className={c.num}>02 · What you want</p>
               <h2 id="plan-wants" className={c.title}>
-                Then what it should do for you.
+                Then, what you need.
               </h2>
-              <p className={c.lede}>Choose up to three on the laptop: a credible website, bookings, an app, one system, less manual work, more customers or departments working together.</p>
+              <p className={c.lede}>Choose up to three on the laptop.</p>
             </div>
           </div>
         </section>
 
         <section className={`${c.block} ${c.hold} ${s.filmOnly}`} data-film-block="stages" style={{ "--hold": "380svh" } as React.CSSProperties} aria-labelledby="plan-stages">
-          <div className={c.panelWrap}>
+          <div className={`${c.panelWrap} ${c.water}`}>
             <div className={c.panel} data-panel>
-              <p className={c.num}>03 · Your seven stages</p>
+              <p className={c.num}>03 · Your plan</p>
               <h2 id="plan-stages" className={c.title}>
-                Every stage, written for your business.
+                Seven stages, written for you.
               </h2>
-              <p className={c.lede}>Discover, Design, Develop, Integrate, Deploy, Maintain and Scale. Keep scrolling to walk through them on the tablet.</p>
+              <p className={c.lede}>Discover, Design, Develop, Integrate, Deploy, Maintain and Scale. Each one plays on the tablet.</p>
             </div>
           </div>
         </section>
@@ -131,42 +114,6 @@ export default function ApproachPage() {
           </div>
         </section>
 
-        <section className={`${c.block} ${c.hold} ${s.filmOnly}`} data-film-block="faq" style={{ "--hold": "140svh" } as React.CSSProperties} aria-labelledby="faq-film">
-          <div className={c.panelWrap}>
-            <div className={c.panel} data-panel style={{ width: "min(42vw, 38rem)" }}>
-              <p className={c.num}>Questions about the process</p>
-              <h2 id="faq-film" className={c.title}>
-                Before you ask.
-              </h2>
-              <div className={c.faq}>
-                {FAQ.map((f) => (
-                  <details key={f.q}>
-                    <summary>{f.q}</summary>
-                    <p>{f.a}</p>
-                  </details>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className={`${c.block} ${c.hold} ${s.filmOnly}`} data-film-block="send" style={{ "--hold": "115svh" } as React.CSSProperties} aria-labelledby="plan-send">
-          <div className={`${c.panelWrap} ${s.low}`}>
-            <div className={c.panel} data-panel>
-              <p className={c.num}>Your plan</p>
-              <h2 id="plan-send" className={c.title}>
-                Take it into your brief.
-              </h2>
-              <p className={c.lede}>Your choices travel with you to the contact form, where you can edit them before anything is sent.</p>
-              <div className={c.actions}>
-                <PlanCta />
-                <a href="#planner" className={c.more}>
-                  See it on one page
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
       </PlanFilm>
       <div className="flat-only">
 
@@ -215,22 +162,6 @@ export default function ApproachPage() {
                 down first. <Link href="/pricing">See plans</Link>.
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="approach-faq">
-        <div className={`container ${s.split}`}>
-          <h2 id="approach-faq" className={s.title}>
-            Questions about the process
-          </h2>
-          <div className={s.faq}>
-            {FAQ.map((f) => (
-              <details key={f.q}>
-                <summary>{f.q}</summary>
-                <p>{f.a}</p>
-              </details>
-            ))}
           </div>
         </div>
       </section>

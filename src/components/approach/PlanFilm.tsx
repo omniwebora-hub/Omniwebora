@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { FILM } from "@/content/film.generated";
 import { stages } from "@/content/approach";
 import { MAX_WANTS, planFor, TRADES, WANTS } from "@/content/planner";
 import { CinemaFilm, plateRect, type CinemaBlock, type PortraitCut, type Rect } from "@/components/film/CinemaFilm";
 import { PB, pscreens, psegs } from "@/components/film/portrait";
+import { quadMatrix, type Quad } from "@/components/film/perspective";
 import { usePlanner, useSendPlan } from "./plannerState";
 import f from "@/components/film/SolutionsFilm.module.css";
 import x from "@/components/displays/displays.module.css";
@@ -19,8 +19,9 @@ import s from "./PlanFilm.module.css";
  * The selection is shared with the full planner below (PlannerProvider).
  */
 const [LEFT, LAPTOP, RIGHT] = FILM["l01-lab"].screens as unknown as [Rect, Rect, Rect];
-/** Pushed in right of centre, large enough that the device always starts clear of the copy. */
-const FRAME = { x: 0.66, y: 0.54, w: 0.55, h: 0.62 };
+/** Each device framed in the upper middle of the screen; its chapter's words sit in a band below it
+ *  (owner, 2026-11-06: "left side content is overlapping the tab"). */
+const FRAME = { x: 0.5, y: 0.41, w: 0.62, h: 0.56 };
 const OPEN = { x: 0.5, y: 0.5, w: 0.85, h: 0.85 };
 export const PLAN_BLOCKS: CinemaBlock[] = [
   // Eye level in the studio, then the camera cranes up until it looks straight down on the table.
@@ -28,14 +29,44 @@ export const PLAN_BLOCKS: CinemaBlock[] = [
   { id: "rise", kind: "seg", seg: "plan-arrive" },
   { id: "table", kind: "hold", still: "table" },
   { id: "trade", kind: "hold", still: "table", dolly: LEFT, frame: FRAME },
-  { id: "wants", kind: "hold", still: "table", dolly: LAPTOP, frame: FRAME },
+  // the laptop's keyboard sits below its screen: frame the screen higher so the keyboard clears the words
+  { id: "wants", kind: "hold", still: "table", dolly: LAPTOP, frame: { x: 0.5, y: 0.28, w: 0.5, h: 0.32 } },
   { id: "stages", kind: "hold", still: "table", dolly: RIGHT, frame: FRAME, steps: stages.length },
-  // Working together and the usual questions: close on open marble below the devices (bottom right,
-  // then bottom left), so the words never sit on a screen.
+  // Working together: close on open marble below the devices, so the words never sit on a screen.
   { id: "together", kind: "hold", still: "table", dolly: [0.7, 0.72, 0.25, 0.25], frame: OPEN },
-  { id: "faq", kind: "hold", still: "table", dolly: [0.04, 0.72, 0.25, 0.25], frame: OPEN },
-  { id: "send", kind: "hold", still: "table" },
 ];
+/**
+ * Eye level (page 1): the laptop and the two tablets on the table show the planner's three screens
+ * (owner, 2026-11-06: "they are blank, fill them with some content"), each mapped onto its screen in
+ * perspective. Corners measured with scripts/cinematic/measure_screens.py on l02-table-eye and on the
+ * portrait cut's first frame (TL, TR, BR, BL; plate fractions).
+ */
+const EYE: Record<"land" | "port", { ref: [number, number]; quads: [Quad, Quad, Quad] }> = {
+  land: {
+    ref: [1600, 900],
+    quads: [
+      [[0.19688, 0.76667], [0.31211, 0.73056], [0.37578, 0.81528], [0.24609, 0.8625]],
+      [[0.41875, 0.49722], [0.53711, 0.47917], [0.56523, 0.63403], [0.44297, 0.66389]],
+      [[0.77617, 0.63611], [0.87305, 0.68333], [0.79531, 0.72361], [0.69766, 0.67292]],
+    ],
+  },
+  port: {
+    ref: [900, 1600],
+    quads: [
+      [[0.06319, 0.68867], [0.25694, 0.67266], [0.34653, 0.72305], [0.13056, 0.74414]],
+      [[0.32292, 0.54688], [0.55486, 0.53789], [0.59375, 0.62148], [0.35278, 0.63555]],
+      [[0.72569, 0.65703], [0.87222, 0.64297], [0.99931, 0.68008], [0.85069, 0.69531]],
+    ],
+  },
+};
+/** Each device's interface size (tablets 4:3, laptop 16:10). */
+const EYE_SIZE: [number, number][] = [
+  [720, 540],
+  [1000, 625],
+  [720, 540],
+];
+const eyeMatrix = (cut: "land" | "port", i: number) => quadMatrix(EYE_SIZE[i][0], EYE_SIZE[i][1], EYE[cut].quads[i], ...EYE[cut].ref);
+
 const ALL = PLAN_BLOCKS.filter((b) => b.kind === "hold" && b.id !== "studio").map((b) => b.id).join(" ");
 const FILMS = FILM as unknown as Record<string, { frames: number; videoFrames: number; fps: number } | undefined>;
 const SEGMENTS = { "plan-arrive": { id: "plan-arrive", base: "/assets/cinematic/plan-arrive", ...(FILMS["plan-arrive"] ?? { frames: 0, videoFrames: 0, fps: 24 }) } };
@@ -71,12 +102,27 @@ export function PlanFilm({ children }: { children: React.ReactNode }) {
       label="The planning table"
       portrait={PORTRAIT}
       overlays={(a) => {
-        const stage = a.block === "stages" ? a.step : a.block === "send" ? stages.length - 1 : -1;
+        const stage = a.block === "stages" ? a.step : -1;
         const tall = a.cut === "portrait" && P_SCREENS;
         const [LEFT_R, LAPTOP_R, RIGHT_R] = tall ? P_SCREENS : [LEFT, LAPTOP, RIGHT];
         const ar = tall ? 9 / 16 : 16 / 9;
         return (
           <>
+            {/* Page 1, eye level: a preview of the three screens (the same ones used on the table). */}
+            <div className={f.overlay} data-show="studio" style={plateRect([0, 0, 1, 1])} aria-hidden="true">
+              <div className={f.overlayInner} data-design={EYE[tall ? "port" : "land"].ref[0]} style={{ width: EYE[tall ? "port" : "land"].ref[0], height: EYE[tall ? "port" : "land"].ref[1] }}>
+                {[<TradeScreen key="t" focus={false} />, <WantsScreen key="w" focus={false} />, <PlanScreen key="p" stage={0} />].map((ui, i) => (
+                  <div
+                    key={i}
+                    className={s.eye}
+                    inert
+                    style={{ width: EYE_SIZE[i][0], height: EYE_SIZE[i][1], transform: eyeMatrix(tall ? "port" : "land", i) }}
+                  >
+                    {ui}
+                  </div>
+                ))}
+              </div>
+            </div>
             <div className={`${f.overlay} ${s.device}`} data-show={ALL} style={plateRect(LEFT_R)}>
               <div className={f.overlayInner} data-design={720} style={design(720, LEFT_R, ar)}>
                 <TradeScreen focus={a.block === "trade"} />
@@ -195,20 +241,5 @@ function PlanScreen({ stage }: { stage: number }) {
         )}
       </footer>
     </div>
-  );
-}
-
-/** The closing action: send the plan once there is one, otherwise simply get in touch. */
-export function PlanCta() {
-  const { trade, wants } = usePlanner();
-  const send = useSendPlan();
-  return planFor(trade, wants).ready ? (
-    <button type="button" className="btn btn-primary btn-small" onClick={() => send(trade, wants)}>
-      Send this plan with my brief
-    </button>
-  ) : (
-    <Link href="/contact" className="btn btn-primary btn-small">
-      Contact us
-    </Link>
   );
 }

@@ -41,6 +41,7 @@ Source: `reference/brochure/omniwebora_brochure_8pages.pdf` (8 scanned pages, re
 | O04 | Company location and details will be provided later. | Owner | PENDING_OWNER | none until supplied |
 | O05 | Content on every demonstration is general (any business), never one sector or one fictional brand. | Owner | OWNER_STATED | All display interfaces |
 | O06 | Public contact email: info@omniwebora.com. Every brief sent from the site goes to it. WhatsApp contact wanted; number pending. | Owner, 2026-10-30 | OWNER_STATED; WhatsApp number = PENDING_OWNER | Footer, Contact, brief delivery |
+| O07 | The first consultation is free (mentioned inside the contact form). The Industries page is removed. | Owner, 2026-11-06 | OWNER_STATED | Contact form |
 | E-DM | Digital marketing capability lines (Meta Ads planning and management, targeting, creative coordination, pixel and conversion tracking, technical / on-page / local SEO, reporting) | Editorial | EDITORIAL_PROPOSAL, owner to confirm | Digital marketing |
 
 ## Obvious scan typos corrected silently in display (meaning unchanged)

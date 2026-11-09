@@ -1,5 +1,5 @@
 // Below-the-film continuity: viewport shots stepping through each page after its film, plus the
-// footer. Usage: node qa/scenic-shots.mjs [base] /industries /about ...
+// footer. Usage: node qa/scenic-shots.mjs [base] /approach /about ...
 import { chromium } from "@playwright/test";
 import fs from "node:fs";
 

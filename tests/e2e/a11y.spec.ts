@@ -13,7 +13,7 @@ const settle = (page: import("@playwright/test").Page) =>
     ),
   );
 
-const ROUTES = ["/", "/solutions", "/solutions/web-development", "/solutions/mobile-apps", "/solutions/custom-software", "/solutions/business-automation", "/solutions/digital-marketing", "/solutions/enterprise-platforms", "/industries", "/approach", "/pricing", "/about", "/contact", "/privacy"];
+const ROUTES = ["/", "/solutions", "/solutions/web-development", "/solutions/mobile-apps", "/solutions/custom-software", "/solutions/business-automation", "/solutions/digital-marketing", "/solutions/enterprise-platforms", "/approach", "/pricing", "/about", "/contact", "/privacy"];
 
 test.describe("accessibility (axe, WCAG 2.2 A/AA)", () => {
   for (const route of ROUTES) {

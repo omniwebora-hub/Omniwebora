@@ -27,7 +27,12 @@ export const PRICE_DRIVERS = [
 ] as const;
 
 export type PlanLevel = "basic" | "standard" | "premium";
-export type Plan = { id: PlanLevel; name: string; position: string };
+/**
+ * `price`: the owner asked (2026-11-06) for each website plan's price to be shown under its name. The
+ * figures are PENDING_OWNER: set them here, written as the owner gives them, and they appear on Pricing; until then
+ * nothing is shown. Never fill them from the brochure bands (O02).
+ */
+export type Plan = { id: PlanLevel; name: string; position: string; price?: string };
 
 /** Relative positioning only; inclusions are PENDING_OWNER and must not be invented. */
 export const WEBSITE_PLANS: Plan[] = [

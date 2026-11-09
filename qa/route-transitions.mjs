@@ -25,7 +25,7 @@ await page.addInitScript(() => {
 await page.goto(base + "/", { waitUntil: "networkidle" });
 const nav = page.getByRole("navigation", { name: "Primary" });
 const results = [];
-for (const [label, path] of [["Industries", "/industries"], ["How We Work", "/approach"], ["Pricing", "/pricing"], ["About", "/about"]]) {
+for (const [label, path] of [["How We Work", "/approach"], ["Pricing", "/pricing"], ["About", "/about"]]) {
   const t0 = Date.now();
   await nav.getByRole("link", { name: label, exact: true }).click();
   if (label === "Pricing") {

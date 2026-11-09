@@ -10,30 +10,41 @@
     list-style: none;
   }
 
+  /* Owner, 2026-11-06: "these colours to be enhanced": three solid pills; the current plan in navy
+     with brass bars, the plans before it in brass, the next one on light glass. */
   .scale li {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    padding: 8px 4px 10px;
-    border-bottom: 2px solid rgb(21 25 33 / 0.25);
-    color: rgb(21 25 33 / 0.62);
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.86);
+    box-shadow:
+      0 12px 28px -18px rgb(12 20 40 / 0.6),
+      inset 0 0 0 1px rgb(21 25 33 / 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--ink);
     font-family: var(--font-display);
     font-size: clamp(1rem, 0.6rem + 0.7vw, 1.4rem);
-    text-shadow: 0 0 12px rgb(255 250 240 / 0.9), 0 0 2px rgb(255 250 240 / 0.9);
-    font-weight: 500;
+    font-weight: 600;
     transition:
-      border-color 0.4s ease,
+      background-color 0.4s ease,
       color 0.4s ease;
   }
 
   .scale li[data-state="done"] {
-    color: rgb(21 25 33 / 0.8);
+    background: linear-gradient(180deg, #e7c98d, #c9a464);
+    color: #2a1f0c;
   }
 
   .scale li[data-state="now"] {
-    border-bottom-color: var(--ink);
-    color: var(--ink);
+    background: linear-gradient(180deg, #16305e, var(--ink));
+    color: #fff;
+    box-shadow:
+      0 16px 32px -16px rgb(12 35 73 / 0.75),
+      0 0 0 3px rgb(201 164 100 / 0.55);
   }
 
   .bars {
@@ -43,13 +54,25 @@
 
   .bars i {
     width: 14px;
-    height: 4px;
-    border-radius: 2px;
-    background: rgb(21 25 33 / 0.2);
+    height: 5px;
+    border-radius: 3px;
+    background: rgb(21 25 33 / 0.18);
   }
 
   .bars i[data-on] {
-    background: #b59258;
+    background: #b58a3e;
+  }
+
+  .scale li[data-state="done"] .bars i[data-on] {
+    background: #5f461d;
+  }
+
+  .scale li[data-state="now"] .bars i {
+    background: rgb(255 255 255 / 0.25);
+  }
+
+  .scale li[data-state="now"] .bars i[data-on] {
+    background: #f0cf8a;
   }
 }
 

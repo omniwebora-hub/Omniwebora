@@ -55,10 +55,7 @@ export default function SolutionsPage() {
             <h1 id="page-title" className={c.h1}>
               Digital solutions, built around the real work.
             </h1>
-            <p className={c.lede}>
-              Six rooms, six services, each with the real thing running on the wall. Start at the front door of a business and walk through to the
-              systems behind it.
-            </p>
+            <p className={c.lede}>Six services, one building. Step into each room to see it working.</p>
             <nav aria-label="Jump to a room" className={c.jump}>
               {ROOMS.map((r) => (
                 <a key={r.slug} href={`#${r.slug}`}>
@@ -91,31 +88,15 @@ export default function SolutionsPage() {
               <div className={c.panelWrap}>
                 <div className={`${c.panel} ${c.beside}`} data-panel>
                   <p className={c.num}>
-                    0{i + 1} · {sol.name}
+                    0{i + 1} · {r.name}
                   </p>
                   <h2 id={`${r.slug}-title`} className={c.title}>
                     {r.title}
                   </h2>
-                  <dl className={c.story}>
-                    <div>
-                      <dt>The need</dt>
-                      <dd>{sol.needs[0]}</dd>
-                    </div>
-                    <div>
-                      <dt>On the wall</dt>
-                      <dd>{r.onWall}</dd>
-                    </div>
-                    <div>
-                      <dt>Why it matters</dt>
-                      <dd>{r.why}</dd>
-                    </div>
-                  </dl>
+                  <p className={c.lede}>{r.line}</p>
                   <div className={c.actions}>
                     <Link href={`/contact?service=${sol.inquiry}`} className="btn btn-primary btn-small">
                       {sol.cta}
-                    </Link>
-                    <Link href={`/solutions/${sol.slug}`} className={c.more}>
-                      {sol.short} in detail <Icon name="arrow-right" size={16} />
                     </Link>
                   </div>
                 </div>
@@ -140,9 +121,7 @@ export default function SolutionsPage() {
             <h2 id="more-title" className={c.title}>
               Every service works better connected.
             </h2>
-            <p className={c.outroLede}>
-              Choose a window to walk back into its room, or tell us what you need and we will suggest where to start.
-            </p>
+            <p className={c.outroLede}>Tell us what you need and we will suggest where to start.</p>
             <div className={c.actions}>
               <Link href="/contact" className="btn btn-primary">
                 Contact us

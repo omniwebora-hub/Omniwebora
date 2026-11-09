@@ -249,7 +249,8 @@ export function SolutionsFilm({ children }: { children: React.ReactNode }) {
                 const d = DESIGN[r.slug];
                 return (
                   <div key={r.slug} className={s.screen} data-screen={r.slug} style={{ ...rect(screenRects[r.slug]), borderRadius: d.r ? `${d.r * 100}% / ${((d.r * w * ar) / h) * 100}%` : undefined }}>
-                    <div className={s.screenInner} style={{ width: d.w, height: d.w / ((w * ar) / h) }}>
+                    {/* view-only on phones: drawn too small to tap there (the room's step chips pick a step) */}
+                    <div className={s.screenInner} style={{ width: d.w, height: d.w / ((w * ar) / h) }} inert={cut === "portrait"}>
                       {ui[r.slug]}
                     </div>
                   </div>

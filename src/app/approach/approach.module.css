@@ -93,26 +93,9 @@
   text-decoration: underline;
 }
 
-.faq {
-  border-top: 1px solid var(--line-strong);
-}
 
-.faq details {
-  border-bottom: 1px solid var(--line-strong);
-}
 
-.faq summary {
-  padding: 20px 0;
-  font-family: var(--font-display);
-  font-size: var(--step-2);
-  color: var(--ink);
-  cursor: pointer;
-}
 
-.faq p {
-  padding-bottom: 20px;
-  color: var(--ink-soft);
-}
 
 @media (max-width: 1100px) {
   .table {
@@ -148,19 +131,6 @@
 @media (prefers-reduced-motion: no-preference) {
   .filmOnly {
     display: block;
-  }
-}
-
-@media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
-
-  /* On the wide view of the table the copy sits on the open marble below the devices. */
-  .low {
-    align-items: flex-end;
-    padding-bottom: clamp(32px, 6svh, 64px);
-  }
-
-  .low::before {
-    mask-image: linear-gradient(180deg, transparent 35%, #000 70%) !important;
   }
 }
 

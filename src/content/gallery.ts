@@ -1,13 +1,17 @@
 /**
  * The Solutions gallery: one room per service (owner's six services, 2026-10-29), in film order.
- * "need" lines come from content/solutions.ts; the room copy is EDITORIAL_PROPOSAL. No outcomes,
- * figures or client claims. Each room's id is the service slug, so /solutions#<slug> opens that room.
+ * Room words: the owner's lines for Website and Mobile (2026-11-07), the rest EDITORIAL_PROPOSAL in the
+ * same plain style. No outcomes, figures or client claims. Each room's id is the service slug, so /solutions#<slug> opens that room.
  */
 import type { SolutionSlug } from "./solutions";
 
 export type Room = {
   slug: SolutionSlug;
+  /** The room's short words in the gallery (owner, 2026-11-07: "easy and understandable, avoid more
+   *  wordings"; the Website and Mobile lines are the owner's own). */
+  name: string;
   title: string;
+  line: string;
   onWall: string;
   why: string;
   /** Scroll steps the interface plays through during the hold (visitor can override). */
@@ -21,7 +25,9 @@ export type Room = {
 export const ROOMS: Room[] = [
   {
     slug: "web-development",
-    title: "Visitors should see what you do, and how to book, in seconds.",
+    name: "Web Designing",
+    title: "From small to grand, let us make your website stand out.",
+    line: "A clear website that shows what you do and makes it easy to contact or book you.",
     onWall:
       "A working site: send an enquiry, browse the catalogue, pick a booking slot. As you scroll it reflows from desktop to tablet to phone, the way a responsive build should.",
     why: "Enquiries arrive with the details you need, from whichever screen your customer happens to use.",
@@ -31,7 +37,9 @@ export const ROOMS: Room[] = [
   },
   {
     slug: "mobile-apps",
-    title: "Put the one thing customers do most in their pocket.",
+    name: "Application Development",
+    title: "We build more than apps.",
+    line: "We build digital experiences that drive growth, efficiency and innovation.",
     onWall:
       "A booking app on the phone stand: open it, choose a service, pick a time, confirm. Scroll to play the journey, or tap through it yourself.",
     why: "The booking is made in under a minute and lands in the same records your team already works from.",
@@ -41,7 +49,9 @@ export const ROOMS: Room[] = [
   },
   {
     slug: "custom-software",
-    title: "When the business runs on spreadsheets, give it one system.",
+    name: "Custom Software",
+    title: "One system for your whole business.",
+    line: "Customers, stock and billing in one place, built around how you work.",
     onWall: "An operations console where customers, stock and billing share one record. Scroll through the modules, or pick one yourself.",
     why: "Every team works from the same customer, order and stock figures, without retyping them between tools.",
     steps: ["CRM", "Inventory", "Billing"],
@@ -50,7 +60,9 @@ export const ROOMS: Room[] = [
   },
   {
     slug: "business-automation",
-    title: "Let routine work move by itself, with people still in charge.",
+    name: "Business Automation",
+    title: "Let routine work run by itself.",
+    line: "Requests are sorted and sent to the right person, with people still in charge.",
     onWall:
       "An enquiry arrives, is classified and routed, waits for a person to approve, then the action is taken and logged. Scroll to follow one, or run your own.",
     why: "Requests stop waiting in inboxes, and every automated step is on record for anyone to check.",
@@ -60,7 +72,9 @@ export const ROOMS: Room[] = [
   },
   {
     slug: "digital-marketing",
-    title: "Bring the right people to what you have built.",
+    name: "Digital Marketing",
+    title: "Reach the right customers.",
+    line: "Meta Ads and SEO that bring real enquiries, and show you what works.",
     onWall:
       "A campaign planner: choose what the ad should lead to and who sees it, check the tracking a campaign needs, then write how the page appears in search.",
     why: "You can see which campaigns bring enquiries, not only impressions, because tracking is set up before the spend starts.",
@@ -70,7 +84,9 @@ export const ROOMS: Room[] = [
   },
   {
     slug: "enterprise-platforms",
-    title: "Many departments, one coordinated platform.",
+    name: "Enterprise Solutions",
+    title: "Every department, one platform.",
+    line: "Sales, finance and operations work together on one shared system.",
     onWall: "The layers of one platform. Scroll to walk through Sales, Finance and Operations, or select any layer and department yourself.",
     why: "Customers, products and people are shared once, with access, audit and reporting handled in one place.",
     steps: ["Platform", "Sales", "Finance", "Operations"],

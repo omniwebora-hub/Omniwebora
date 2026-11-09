@@ -291,9 +291,6 @@ export const FILM = {
     "screenStart": null,
     "screenEnd": null
   },
-  "i01-city": {
-    "screen": null
-  },
   "about-in": {
     "frames": 64,
     "videoFrames": 158,

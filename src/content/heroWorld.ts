@@ -39,16 +39,17 @@ export type HeroPanel = {
   slug: SolutionSlug;
   /** Which side of the crystal the card stands on (the opening lays the cards out per screen). */
   side: "left" | "right";
-  /** One line under the name. */
-  tagline: string;
+  /** The card's name (owner, 2026-11-06: "change like this only for the 6 services", with a reference
+   *  of icon cards titled as below). */
+  title: string;
 };
 
-/** The six services as glass cards around the crystal on Home's first screen (HomeOpening). */
+/** The six services as icon cards around the crystal on Home's first screen (HomeOpening). */
 export const heroPanels: HeroPanel[] = [
-  { slug: "web-development", side: "left", tagline: "Credible, fast, easy to book" },
-  { slug: "mobile-apps", side: "left", tagline: "Android and iOS apps" },
-  { slug: "custom-software", side: "left", tagline: "ERP and CRM on one record" },
-  { slug: "business-automation", side: "right", tagline: "Routine work runs itself" },
-  { slug: "digital-marketing", side: "right", tagline: "Meta Ads and SEO" },
-  { slug: "enterprise-platforms", side: "right", tagline: "Departments working as one" },
+  { slug: "web-development", side: "left", title: "Website Development" },
+  { slug: "mobile-apps", side: "left", title: "Mobile App Development" },
+  { slug: "custom-software", side: "left", title: "Custom Software Development" },
+  { slug: "business-automation", side: "right", title: "Business Automation" },
+  { slug: "digital-marketing", side: "right", title: "Digital Marketing" },
+  { slug: "enterprise-platforms", side: "right", title: "Enterprise Solutions" },
 ];

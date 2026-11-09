@@ -108,3 +108,13 @@
 :global([data-cut="portrait"]) .introLede {
   display: none;
 }
+
+/* A website plan's price, under its name (shown once the owner has set it in src/content/pricing.ts). */
+.price {
+  margin-top: -4px;
+  color: #f3dfb5;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 1rem + 1vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+}

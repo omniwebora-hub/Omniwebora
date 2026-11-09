@@ -15,13 +15,14 @@ export type NavGroup = NavItem & { children?: NavItem[] };
 
 /** Intent-based primary navigation (docs/governance/02_FINAL_CONTENT_AND_SITEMAP.md §1). */
 export const primaryNav: NavGroup[] = [
+  // Owner, 2026-11-09: a Home link before Solutions.
+  { label: "Home", href: "/" },
   {
     label: "Solutions",
     href: "/solutions",
     // Each service opens its own room in the Solutions gallery (owner request, 2026-10-29).
     children: solutions.map((s) => ({ label: s.name, href: `/solutions#${s.slug}`, description: s.pitch, image: `/assets/cinematic/${ROOM_STILL[s.slug]}-1280.webp` })),
   },
-  { label: "Industries", href: "/industries" },
   { label: "How We Work", href: "/approach" },
   { label: "Pricing", href: "/pricing" },
   { label: "About", href: "/about" },

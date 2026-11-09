@@ -49,7 +49,6 @@ export default function HomePage() {
         </picture>
         <div className={`${c.panelWrap} ${h.heroWrap}`}>
           <div className={`${c.panel} ${h.heroPanel}`} data-panel>
-            <p className={c.num}>Digital solutions studio</p>
             <h1 id="hero-title" className={h.heroTitle}>
               Ideas we bring <span>to life.</span>
             </h1>

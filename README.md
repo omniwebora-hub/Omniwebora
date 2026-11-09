@@ -22,7 +22,7 @@ npm run test:e2e     # Playwright + axe (run `npm run build` first; first time: 
 ## Project map
 | Path | What it is |
 |---|---|
-| `src/app/` | Routes: `/`, `/solutions` (+ six detail pages), `/industries`, `/approach` (How We Work), `/pricing`, `/about`, `/contact`, `/privacy`, `/thank-you`, `POST /api/inquiry` |
+| `src/app/` | Routes: `/`, `/solutions` (+ six detail pages), `/approach` (How We Work), `/pricing`, `/about`, `/contact`, `/privacy`, `/thank-you`, `POST /api/inquiry` |
 | `src/components/film/` | The film system: `engine.ts` (eased scroll, video scrubbing, joins), `CinemaFilm.tsx` (chapters, stills, overlays), shared chapter styles |
 | `src/components/<page>/` | Each page's film and tools (`HomeFilm`, `PricingFilm`, `ContactFilm`, `RoomFilm`, …) |
 | `src/components/displays/` | The live interfaces shown on the walls (website, phone app, operations console, …) |
