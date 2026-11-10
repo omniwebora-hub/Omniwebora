@@ -25,12 +25,13 @@ export const timelineOptions = [
   { value: "exploring", label: "Just exploring" },
 ] as const;
 
-/** Optional plan preference. No amounts are shown anywhere (owner instruction, 2026-10-29). */
+/** Optional website plan preference, with the owner's prices (2026-11-10, O08). */
 export const SHOW_BUDGET_FIELD = true;
 export const budgetOptions = [
-  { value: "basic", label: "Basic" },
-  { value: "standard", label: "Standard" },
-  { value: "premium", label: "Premium" },
+  { value: "basic", label: "Basic · £399" },
+  { value: "standard", label: "Standard · £999" },
+  { value: "premium", label: "Premium · £1,999" },
+  { value: "professional", label: "Professional · £4,999" },
   { value: "not-sure", label: "Not sure yet" },
 ] as const;
 

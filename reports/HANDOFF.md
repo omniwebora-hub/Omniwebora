@@ -495,3 +495,12 @@ Owner, from the document and chat: the six captions like the "Our Core Services"
 - New QA: `node qa/review-shots.mjs [base] [--phone] [/routes]` (steps each page with its own Next button, one screenshot per stop).
 - Tests: tsc ✓, eslint ✓, build ✓, Vitest 33/33, Playwright 64 passed / 8 skipped / 0 failed; `qa/gestures.mjs` PASS (Home 9, How We Work 6, About 2 on desktop; How We Work 6, About 2 on a phone).
 - **Waiting on the owner**: the three website plan prices; confirmation of the Web Designing line; (still) the WhatsApp number and an email-sending service.
+
+### 2026-11-10 (session 7, part 2): website plan prices in pounds, a fourth plan
+Owner: "the pricing should be in pounds: Basic 399, Standard 999, Premium 1999, Professional 4999; all these categories."
+- `WEBSITE_PLANS` (`src/content/pricing.ts`) is now four plans with prices: Basic £399, Standard £999, Premium £1,999, **Professional £4,999** (new). FACT_REGISTER O08 (supersedes O02's "no explicit money" for these four plans only; other services stay quoted per project).
+- **Pricing film**: a fourth chapter, Professional, resting on the finished campus (no new footage); each plan shows its price under its name; the plan scale is four pills with the price beside each name (sized to fit at 1280–1920 without clipping or touching the chapter buttons). "Website plan N of 4"; the intro says "four plans, from £399"; the "why are there no prices" FAQ is gone. Reduced-motion plan cards: four columns with prices.
+- **Contact brief** "plan in mind": Basic · £399 … Professional · £4,999; **Website page**: "Four plans" with prices; search, page description and the service copy name all four plans.
+- Tests: the no-currency unit test now allows only the owner's four pound prices (and still forbids any rupee figure); the Pricing e2e checks all four plans and prices. The Home e2e walk now holds a touch while each chapter loads (the page's one-gesture settle otherwise moves a jump that lands in a camera move on before the film has caught up; it raced under load).
+- Tests: Vitest 32/32, Playwright 64 passed / 8 skipped / 0 failed.
+- Still open: what each plan includes (the owner has given prices, not inclusions).

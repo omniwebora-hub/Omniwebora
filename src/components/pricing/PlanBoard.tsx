@@ -8,7 +8,7 @@ import { onTabKeys } from "@/lib/tabKeys";
 import s from "./PlanBoard.module.css";
 
 /**
- * Plans by service, with no amounts (owner instruction). Website plans are named; their inclusions are
+ * Plans by service. Website plans carry the owner's prices (pricing.ts); their inclusions are
  * pending from the owner and shown as such. Every other service is a scoped proposal. All six panels
  * stay in the HTML (hidden, not removed) so the content is indexable.
  */
@@ -91,11 +91,12 @@ export function PlanCards({ offer }: { offer: Offer }) {
       {offer.plans!.map((p, i) => (
         <li key={p.id} className={s.plan} data-level={i + 1}>
           <span className={s.steps} aria-hidden="true">
-            {[0, 1, 2].map((k) => (
+            {offer.plans!.map((_, k) => (
               <i key={k} data-on={k <= i ? "true" : undefined} />
             ))}
           </span>
           <h3 className={s.planName}>{p.name}</h3>
+          <p className={s.planPrice}>{p.price}</p>
           <p className={s.position}>{p.position}</p>
           <p className={s.pending}>Plan details coming soon</p>
           <Link href={`/contact?service=${sol.inquiry}&plan=${p.id}`} className={s.ask}>

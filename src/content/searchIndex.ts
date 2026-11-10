@@ -6,7 +6,7 @@ export type SearchEntry = { title: string; href: string; description: string; gr
 export const searchIndex: SearchEntry[] = [
   { title: "Home", href: "/", description: "Websites, apps, software, AI and enterprise solutions", group: "Pages" },
   { title: "Solutions", href: "/solutions", description: "All six solution families and how they fit together", group: "Pages" },
-  { title: "Pricing", href: "/pricing", description: "Website plans (Basic, Standard, Premium) and proposals for every service", group: "Pages" },
+  { title: "Pricing", href: "/pricing", description: "Website plans from £399 (Basic, Standard, Premium, Professional) and proposals for every service", group: "Pages" },
   { title: "How we work", href: "/approach", description: "Discover, design, develop, integrate, deploy, maintain, scale", group: "Pages" },
   { title: "About", href: "/about", description: "Technology should fit the people who use it", group: "Pages" },
   { title: "Contact", href: "/contact", description: "Contact us with a short guided brief", group: "Pages" },

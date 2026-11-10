@@ -182,14 +182,14 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
             <div className={c.panel} data-panel style={{ width: "min(40vw, 36rem)" }}>
               <p className={c.num}>Website plans</p>
               <h2 id="web-plans" className={c.title}>
-                Three plans, one standard of care.
+                Four plans, one standard of care.
               </h2>
               <ol className={c.lines}>
                 {WEBSITE_PLANS.map((p, i) => (
                   <li key={p.id}>
                     <span>0{i + 1}</span>
                     <span style={{ color: "#fff", fontSize: "1rem", letterSpacing: 0, fontWeight: 400 }}>
-                      <b>{p.name}</b> · {p.position}
+                      <b>{p.name}</b> · {p.price} · {p.position}
                     </span>
                   </li>
                 ))}

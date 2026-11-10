@@ -3,7 +3,7 @@
  * application, Custom software (ERP & CRM), Business automation, Digital marketing (Meta Ads, SEO),
  * Enterprise platform. Capability lines for websites, mobile, software, automation and enterprise come from
  * the brochure (VERIFIED_FROM_BROCHURE); Digital marketing lines are EDITORIAL_PROPOSAL pending owner
- * confirmation. No prices are published (owner instruction): plans are named only. No outcomes are claimed.
+ * confirmation. Website plans carry the owner's prices (pricing.ts); other services are quoted per project. No outcomes are claimed.
  */
 
 export type SolutionSlug = "web-development" | "mobile-apps" | "custom-software" | "business-automation" | "digital-marketing" | "enterprise-platforms";
@@ -44,7 +44,7 @@ export const solutions: Solution[] = [
     pitch: "A digital presence built to be useful, credible and ready to grow.",
     metaTitle: "Website & E-commerce Development",
     metaDescription:
-      "Business websites, e-commerce stores and web applications: responsive design, enquiry and booking flows, content management and integrations, in Basic, Standard and Premium plans.",
+      "Business websites, e-commerce stores and web applications: responsive design, enquiry and booking flows, content management and integrations, in Basic, Standard, Premium and Professional plans.",
     h1: "Websites that make the right first impression, and support what comes next.",
     lede: "From a focused five-page site to an online store or a web application with its own backend: structured around what your customers need to find, do and ask.",
     needs: [
@@ -74,7 +74,7 @@ export const solutions: Solution[] = [
     faqs: [
       {
         q: "Which website plan is right for us?",
-        a: "Start from what visitors must be able to do. We will recommend Basic, Standard or Premium once we understand your pages, features and integrations, and confirm the details in a written proposal.",
+        a: "Start from what visitors must be able to do. We will recommend Basic, Standard, Premium or Professional once we understand your pages, features and integrations, and confirm the details in a written proposal.",
       },
       {
         q: "Are domain, hosting and third-party fees included?",

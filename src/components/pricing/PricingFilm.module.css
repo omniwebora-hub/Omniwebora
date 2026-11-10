@@ -1,23 +1,24 @@
 @media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
   /* on the table's front edge, clear of the chapter buttons below it */
   .scale {
-    left: 34%;
-    right: 14%;
+    left: 27%;
+    right: 11%;
     top: 83%;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
     list-style: none;
   }
 
-  /* Owner, 2026-11-06: "these colours to be enhanced": three solid pills; the current plan in navy
-     with brass bars, the plans before it in brass, the next one on light glass. */
+  /* Owner, 2026-11-06: "these colours to be enhanced": solid pills, one per plan with its price; the
+     current plan in navy with brass bars, the plans before it in brass, the next ones on light glass. */
   .scale li {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 10px 16px;
+    gap: 8px;
+    padding: 9px 12px;
+    white-space: nowrap;
     border-radius: 999px;
     background: rgb(255 255 255 / 0.86);
     box-shadow:
@@ -27,7 +28,7 @@
     -webkit-backdrop-filter: blur(10px);
     color: var(--ink);
     font-family: var(--font-display);
-    font-size: clamp(1rem, 0.6rem + 0.7vw, 1.4rem);
+    font-size: clamp(0.92rem, 0.55rem + 0.6vw, 1.25rem);
     font-weight: 600;
     transition:
       background-color 0.4s ease,
@@ -47,13 +48,20 @@
       0 0 0 3px rgb(201 164 100 / 0.55);
   }
 
+  .scale li small {
+    font-family: var(--font-text);
+    font-size: 0.78em;
+    font-weight: 700;
+    opacity: 0.85;
+  }
+
   .bars {
     display: flex;
     gap: 3px;
   }
 
   .bars i {
-    width: 14px;
+    width: 10px;
     height: 5px;
     border-radius: 3px;
     background: rgb(21 25 33 / 0.18);

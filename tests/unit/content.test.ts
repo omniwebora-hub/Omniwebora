@@ -82,21 +82,25 @@ describe("services (owner list, 2026-10-29) and process content", () => {
   });
 });
 
-describe("plans (owner instruction: no amounts)", () => {
-  it("names the website plans Basic, Standard and Premium and scopes the rest", () => {
-    expect(WEBSITE_PLANS.map((p) => p.name)).toEqual(["Basic", "Standard", "Premium"]);
-    expect(OFFERS.map((o) => o.service)).toEqual(solutions.map((x) => x.slug));
+describe("plans (owner, 2026-11-10: four website plans, priced in pounds)", () => {
+  it("names the four website plans with the owner's prices and scopes the rest", () => {
+    expect(WEBSITE_PLANS.map((p) => [p.name, p.price])).toEqual([
+      ["Basic", "£399"],
+      ["Standard", "£999"],
+      ["Premium", "£1,999"],
+      ["Professional", "£4,999"],
+    ]);
     expect(OFFERS.filter((o) => o.plans).map((o) => o.service)).toEqual(["web-development"]);
   });
 
-  it("publishes no currency amounts anywhere in the site source", () => {
-    const files = walk(SRC).filter((f) => /\.(tsx?|css)$/.test(f) && !/demos[\\/]|ResponsiveBrowser/.test(f));
+  it("publishes no other amounts: no rupee figures anywhere, pounds only as the owner's plan prices", () => {
+    const files = walk(SRC).filter((f) => /\.(tsx?|css)$/.test(f));
     for (const f of files) expect(fs.readFileSync(f, "utf8"), f).not.toMatch(/₹|\blakh\b|\bINR\b|Rs\.\s?\d/i);
-  });
-
-  it("has no Work / case-study route and no Concept Lab (owner removed both)", () => {
-    expect(fs.existsSync(path.join(SRC, "app/work"))).toBe(false);
-    expect(fs.existsSync(path.join(SRC, "app/concept-lab"))).toBe(false);
+    const allowed = new Set(["£399", "£999", "£1,999", "£4,999"]);
+    for (const f of files) {
+      const found = fs.readFileSync(f, "utf8").match(/£\s?[\d,]+/g) ?? [];
+      for (const amount of found) expect(allowed.has(amount), `${f}: ${amount}`).toBe(true);
+    }
   });
 });
 

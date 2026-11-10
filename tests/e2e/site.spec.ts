@@ -205,9 +205,19 @@ test.describe("home", () => {
     await expect(crystal.locator("[data-card]")).toHaveCount(6);
     // the crystal's core is left as filmed: no mark or name laid over the glass
     await expect(crystal.locator('[data-part="core"]')).toHaveCount(0);
+    // A jump that lands inside a camera move is settled on to the next chapter by the page once the
+    // visitor lets go (one gesture, one chapter); a held touch keeps it there while the film catches up.
     for (const id of ["push", "core", "dive", "innovate", "design", "build", "launch", "idea", "launched", "invite"]) {
-      await page.locator(`[data-film-block="${id}"]`).evaluate((el) => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + 40, behavior: "instant" }));
-      await expect(film).toHaveAttribute("data-block", id);
+      const seen = await page.locator(`[data-film-block="${id}"]`).evaluate(async (el, id) => {
+        window.dispatchEvent(new Event("touchstart"));
+        window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY + 40, behavior: "instant" });
+        const root = document.querySelector<HTMLElement>("[data-film][aria-label='Ideas we bring to life']")!;
+        const t0 = performance.now();
+        while (root.dataset.block !== id && performance.now() - t0 < 4000) await new Promise((r) => requestAnimationFrame(r));
+        window.dispatchEvent(new Event("touchend"));
+        return root.dataset.block;
+      }, id);
+      expect(seen, id).toBe(id);
     }
     await expect(crystal).toHaveAttribute("data-on", "false");
     // the lit bays are links into their rooms
@@ -319,10 +329,10 @@ test.describe("project brief and API", () => {
 });
 
 test.describe("route interactions", () => {
-  test("pricing shows named website plans, no amounts, and every service panel in the HTML", async ({ page, request }) => {
+  test("pricing shows the four website plans with their prices, and every service panel in the HTML", async ({ page, request }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     const html = await (await request.get("/pricing")).text();
-    for (const name of ["Basic", "Standard", "Premium", "Quoted on your requirements", "Digital Marketing"]) expect(html).toContain(name);
+    for (const name of ["Basic", "Standard", "Premium", "Professional", "£399", "£999", "£1,999", "£4,999", "Quoted on your requirements", "Digital Marketing"]) expect(html).toContain(name);
     expect(html).not.toMatch(/₹|lakh/);
     await page.goto("/pricing");
     await page.getByRole("tab", { name: "Enterprise Platforms" }).click();

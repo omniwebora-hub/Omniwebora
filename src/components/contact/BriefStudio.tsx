@@ -309,7 +309,7 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
                   ))}
                 </div>
                 <p className={s.hint}>
-                  Website plans are Basic, Standard and Premium. See <Link href="/pricing">plans</Link>; other services are scoped per project.
+                  Website plans are Basic, Standard, Premium and Professional. See <Link href="/pricing">plans</Link>; other services are scoped per project.
                 </p>
               </fieldset>
               <div className={s.actions}>

@@ -15,15 +15,11 @@ import s from "./pricing.module.css";
 export const metadata: Metadata = pageMetadata({
   title: "Plans & Proposals",
   description:
-    "Website plans in Basic, Standard and Premium, and written proposals for mobile apps, ERP & CRM software, business automation, digital marketing and enterprise platforms.",
+    "Website plans from £399: Basic, Standard, Premium and Professional. Written proposals for mobile apps, ERP & CRM software, business automation, digital marketing and enterprise platforms.",
   path: "/pricing",
 });
 
 const FAQ = [
-  {
-    q: "Why are there no prices on the site?",
-    a: "Because scope decides cost. The same label can mean five pages or fifty, one user role or ten. We share plan details on request and send a written proposal once we understand your requirements.",
-  },
   {
     q: "What shapes a proposal?",
     a: "Requirements, the number of modules, users and roles, platforms, integrations, infrastructure, security requirements and support after launch.",
@@ -43,33 +39,35 @@ export default function PricingPage() {
     <>
       <PricingFilm>
         {WEBSITE_PLANS.map((plan, i) => {
-          const block = ["basic", "standard", "premium"][i];
+          const block = plan.id;
           const metaphor = [
             "One well-made building: the essentials, done properly.",
             "The same foundations, with more rooms and more connections.",
             "A complete, connected campus: everything working together.",
+            "The whole campus, finished to the last detail.",
           ][i];
           return [
-            i > 0 && <div key={`g${i}`} className={`${c.block} ${c.move}`} data-film-block={`grow${i}`} aria-hidden="true"><p className={c.moveLine}>{i === 1 ? "The scope grows · more rooms, more connections" : "Everything, coordinated"}</p></div>,
+            // the model grows between the first three plans; Professional is a closer look at the campus
+            i > 0 && i < 3 && <div key={`g${i}`} className={`${c.block} ${c.move}`} data-film-block={`grow${i}`} aria-hidden="true"><p className={c.moveLine}>{i === 1 ? "The scope grows · more rooms, more connections" : "Everything, coordinated"}</p></div>,
             <section key={plan.id} className={`${c.block} ${c.hold}`} data-film-block={block} style={{ "--hold": i === 0 ? "150svh" : "130svh" } as React.CSSProperties} aria-labelledby={`plan-${plan.id}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className={c.flatPlate} src={`/assets/cinematic/${["p01-basic", "price-grow1-end", "price-grow2-end"][i]}-1280.webp`} alt="" loading={i ? "lazy" : undefined} />
+              <img className={c.flatPlate} src={`/assets/cinematic/${["p01-basic", "price-grow1-end", "price-grow2-end", "price-grow2-end"][i]}-1280.webp`} alt="" loading={i ? "lazy" : undefined} />
               <div className={c.panelWrap}>
                 <div className={c.panel} data-panel>
                   {i === 0 && (
                     <>
                       <Breadcrumbs items={[{ name: "Pricing", path: "/pricing" }]} />
                       <h1 className={c.title}>The right plan starts with the right scope.</h1>
-                      <p className={`${c.lede} ${s.introLede}`}>Websites come in three plans. Everything else is shaped to your requirements and sent as a written proposal.</p>
+                      <p className={`${c.lede} ${s.introLede}`}>Websites come in four plans, from £399. Everything else is shaped to your requirements and sent as a written proposal.</p>
                     </>
                   )}
                   <p className={c.num}>
-                    Website plan {i + 1} of 3
+                    Website plan {i + 1} of {WEBSITE_PLANS.length}
                   </p>
                   <h2 id={`plan-${plan.id}`} className={c.title}>
                     {plan.name}
                   </h2>
-                  {plan.price && <p className={s.price}>{plan.price}</p>}
+                  <p className={s.price}>{plan.price}</p>
                   <dl className={c.story}>
                     <div>
                       <dt>Where it sits</dt>
@@ -89,7 +87,7 @@ export default function PricingPage() {
                       Ask about {plan.name}
                       <span className="visually-hidden"> website plan</span>
                     </Link>
-                    {i === 2 && (
+                    {i === WEBSITE_PLANS.length - 1 && (
                       <a href="#others" className={c.more}>
                         Every other service
                       </a>

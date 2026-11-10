@@ -1,14 +1,14 @@
 /**
- * Plans and proposals. OWNER INSTRUCTION (2026-10-29): no amounts anywhere on the site. Website plans are
- * named Basic / Standard / Premium; their inclusions will be supplied by the owner (PENDING_OWNER).
- * Other services are scoped per project. Nothing here is a price, a formula or a promise.
+ * Plans and proposals. Website plans: Basic, Standard, Premium and Professional, priced in pounds by the
+ * owner (2026-11-10, FACT_REGISTER O08). Their inclusions will be supplied by the owner (PENDING_OWNER).
+ * Every other service is scoped per project and quoted in a written proposal.
  */
 import type { SolutionSlug } from "./solutions";
 
 export const PRICING_STATUS = {
-  source: "Owner instruction, 2026-10-29",
+  source: "Owner instruction, 2026-10-29; website plan prices 2026-11-10",
   confirmed: false,
-  pending: "Plan inclusions for Basic, Standard and Premium; whether other services use named plans.",
+  pending: "Plan inclusions for Basic, Standard, Premium and Professional; whether other services use named plans.",
 } as const;
 
 export const PRICING_NOTE =
@@ -26,19 +26,16 @@ export const PRICE_DRIVERS = [
   { id: "support", label: "Support and maintenance", body: "Ad-hoc help after launch, or an ongoing arrangement for updates and improvements." },
 ] as const;
 
-export type PlanLevel = "basic" | "standard" | "premium";
-/**
- * `price`: the owner asked (2026-11-06) for each website plan's price to be shown under its name. The
- * figures are PENDING_OWNER: set them here, written as the owner gives them, and they appear on Pricing; until then
- * nothing is shown. Never fill them from the brochure bands (O02).
- */
-export type Plan = { id: PlanLevel; name: string; position: string; price?: string };
+export type PlanLevel = "basic" | "standard" | "premium" | "professional";
+/** `price`: the owner's figure for the plan, in pounds (2026-11-10, O08), shown under its name. */
+export type Plan = { id: PlanLevel; name: string; position: string; price: string };
 
-/** Relative positioning only; inclusions are PENDING_OWNER and must not be invented. */
+/** Prices as the owner gave them; positions are relative only (inclusions are PENDING_OWNER). */
 export const WEBSITE_PLANS: Plan[] = [
-  { id: "basic", name: "Basic", position: "A focused starting point" },
-  { id: "standard", name: "Standard", position: "More pages and features" },
-  { id: "premium", name: "Premium", position: "The most complete website plan" },
+  { id: "basic", name: "Basic", position: "A focused starting point", price: "£399" },
+  { id: "standard", name: "Standard", position: "More pages and features", price: "£999" },
+  { id: "premium", name: "Premium", position: "A complete, connected website", price: "£1,999" },
+  { id: "professional", name: "Professional", position: "The most complete website plan", price: "£4,999" },
 ];
 
 export type Offer = { service: SolutionSlug; label: string; plans: Plan[] | null };

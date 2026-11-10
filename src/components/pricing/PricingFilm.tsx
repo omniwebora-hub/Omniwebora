@@ -11,7 +11,7 @@ import s from "./PricingFilm.module.css";
 /**
  * Pricing "scope atelier" (design/IMMERSIVE_PLAN.md §10): a locked-off camera on an architect's model
  * table. As you scroll, the model grows from one pavilion (Basic) to connected wings (Standard) to a
- * coordinated campus (Premium): a metaphor for scope, not a price formula.
+ * coordinated campus (Premium); Professional rests on the finished campus.
  */
 type SegId = "price-grow1" | "price-grow2";
 const seg = (id: SegId): FilmSegment => ({ id, base: `/assets/cinematic/${id}`, frames: FILM[id].frames, videoFrames: FILM[id].videoFrames, fps: FILM[id].fps });
@@ -24,6 +24,8 @@ export const PRICING_BLOCKS: CinemaBlock[] = [
   { id: "standard", kind: "hold", still: "standard" },
   { id: "grow2", kind: "seg", seg: "price-grow2" },
   { id: "premium", kind: "hold", still: "premium" },
+  // Professional: the finished campus, held steady so the plan scale stays in view
+  { id: "professional", kind: "hold", still: "premium" },
   // After the plans the camera stays with the finished campus, easing toward a different part of it
   // for each chapter: every other service, what shapes a proposal, questions.
   { id: "others", kind: "hold", still: "premium", dolly: [0.36, 0.36, 0.42, 0.4] },
@@ -48,7 +50,7 @@ const PORTRAIT_CUT: PortraitCut | undefined =
         blocks: Object.fromEntries(PRICING_BLOCKS.map((b) => [b.id, { dolly: MODEL, dollyHold: true }])),
       }
     : undefined;
-const LEVEL: Record<string, number> = { basic: 0, grow1: 0, standard: 1, grow2: 1, premium: 2 };
+const LEVEL: Record<string, number> = { basic: 0, grow1: 0, standard: 1, grow2: 1, premium: 2, professional: 3 };
 
 export function PricingFilm({ children }: { children: React.ReactNode }) {
   return (
@@ -61,15 +63,16 @@ export function PricingFilm({ children }: { children: React.ReactNode }) {
       overlays={(a) => {
         const lvl = LEVEL[a.block] + (a.block.startsWith("grow") && a.p > 0.5 ? 1 : 0);
         return (
-          <ol className={`${f.overlay} ${s.scale}`} data-show="basic grow1 standard grow2 premium" aria-hidden="true">
+          <ol className={`${f.overlay} ${s.scale}`} data-show="basic grow1 standard grow2 premium professional" aria-hidden="true">
             {WEBSITE_PLANS.map((p, i) => (
               <li key={p.id} data-state={i < lvl ? "done" : i === lvl ? "now" : undefined}>
                 <span className={s.bars}>
-                  {[0, 1, 2].map((k) => (
+                  {WEBSITE_PLANS.map((_, k) => (
                     <i key={k} data-on={k <= i ? "true" : undefined} />
                   ))}
                 </span>
                 {p.name}
+                <small>{p.price}</small>
               </li>
             ))}
           </ol>
