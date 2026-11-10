@@ -94,20 +94,20 @@ export default function ApproachPage() {
             <div className={`${c.panel} ${c.storyAll}`} data-panel style={{ width: "min(40vw, 36rem)" }}>
               <p className={c.num}>Working together</p>
               <h2 id="together-film" className={c.title}>
-                What we propose, and what helps from your side.
+                How we work together.
               </h2>
               <dl className={c.story}>
                 <div>
-                  <dt>Communication</dt>
-                  <dd>Short, regular reviews of something you can see: a flow, a screen, a working build. Decisions are written down where everyone can find them.</dd>
+                  <dt>We show you</dt>
+                  <dd>Short, regular reviews of real screens.</dd>
                 </div>
                 <div>
-                  <dt>What you bring</dt>
-                  <dd>Context about the business, access to the people who do the work, timely feedback, and the content or data the product needs.</dd>
+                  <dt>You bring</dt>
+                  <dd>Your know-how, quick feedback and content.</dd>
                 </div>
                 <div>
-                  <dt>Scope</dt>
-                  <dd>Modules, users, platforms, integrations, infrastructure, security and support shape every proposal, so they are pinned down first.</dd>
+                  <dt>We agree</dt>
+                  <dd>The scope, written down before we start.</dd>
                 </div>
               </dl>
             </div>

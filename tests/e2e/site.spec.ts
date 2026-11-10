@@ -277,6 +277,18 @@ test.describe("project brief and API", () => {
     await expect(page.getByText("Agree to the privacy notice so we can reply.")).toBeVisible();
   });
 
+  test("the brief offers website plans (with prices) for Website only", async ({ page }) => {
+    await page.goto("/contact?service=website&plan=premium");
+    await toChapter(page, "brief");
+    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(page.getByRole("radio", { name: "Premium · £1,999" })).toBeChecked();
+    await page.getByRole("button", { name: "Back" }).click();
+    await page.getByRole("radio", { name: "Mobile app" }).check();
+    await page.getByRole("button", { name: "Continue" }).click();
+    await expect(page.getByRole("heading", { name: /Where are you starting from/ })).toBeVisible();
+    await expect(page.getByRole("radio", { name: /£/ })).toHaveCount(0);
+  });
+
   test("without a configured transport the brief says so plainly and does not fake success", async ({ page }) => {
     await page.goto("/contact?service=website");
     await toChapter(page, "brief");

@@ -6,7 +6,6 @@ import { TrackedLink } from "@/components/ui/TrackedLink";
 import { Icon } from "@/components/ui/Icon";
 import { ROOMS } from "@/content/gallery";
 import { solutionBySlug } from "@/content/solutions";
-import { stages } from "@/content/approach";
 import { pageMetadata } from "@/lib/seo";
 import { site } from "@/content/site";
 import c from "@/components/film/chapters.module.css";
@@ -20,17 +19,17 @@ export const metadata: Metadata = {
 };
 
 const IDEA = [
-  ["The idea", "“Let customers book without calling.” One sentence from a business owner is enough to start."],
-  ["An app", "Customers book from their phone in under a minute, and get a reminder the day before."],
-  ["A website", "The same booking works from any browser, on any screen."],
-  ["One system", "Every booking lands in one schedule your team already uses. Nothing is typed twice."],
+  ["The idea", "“Let customers book without calling.”"],
+  ["An app", "Book from the phone in a minute."],
+  ["A website", "The same booking, on any screen."],
+  ["One system", "Every booking in one schedule."],
 ];
 
 /** Each stage of the drawing-to-building story, in the brochure's words (Innovate · Build · Transform). */
 const STAGE_COPY = [
-  { id: "innovate", n: "01 · Innovate", title: "Every product starts as a drawing.", lede: "Six services, one plan. We understand the idea and the people it is for before anything is built.", hold: "150svh", plate: "k1-draw" },
-  { id: "design", n: "02 · Design", title: "Then it takes shape.", lede: "Flows, screens and structure you can react to before a line of code is written.", hold: "140svh", plate: "home-design-end" },
-  { id: "build", n: "03 · Build", title: "Built to last.", lede: "Websites, apps, ERP and CRM, automation and campaigns, engineered piece by piece and tested as they grow.", hold: "140svh", plate: "home-build-end" },
+  { id: "innovate", n: "01 · Innovate", title: "Every product starts as a drawing.", lede: "We understand your idea first.", hold: "150svh", plate: "k1-draw" },
+  { id: "design", n: "02 · Design", title: "Then it takes shape.", lede: "You see the screens before we build.", hold: "140svh", plate: "home-design-end" },
+  { id: "build", n: "03 · Build", title: "Built to last.", lede: "Built and tested, piece by piece.", hold: "140svh", plate: "home-build-end" },
 ] as const;
 
 /**
@@ -52,7 +51,7 @@ export default function HomePage() {
             <h1 id="hero-title" className={h.heroTitle}>
               Ideas we bring <span>to life.</span>
             </h1>
-            <p className={c.lede}>Websites, mobile apps, business software, automation and digital marketing, designed around how your business really works.</p>
+            <p className={c.lede}>Websites, apps, software and marketing for your business.</p>
             <div className={c.actions}>
               <TrackedLink href="/contact" event="start_project" props={{ location: "hero" }} className="btn btn-primary">
                 Contact Us
@@ -81,7 +80,7 @@ export default function HomePage() {
             <h2 id="core-title" className={c.title}>
               Six services, planned as one system.
             </h2>
-            <p className={c.lede}>Your website, apps, business software and automations are planned together, so they share their data and grow as one.</p>
+            <p className={c.lede}>Planned together, so they grow together.</p>
           </div>
         </div>
       </section>
@@ -125,7 +124,7 @@ export default function HomePage() {
             <h2 id="what-we-build" className={c.title}>
               Launched, lit and working.
             </h2>
-            <p className={c.lede}>Six services, one building. Choose a window to walk into its room.</p>
+            <p className={c.lede}>Choose a window to enter its room.</p>
             <ul className={h.services} aria-label="What we build">
               {ROOMS.map((r) => {
                 const sol = solutionBySlug(r.slug)!;
@@ -133,7 +132,6 @@ export default function HomePage() {
                   <li key={r.slug}>
                     <Link href={`/solutions#${r.slug}`}>
                       {sol.name}
-                      <span>{sol.pitch}</span>
                     </Link>
                   </li>
                 );
@@ -191,16 +189,9 @@ export default function HomePage() {
             <h2 id="beyond" className={c.title}>
               Built to keep improving.
             </h2>
-            <p>Seven stages, adapted to every project, and support for as long as you need it.</p>
-            <ol className={h.stageList}>
-              {stages.map((st) => (
-                <li key={st.id}>
-                  <b>{st.name}</b>: {st.summary}
-                </li>
-              ))}
-            </ol>
+            <p>Seven stages, and support after launch.</p>
             <Link href="/approach" className={c.more}>
-              See how it would work for you <Icon name="arrow-right" size={16} />
+              How we work <Icon name="arrow-right" size={16} />
             </Link>
           </div>
         </div>
@@ -213,7 +204,7 @@ export default function HomePage() {
             <h2 id="final-title" className={c.title}>
               Tell us what you&rsquo;re trying to build.
             </h2>
-            <p className={c.lede}>A clear brief is a good start. A rough idea is enough to begin a conversation.</p>
+            <p className={c.lede}>A rough idea is enough to begin.</p>
             <div className={c.actions}>
               <TrackedLink href="/contact" event="project_cta_click" props={{ location: "home_final" }} className="btn btn-primary btn-small">
                 Contact Us

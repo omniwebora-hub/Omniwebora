@@ -27,7 +27,7 @@ export const ROOMS: Room[] = [
     slug: "web-development",
     name: "Web Designing",
     title: "From small to grand, let us make your website stand out.",
-    line: "A clear website that shows what you do and makes it easy to contact or book you.",
+    line: "A clear website, easy to contact or book.",
     onWall:
       "A working site: send an enquiry, browse the catalogue, pick a booking slot. As you scroll it reflows from desktop to tablet to phone, the way a responsive build should.",
     why: "Enquiries arrive with the details you need, from whichever screen your customer happens to use.",

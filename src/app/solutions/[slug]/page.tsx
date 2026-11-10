@@ -71,11 +71,9 @@ const SIGNATURE: Record<SolutionSlug, { tone: "light" | "dark"; title: string; l
   },
 };
 
-/** Chapters that only some rooms have, told on the scene like the rest. */
-const EXTRA: Partial<Record<SolutionSlug, "plans" | "rules" | "promise">> = {
+/** Only the website room has priced plans (owner, 2026-11-10). */
+const EXTRA: Partial<Record<SolutionSlug, "plans">> = {
   "web-development": "plans",
-  "business-automation": "rules",
-  "digital-marketing": "promise",
 };
 
 const hold = (h: string) => ({ "--hold": h }) as React.CSSProperties;
@@ -87,8 +85,8 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
   const sig = SIGNATURE[sol.slug];
   const room = ROOMS.find((r) => r.slug === sol.slug)!;
   const extra = EXTRA[sol.slug];
-  const chapters = ["intro", "demo", "needs", "covers", ...(extra ? [extra] : []), "questions", "faq", "next"];
-  const others = solutions.filter((x) => x.slug !== sol.slug);
+  // Owner, 2026-11-09/10: few words. The room, its live screen, what it covers, (plans), the next step.
+  const chapters = ["intro", "demo", "covers", ...(extra ? [extra] : []), "next"];
 
   return (
     <RoomFilm slug={sol.slug} chapters={chapters}>
@@ -103,18 +101,15 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
                 { name: sol.name, path: `/solutions/${sol.slug}` },
               ]}
             />
-            <p className={c.num}>{sol.name}</p>
+            <p className={c.num}>{room.name}</p>
             <h1 id="page-title" className={c.title}>
-              {sol.h1}
+              {room.title}
             </h1>
-            <p className={c.lede}>{sol.lede}</p>
+            <p className={c.lede}>{room.line}</p>
             <div className={c.actions}>
               <TrackedLink href={`/contact?service=${sol.inquiry}`} event="project_cta_click" props={{ location: "solution_hero", service: sol.slug }} className="btn btn-primary btn-small">
                 {sol.cta}
               </TrackedLink>
-              <Link href="/pricing" className={c.more}>
-                Plans &amp; proposals
-              </Link>
             </div>
           </div>
         </div>
@@ -127,7 +122,6 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
             <h2 id="demo-title" className={c.title}>
               {sig.title}
             </h2>
-            <p className={c.lede}>{room.onWall}</p>
           </div>
         </div>
       </section>
@@ -141,37 +135,18 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
         </section>
       </div>
 
-      <section className={`${c.block} ${c.hold}`} data-film-block="needs" style={hold("140svh")} aria-labelledby="needs-title">
-        <div className={c.panelWrap}>
-          <div className={c.panel} data-panel style={{ width: "min(40vw, 36rem)" }}>
-            <p className={c.num}>When it helps</p>
-            <h2 id="needs-title" className={c.title}>
-              Situations we hear about.
-            </h2>
-            <ul className={c.lines}>
-              {sol.needs.map((n) => (
-                <li key={n} style={{ display: "block" }}>
-                  {n}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
       <section className={`${c.block} ${c.hold}`} data-film-block="covers" style={hold("150svh")} aria-labelledby="caps-title">
         <div className={c.panelWrap}>
           <div className={c.panel} data-panel style={{ width: "min(40vw, 36rem)" }}>
             <p className={c.num}>What it can include</p>
             <h2 id="caps-title" className={c.title}>
-              Capabilities.
+              What we build.
             </h2>
             <ul className={c.capList}>
-              {sol.capabilities.map((cap) => (
+              {sol.capabilities.slice(0, 6).map((cap) => (
                 <li key={cap}>{cap}</li>
               ))}
             </ul>
-            <p className={c.lede}>From the Omniwebora brochure. What is in scope for you is agreed in the proposal.</p>
           </div>
         </div>
       </section>
@@ -189,102 +164,20 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
                   <li key={p.id}>
                     <span>0{i + 1}</span>
                     <span style={{ color: "#fff", fontSize: "1rem", letterSpacing: 0, fontWeight: 400 }}>
-                      <b>{p.name}</b> · {p.price} · {p.position}
+                      <b>{p.name}</b> · {p.price}
                     </span>
                   </li>
                 ))}
               </ol>
-              <p className={c.lede}>Plan details are being finalised; ask us and we will share the current plan sheet.</p>
               <div className={c.actions}>
                 <Link href="/pricing" className={c.more}>
-                  See the plans grow
+                  See the plans
                 </Link>
               </div>
             </div>
           </div>
         </section>
       )}
-
-      {extra === "rules" && (
-        <section className={`${c.block} ${c.hold}`} data-film-block="rules" style={hold("150svh")} aria-labelledby="rules-ai">
-          <div className={`${c.panelWrap} ${c.wideWrap}`}>
-            <div className={`${c.panel} ${c.wide}`} data-panel style={{ width: "min(52vw, 50rem)" }}>
-              <p className={c.num}>How it decides</p>
-              <h2 id="rules-ai" className={c.title}>
-                Rules, AI, and the person in the loop.
-              </h2>
-              <div className={c.cols}>
-                <div>
-                  <h3>Rules-based automation</h3>
-                  <p>Best when inputs are structured and the decision is clear: routing by amount, status changes, reminders, scheduled reports. Predictable and easy to audit.</p>
-                </div>
-                <div>
-                  <h3>AI-assisted steps</h3>
-                  <p>Useful when inputs are messy: free-text enquiries, documents, summaries. We evaluate it on your own examples before relying on it, and keep a fallback.</p>
-                </div>
-                <div>
-                  <h3>Human oversight</h3>
-                  <p>Wherever a mistake would matter (money, customers, records), a person approves. Every automated step is logged so it can be checked later.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {extra === "promise" && (
-        <section className={`${c.block} ${c.hold}`} data-film-block="promise" style={hold("130svh")} aria-labelledby="no-guarantee">
-          <div className={c.panelWrap}>
-            <div className={c.panel} data-panel style={{ width: "min(40vw, 36rem)" }}>
-              <p className={c.num}>Plainly</p>
-              <h2 id="no-guarantee" className={c.title}>
-                What we will and will not promise.
-              </h2>
-              <p className={c.lede}>
-                We plan campaigns and search work around the actions that matter to your business, set up tracking so results are visible, and report plainly. We do not promise rankings, reach or a number of leads: search engines and ad platforms decide those, and honest agencies say so.
-              </p>
-            </div>
-          </div>
-        </section>
-      )}
-
-      <section className={`${c.block} ${c.hold}`} data-film-block="questions" style={hold("140svh")} aria-labelledby="scope-title">
-        <div className={c.panelWrap}>
-          <div className={c.panel} data-panel style={{ width: "min(40vw, 36rem)" }}>
-            <p className={c.num}>Before we estimate</p>
-            <h2 id="scope-title" className={c.title}>
-              Questions that shape the scope.
-            </h2>
-            <ol className={c.lines}>
-              {sol.scopeQuestions.map((q, i) => (
-                <li key={q}>
-                  <span>0{i + 1}</span>
-                  <span style={{ color: "rgb(255 255 255 / 0.92)", fontSize: "0.98rem", letterSpacing: 0, fontWeight: 400 }}>{q}</span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      <section className={`${c.block} ${c.hold}`} data-film-block="faq" style={hold("140svh")} aria-labelledby="faq-title">
-        <div className={c.panelWrap}>
-          <div className={c.panel} data-panel style={{ width: "min(40vw, 36rem)" }}>
-            <p className={c.num}>Common questions</p>
-            <h2 id="faq-title" className={c.title}>
-              Before you ask.
-            </h2>
-            <div className={c.faq}>
-              {sol.faqs.map((q) => (
-                <details key={q.q}>
-                  <summary>{q.q}</summary>
-                  <p>{q.a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section className={`${c.block} ${c.hold}`} data-film-block="next" style={hold("130svh")} aria-labelledby="next-title">
         <div className={`${c.panelWrap} ${c.low}`}>
@@ -293,7 +186,6 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
             <h2 id="next-title" className={c.title}>
               {sol.cta}.
             </h2>
-            <p className={c.lede}>Share the problem and the people involved. We will reply with questions and a sensible first step.</p>
             <div className={c.actions}>
               <TrackedLink href={`/contact?service=${sol.inquiry}`} event="project_cta_click" props={{ location: `solution-${sol.slug}` }} className="btn btn-primary btn-small">
                 {sol.cta}
@@ -302,15 +194,6 @@ export default async function SolutionPage({ params }: { params: Promise<Params>
                 Back to the gallery
               </Link>
             </div>
-            <nav aria-label="Other solutions">
-              <ul className={c.lines}>
-                {others.map((o) => (
-                  <li key={o.slug} style={{ display: "block" }}>
-                    <Link href={`/solutions/${o.slug}`}>{o.name}</Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
           </div>
         </div>
       </section>

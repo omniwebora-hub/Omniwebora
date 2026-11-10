@@ -27,9 +27,8 @@ export const PRICING_BLOCKS: CinemaBlock[] = [
   // Professional: the finished campus, held steady so the plan scale stays in view
   { id: "professional", kind: "hold", still: "premium" },
   // After the plans the camera stays with the finished campus, easing toward a different part of it
-  // for each chapter: every other service, what shapes a proposal, questions.
+  // for each chapter: every other service, questions.
   { id: "others", kind: "hold", still: "premium", dolly: [0.36, 0.36, 0.42, 0.4] },
-  { id: "drivers", kind: "hold", still: "premium", dolly: [0.46, 0.38, 0.4, 0.38] },
   { id: "faq", kind: "hold", still: "premium", dolly: [0.3, 0.32, 0.46, 0.42] },
 ];
 /** Portrait cut (9:16, scripts/cinematic/build_portrait.py): the same model table filmed for tall

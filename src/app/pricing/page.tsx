@@ -20,18 +20,9 @@ export const metadata: Metadata = pageMetadata({
 });
 
 const FAQ = [
-  {
-    q: "What shapes a proposal?",
-    a: "Requirements, the number of modules, users and roles, platforms, integrations, infrastructure, security requirements and support after launch.",
-  },
-  {
-    q: "Are hosting, domains and third-party fees included?",
-    a: "Not assumed. Anything included, and any third-party costs such as advertising spend, are listed in the proposal for your project.",
-  },
-  {
-    q: "Do you offer maintenance?",
-    a: "Yes, as ad-hoc help or an ongoing arrangement. What is included is confirmed in each proposal.",
-  },
+  { q: "What decides the price of other services?", a: "Your features, users, platforms, integrations and support needs." },
+  { q: "Are hosting, domains and other fees included?", a: "Anything included is listed in your proposal." },
+  { q: "Do you offer maintenance?", a: "Yes, as one-off help or ongoing support." },
 ];
 
 export default function PricingPage() {
@@ -40,12 +31,6 @@ export default function PricingPage() {
       <PricingFilm>
         {WEBSITE_PLANS.map((plan, i) => {
           const block = plan.id;
-          const metaphor = [
-            "One well-made building: the essentials, done properly.",
-            "The same foundations, with more rooms and more connections.",
-            "A complete, connected campus: everything working together.",
-            "The whole campus, finished to the last detail.",
-          ][i];
           return [
             // the model grows between the first three plans; Professional is a closer look at the campus
             i > 0 && i < 3 && <div key={`g${i}`} className={`${c.block} ${c.move}`} data-film-block={`grow${i}`} aria-hidden="true"><p className={c.moveLine}>{i === 1 ? "The scope grows · more rooms, more connections" : "Everything, coordinated"}</p></div>,
@@ -57,8 +42,8 @@ export default function PricingPage() {
                   {i === 0 && (
                     <>
                       <Breadcrumbs items={[{ name: "Pricing", path: "/pricing" }]} />
-                      <h1 className={c.title}>The right plan starts with the right scope.</h1>
-                      <p className={`${c.lede} ${s.introLede}`}>Websites come in four plans, from £399. Everything else is shaped to your requirements and sent as a written proposal.</p>
+                      <h1 className={c.title}>Simple plans for websites.</h1>
+                      <p className={`${c.lede} ${s.introLede}`}>Four plans, from £399. Other services are quoted for you.</p>
                     </>
                   )}
                   <p className={c.num}>
@@ -68,20 +53,7 @@ export default function PricingPage() {
                     {plan.name}
                   </h2>
                   <p className={s.price}>{plan.price}</p>
-                  <dl className={c.story}>
-                    <div>
-                      <dt>Where it sits</dt>
-                      <dd>{plan.position}</dd>
-                    </div>
-                    <div>
-                      <dt>On the table</dt>
-                      <dd>{metaphor}</dd>
-                    </div>
-                    <div>
-                      <dt>Details</dt>
-                      <dd>Plan details are being finalised. Ask us and we will share the current plan sheet.</dd>
-                    </div>
-                  </dl>
+                  <p className={c.lede}>{plan.position}</p>
                   <div className={c.actions}>
                     <Link href={`/contact?service=website&plan=${plan.id}`} className="btn btn-primary btn-small">
                       Ask about {plan.name}
@@ -106,7 +78,7 @@ export default function PricingPage() {
               <h2 id="others-title" className={c.title}>
                 Quoted on your requirements.
               </h2>
-              <p className={`${c.lede} ${s.introLede}`}>Apps, ERP and CRM, automation, marketing and enterprise platforms are shaped to what you need and sent as a written proposal. This is what we would ask first.</p>
+              <p className={`${c.lede} ${s.introLede}`}>Priced on what you need, in a written proposal.</p>
               <div className={c.cols}>
                 {solutions
                   .filter((sol) => sol.slug !== "web-development")
@@ -115,28 +87,8 @@ export default function PricingPage() {
                       <h3>
                         <Link href={`/contact?service=${sol.inquiry}`}>{sol.name}</Link>
                       </h3>
-                      <p>{sol.scopeQuestions[0]}</p>
                     </div>
                   ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className={`${c.block} ${c.hold}`} data-film-block="drivers" style={{ "--hold": "150svh" } as React.CSSProperties} aria-labelledby="drivers-film-title">
-          <div className={`${c.panelWrap} ${c.wideWrap}`}>
-            <div className={`${c.panel} ${c.wide}`} data-panel>
-              <p className={c.num}>What shapes a proposal</p>
-              <h2 id="drivers-film-title" className={c.title}>
-                Eight things we look at first.
-              </h2>
-              <div className={c.cols} style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }}>
-                {PRICE_DRIVERS.map((d) => (
-                  <div key={d.id}>
-                    <h3>{d.label}</h3>
-                    <p>{d.body}</p>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
@@ -145,7 +97,7 @@ export default function PricingPage() {
         <section className={`${c.block} ${c.hold}`} data-film-block="faq" style={{ "--hold": "150svh" } as React.CSSProperties} aria-labelledby="faq-film-title">
           <div className={`${c.panelWrap} ${c.wideWrap}`}>
             <div className={c.panel} data-panel style={{ width: "min(42vw, 38rem)" }}>
-              <p className={c.num}>Plan questions</p>
+              <p className={c.num}>Questions</p>
               <h2 id="faq-film-title" className={c.title}>
                 Before you ask.
               </h2>

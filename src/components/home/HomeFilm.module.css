@@ -239,12 +239,6 @@
   text-align: right;
 }
 
-.stageList {
-  display: grid;
-  gap: 6px;
-  margin-top: 8px;
-  padding-left: 1.2em;
-}
 
 @media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
   .bottomWrap {
@@ -352,9 +346,6 @@
     background: #fff;
   }
 
-  .nightPanel .stageList {
-    display: none;
-  }
 }
 
 @media (min-width: 1024px) and (min-aspect-ratio: 5/4) and (prefers-reduced-motion: no-preference) {
@@ -596,9 +587,6 @@
     text-align: left;
   }
 
-  .stageList b {
-    color: #fff;
-  }
 
   .nightPanel,
   .nightPanel :is(h2, p, li) {
@@ -738,9 +726,6 @@
   }
 
   .home .strip > dl,
-  .home .nightPanel .stageList {
-    display: none;
-  }
 
   .home[data-engine] .stripWrap,
   .home[data-engine] .nightWrap {

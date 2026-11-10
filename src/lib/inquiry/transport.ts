@@ -29,7 +29,7 @@ export function renderEmail(i: Inquiry) {
     ["Service", label(serviceOptions, i.service)],
     ...(i.situation ? ([["Situation", label(situationOptions, i.situation)]] as [string, string][]) : []),
     ["Timeline", label(timelineOptions, i.timeline)],
-    ...(i.budget ? ([["Plan in mind", label(budgetOptions, i.budget)]] as [string, string][]) : []),
+    ...(i.budget && i.service === "website" ? ([["Website plan", label(budgetOptions, i.budget)]] as [string, string][]) : []),
     ["Page", i.page ?? "—"],
     [
       "Attribution",

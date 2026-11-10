@@ -136,7 +136,6 @@ export default function SolutionsPage() {
                 <li key={x.slug}>
                   <Link href={`/solutions/${x.slug}`}>
                     <span className={c.roomName}>{x.name}</span>
-                    <span className={c.roomPitch}>{x.pitch}</span>
                     <Icon name="arrow-right" size={18} />
                   </Link>
                 </li>

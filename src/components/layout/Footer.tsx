@@ -28,7 +28,7 @@ export function Footer() {
         <div className={styles.brand}>
           <Logo size="footer" />
           <p className={styles.tagline}>{site.brochureTagline}</p>
-          <p>{site.description}</p>
+          <p>Websites, apps, software and marketing for your business.</p>
           <ContactLinks className={styles.direct} />
           <Link href="/contact" className="btn btn-on-ink btn-small">
             Contact us

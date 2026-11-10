@@ -64,6 +64,10 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
   const [situation, setSituation] = useState("");
   const [timeline, setTimeline] = useState("");
   const [budget, setBudget] = useState(() => (budgetOptions.some((o) => o.value === initialPlan) ? initialPlan : ""));
+  // Only websites have fixed-price plans (owner, 2026-11-10): the plan choice exists for Website alone,
+  // and a plan picked earlier is dropped if the visitor switches to another service.
+  const plans = service === "website";
+  const plan = plans ? budget : "";
   const [scope, setScope] = useState<string>(saved?.summary ?? "");
   const [fields, setFields] = useState<Fields>({ name: "", email: "", company: "", message: "", consent: false, website: "" });
   const [errors, setErrors] = useState<InquiryFieldErrors>({});
@@ -108,7 +112,7 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
       `Need: ${label(serviceOptions, service) ?? "Not sure yet"}`,
       situation && `Situation: ${label(situationOptions, situation)}`,
       timeline && `Timing: ${label(timelineOptions, timeline)}`,
-      budget && `Plan in mind: ${label(budgetOptions, budget)}`,
+      plan && `Website plan: ${label(budgetOptions, plan)}`,
       scope && `From your plan:\n${scope}`,
     ]
       .filter(Boolean)
@@ -141,7 +145,7 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
       service: service || "not-sure",
       situation: situation || undefined,
       timeline: timeline || undefined,
-      budget: budget || undefined,
+      budget: plan || undefined,
       brief: briefText(),
       startedAt: startedAt.current || Date.now(),
       page: window.location.pathname,
@@ -202,14 +206,18 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
               {situation ? <> ({label(situationOptions, situation)?.toLowerCase()})</> : null}.
             </>
           ) : (
-            "Choose what you need, or skip straight to the short form."
+            "Choose what you need."
           )}
         </p>
         <dl className={s.sumList}>
           <dt>Timing</dt>
           <dd>{label(timelineOptions, timeline) ?? "Not set"}</dd>
-          <dt>Plan in mind</dt>
-          <dd>{label(budgetOptions, budget) ?? "Not set"}</dd>
+          {plans && (
+            <>
+              <dt>Website plan</dt>
+              <dd>{label(budgetOptions, plan) ?? "Not set"}</dd>
+            </>
+          )}
           <dt>Contact</dt>
           <dd>{fields.name ? `${fields.name}${fields.company ? `, ${fields.company}` : ""}` : "Not yet"}</dd>
         </dl>
@@ -223,7 +231,7 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
           </div>
         )}
         <p className={s.next}>
-          The first consultation is free. We read every enquiry and reply by email to talk through scope and next steps.
+          We reply by email.
         </p>
       </aside>
 
@@ -298,20 +306,22 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
                   ))}
                 </div>
               </fieldset>
-              <fieldset className={s.group}>
-                <legend>Plan in mind (optional)</legend>
-                <div className={s.chips}>
-                  {budgetOptions.map((o) => (
-                    <label key={o.value} className={s.chip}>
-                      <input type="radio" name="budget" value={o.value} checked={budget === o.value} onChange={() => setBudget(o.value)} />
-                      <span>{o.label}</span>
-                    </label>
-                  ))}
-                </div>
-                <p className={s.hint}>
-                  Website plans are Basic, Standard, Premium and Professional. See <Link href="/pricing">plans</Link>; other services are scoped per project.
-                </p>
-              </fieldset>
+              {plans && (
+                <fieldset className={s.group}>
+                  <legend>Website plan (optional)</legend>
+                  <div className={s.chips}>
+                    {budgetOptions.map((o) => (
+                      <label key={o.value} className={s.chip}>
+                        <input type="radio" name="budget" value={o.value} checked={budget === o.value} onChange={() => setBudget(o.value)} />
+                        <span>{o.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                  <p className={s.hint}>
+                    See <Link href="/pricing">plans</Link>.
+                  </p>
+                </fieldset>
+              )}
               <div className={s.actions}>
                 <button type="button" className="btn btn-ghost" onClick={() => setStep(0)}>
                   Back
@@ -355,7 +365,7 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
                   <label htmlFor={`${id}-message`}>What are you trying to build or fix? *</label>
                   <textarea id={`${id}-message`} name="message" rows={5} value={fields.message} onChange={(e) => set("message", e.target.value)} aria-invalid={!!errors.message} aria-describedby={`${id}-message-help${errors.message ? ` ${id}-message-err` : ""}`} maxLength={LIMITS.message.max} />
                   <span id={`${id}-message-help`} className={s.hint}>
-                    A few sentences is plenty: the problem, who it affects, and anything that must connect. {fields.message.length}/{LIMITS.message.max}
+                    A few sentences is plenty. {fields.message.length}/{LIMITS.message.max}
                   </span>
                   {err("message")}
                 </div>
@@ -367,7 +377,7 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
                   <label className={s.consent}>
                     <input id={`${id}-consent`} type="checkbox" checked={fields.consent} onChange={(e) => set("consent", e.target.checked)} aria-invalid={!!errors.consent} aria-describedby={errors.consent ? `${id}-consent-err` : undefined} />
                     <span>
-                      I agree that Omniwebora may use these details to reply to my brief, as described in the <Link href="/privacy">privacy notice</Link>. The page I sent this from and any campaign tags in my link are included. *
+                      I agree to Omniwebora using these details, and the page and link I came from, to reply. See the <Link href="/privacy">privacy notice</Link>. *
                     </span>
                   </label>
                   {err("consent")}
@@ -397,9 +407,9 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
                     Edit
                   </button>
                 </dd>
-                <dt>Situation, timing, plan</dt>
+                <dt>{plans ? "Situation, timing, plan" : "Situation, timing"}</dt>
                 <dd>
-                  {[label(situationOptions, situation), label(timelineOptions, timeline), label(budgetOptions, budget)].filter(Boolean).join(" · ") || "Not set"}{" "}
+                  {[label(situationOptions, situation), label(timelineOptions, timeline), label(budgetOptions, plan)].filter(Boolean).join(" · ") || "Not set"}{" "}
                   <button type="button" className={s.edit} onClick={() => setStep(1)}>
                     Edit
                   </button>
