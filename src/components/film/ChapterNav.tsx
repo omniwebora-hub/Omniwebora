@@ -193,12 +193,16 @@ export function ChapterNav() {
       const now = performance.now();
       const d = Math.sign(e.deltaY);
       const abs = Math.abs(e.deltaY);
-      // a sharp rise in strength is a new flick, even inside a trackpad's stream of events
-      const fresh = abs > Math.max(20, lastAbs * 1.6);
-      // a mouse notch (large delta) is its own gesture unless it comes in a rapid spin; a trackpad
-      // stream (small deltas every frame) is one gesture
+      // Where one gesture ends is read from the deltas, not only the timing: while the page glides the
+      // camera, events can arrive 200 ms+ apart (measured on the live site), so a pause alone is no proof.
+      // - a mouse notch repeats the same delta: notches 200 ms+ apart are separate gestures, a quicker
+      //   run is one spin
+      // - a trackpad stream changes delta every event: one gesture until it pauses 400 ms, unless a
+      //   strong push comes after its momentum has almost died out (a new flick)
       const gap = now - lastWheel;
-      const burst = (abs >= 40 ? gap < 110 : gap < 240) && d === wheelDir && !fresh;
+      const notch = e.deltaMode !== 0 || (abs >= 40 && abs === lastAbs);
+      const fresh = lastAbs < 12 && abs > Math.max(30, lastAbs * 3);
+      const burst = d === wheelDir && gap < (notch ? 200 : 400) && !fresh;
       // a fading stream (momentum) never advances again; a steady one (a long wheel spin) may, after a beat
       const fading = abs < lastAbs * 0.97 || abs < 10;
       lastWheel = now;
