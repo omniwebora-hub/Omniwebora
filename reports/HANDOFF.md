@@ -542,4 +542,5 @@ Owner: "no Gmail delivery, only through WhatsApp"; "Contact Us should have the W
 ## Session 8, part 4 (2026-11-15): scroll pace restored
 - Owner: "its ultra fast now; prev before i told u to slow itself was fine". `ChapterNav.tsx` and `qa/wheel-burst.mjs` restored exactly to c0bf6dc (one gesture = one chapter, glides 1 s + 650 ms per screen up to 3 s, 3.1 s beat in a continuing spin). The email removal stays.
 - Then, owner: "make it 1.5": glide is now `min(2200, 700 + 470 ms per screen)`, about 1.5 s per chapter (was ~2.1 s).
-- Verified locally on the production build: `qa/wheel-burst.mjs` ALL PASS on `/` and `/solutions/web-development` (glides 1.46–1.66 s). Pushed; not deployed.
+- Verified locally on the production build: `qa/wheel-burst.mjs` ALL PASS on `/` and `/solutions/web-development` (glides 1.46–1.66 s).
+- Deployed 60c46c5 to production (omniwebora-qyclpobae, aliased to https://omniwebora.vercel.app). Live check: all routes 200, `/api/inquiry` 404, `qa/wheel-burst.mjs` ALL PASS on `/` and `/solutions/web-development` against the live site (glides 1.46–1.60 s).
