@@ -538,3 +538,8 @@ Owner: "no Gmail delivery, only through WhatsApp"; "Contact Us should have the W
 - Verified: tsc, eslint, build (all static); Vitest 23/23; Playwright 65 passed / 9 skipped / 0 failed; `qa/wheel-burst.mjs` ALL PASS twice each on `/` and `/solutions/web-development` (new checks: three notches 400 ms apart = 2–3 chapters, two notches 250 ms apart = 2, five notches 150 ms apart = a spin, 1–2).
 - The first deploy (4f57fe3) failed the wheel QA on the live site (a spin and a trackpad flick moved 2–3 chapters, because of the slower event timing there); it was fixed and redeployed the same day.
 - Deployed b4aebdf to production (omniwebora-768y95d5t, aliased to https://omniwebora.vercel.app). Live check: all routes 200, `/api/inquiry` 404, no email on /contact, `qa/wheel-burst.mjs` ALL PASS against the live site on `/` and `/solutions/web-development`.
+
+## Session 8, part 4 (2026-11-15): scroll pace restored
+- Owner: "its ultra fast now; prev before i told u to slow itself was fine". `ChapterNav.tsx` and `qa/wheel-burst.mjs` restored exactly to c0bf6dc (one gesture = one chapter, glides 1 s + 650 ms per screen up to 3 s, 3.1 s beat in a continuing spin). The email removal stays.
+- Then, owner: "make it 1.5": glide is now `min(2200, 700 + 470 ms per screen)`, about 1.5 s per chapter (was ~2.1 s).
+- Verified locally on the production build: `qa/wheel-burst.mjs` ALL PASS on `/` and `/solutions/web-development` (glides 1.46–1.66 s). Pushed; not deployed.
