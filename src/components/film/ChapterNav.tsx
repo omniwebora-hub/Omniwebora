@@ -18,8 +18,11 @@ import s from "./ChapterNav.module.css";
  * (a form field has focus, or the chapter is a form: `data-free-scroll`) or once the film has ended.
  */
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
-/** Pause on each step of a chapter before the next one plays (ms). */
-const STEP_PAUSE = 2600;
+/** Pause on each step of a chapter before the next one plays (ms); long enough to read each screen
+ *  (owner, 2026-11-15: the product wall "alone is very fast"). */
+const STEP_PAUSE = 4500;
+/** The move from one step to the next (ms). */
+const STEP_GLIDE = 1500;
 
 export function ChapterNav() {
   const [film, setFilm] = useState<FilmEngine | null>(null);
@@ -139,7 +142,7 @@ export function ChapterNav() {
       if (!here || here.chapter === heldChapter || here.step >= here.steps - 1) return;
       autoT = window.setTimeout(() => {
         if (a.gliding || writing() || Math.abs(window.scrollY - here.y) > 6) return;
-        glide(stops[i + 1].y, 1100, arm);
+        glide(stops[i + 1].y, STEP_GLIDE, arm);
       }, STEP_PAUSE);
     };
 
