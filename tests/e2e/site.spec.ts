@@ -289,7 +289,7 @@ test.describe("project brief and API", () => {
     await expect(page.getByRole("radio", { name: /£/ })).toHaveCount(0);
   });
 
-  test("without a configured transport the brief says so plainly and does not fake success", async ({ page }) => {
+  test("without a mailbox the brief is sent to the owner's WhatsApp, prefilled", async ({ page }) => {
     await page.goto("/contact?service=website");
     await toChapter(page, "brief");
     await expect(page.getByRole("radio", { name: "Website" })).toBeChecked();
@@ -302,10 +302,17 @@ test.describe("project brief and API", () => {
     await page.getByRole("checkbox").check();
     await page.getByRole("button", { name: "Review brief" }).click();
     await expect(page.getByRole("heading", { name: "Review and send" })).toBeVisible();
-    await page.waitForTimeout(3100); // minimum fill time (anti-bot)
-    await page.getByRole("button", { name: "Send brief" }).click();
-    await expect(page.getByRole("alert").filter({ hasText: /isn.t connected to a mailbox yet/ })).toBeVisible();
-    await expect(page).toHaveURL(/\/contact/);
+    const wa = page.getByRole("link", { name: "Send on WhatsApp" });
+    const href = decodeURIComponent((await wa.getAttribute("href")) ?? "");
+    expect(href).toMatch(/^https:\/\/wa\.me\/447387653699\?text=/);
+    expect(href).toContain("Need: Website");
+    expect(href).toContain("We would like a new marketing website for our studio.");
+    expect(href).toContain("test@example.com");
+    // the visitor finishes in WhatsApp (a new tab or the app); the site explains the last step
+    await page.context().route("https://wa.me/**", (r) => r.fulfill({ body: "ok" }));
+    await wa.click();
+    await expect(page).toHaveURL(/\/thank-you\?via=whatsapp/);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("WhatsApp");
   });
 
   test("how we work personalises the seven stages and carries them into the brief", async ({ page }) => {

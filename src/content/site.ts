@@ -34,14 +34,15 @@ export const site = {
   } satisfies Verifiable<string>,
 
   /**
-   * WhatsApp (owner asked for a link, 2026-10-30). International number, digits only, e.g. "9198…".
-   * Empty until the owner gives the number: nothing is rendered without it.
+   * WhatsApp (owner, 2026-11-14, FACT_REGISTER O09): +44 7387 653699. International digits for wa.me;
+   * NEXT_PUBLIC_WHATSAPP_NUMBER may override it.
    */
   whatsapp: {
-    value: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "") ?? "",
-    verified: Boolean(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER),
-    source: "Owner (number pending)",
-  } satisfies Verifiable<string>,
+    value: (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "447387653699").replace(/\D/g, ""),
+    display: "+44 7387 653699",
+    verified: true,
+    source: "Owner, 2026-11-14",
+  } satisfies Verifiable<string> & { display: string },
 
   phone: { value: "", verified: false, source: "unknown" } satisfies Verifiable<string>,
   address: { value: "", verified: false, source: "unknown" } satisfies Verifiable<string>,

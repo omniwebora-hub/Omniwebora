@@ -5,17 +5,20 @@ import { BriefStudio, BriefStudioFromUrl } from "@/components/contact/BriefStudi
 import { ContactFilm } from "@/components/contact/ContactFilm";
 import { ContactLinks } from "@/components/layout/ContactLinks";
 import { pageMetadata } from "@/lib/seo";
+import { describeTransport } from "@/lib/inquiry/transport";
 import c from "@/components/film/chapters.module.css";
 import s from "./contact.module.css";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact Us",
   description:
-    "Share the challenge, a rough idea or an existing process. A short guided brief helps us understand the scope; we reply by email to discuss next steps.",
+    "Share the challenge, a rough idea or an existing process. Send a short brief or message us on WhatsApp.",
   path: "/contact",
 });
 
 export default function ContactPage() {
+  // Read at build time: with a mailbox connected the brief is emailed; otherwise it is sent on WhatsApp.
+  const emailReady = describeTransport() !== "none";
   return (
     <ContactFilm>
       <section className={`${c.block} ${c.hold}`} data-film-block="terrace" style={{ "--hold": "95svh" } as React.CSSProperties} aria-labelledby="contact-title">
@@ -28,7 +31,7 @@ export default function ContactPage() {
             <h1 id="contact-title" className={c.title}>
               Tell us what you&rsquo;re building.
             </h1>
-            <p className={c.lede}>Share your idea. We reply by email.</p>
+            <p className={c.lede}>Share your idea, or message us on WhatsApp.</p>
             {/* Owner, 2026-11-06: "Enquire with us" opens the form (the next chapter). */}
             <div className={c.actions}>
               <a href="#brief" className="btn btn-primary btn-small">
@@ -48,8 +51,8 @@ export default function ContactPage() {
         {/* The link target sits just inside the chapter, so a jump here (after the header offset) lands on it. */}
         <span id="brief" className={s.anchor} />
         <div className={s.card} data-panel>
-          <Suspense fallback={<BriefStudio />}>
-            <BriefStudioFromUrl />
+          <Suspense fallback={<BriefStudio emailReady={emailReady} />}>
+            <BriefStudioFromUrl emailReady={emailReady} />
           </Suspense>
         </div>
       </section>

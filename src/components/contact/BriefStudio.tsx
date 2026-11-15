@@ -9,6 +9,7 @@ import { getAttribution } from "@/lib/utm";
 import { track } from "@/lib/analytics";
 import { Icon } from "@/components/ui/Icon";
 import { site } from "@/content/site";
+import { whatsappLink } from "@/lib/whatsapp";
 import s from "./BriefStudio.module.css";
 
 const SERVER_MESSAGES: Record<string, string> = {
@@ -39,16 +40,27 @@ function readScope(fromPricing: boolean): { service?: string; summary?: string }
 type Fields = { name: string; email: string; company: string; message: string; consent: boolean; website: string };
 
 /** Reads ?service= and ?from= and renders the studio with them (wrap in Suspense). */
-export function BriefStudioFromUrl() {
+export function BriefStudioFromUrl({ emailReady = false }: { emailReady?: boolean }) {
   const params = useSearchParams();
-  return <BriefStudio initialService={params.get("service") ?? ""} initialPlan={params.get("plan") ?? ""} fromPricing={["pricing", "approach"].includes(params.get("from") ?? "")} />;
+  return <BriefStudio emailReady={emailReady} initialService={params.get("service") ?? ""} initialPlan={params.get("plan") ?? ""} fromPricing={["pricing", "approach"].includes(params.get("from") ?? "")} />;
 }
 
 /**
  * Guided project brief. Rendered on the server without prefill (also the Suspense fallback, so the
  * layout never shifts), then re-rendered with the URL prefill on the client.
  */
-export function BriefStudio({ initialService = "", initialPlan = "", fromPricing = false }: { initialService?: string; initialPlan?: string; fromPricing?: boolean }) {
+export function BriefStudio({
+  initialService = "",
+  initialPlan = "",
+  fromPricing = false,
+  emailReady = false,
+}: {
+  initialService?: string;
+  initialPlan?: string;
+  fromPricing?: boolean;
+  /** The server can email the brief to the owner (RESEND or webhook configured). Otherwise it goes by WhatsApp. */
+  emailReady?: boolean;
+}) {
   const id = useId();
   const router = useRouter();
   const startedAt = useRef(0);
@@ -124,6 +136,30 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
     const body = `${fields.message}\n\n${briefText()}\n\n${fields.name}${fields.company ? `, ${fields.company}` : ""}\n${fields.email}`;
     return `mailto:${site.contactEmail.value}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
+
+  // The whole brief as one WhatsApp message to the owner (O09).
+  const whatsapp = () =>
+    whatsappLink(
+      `Hello Omniwebora, here is my project brief.
+
+${briefText()}
+
+${fields.message}
+
+${fields.name}${fields.company ? `, ${fields.company}` : ""}
+${fields.email}`,
+    );
+
+  /** No mailbox connected: the brief opens in WhatsApp (a new tab / the app), and the page says how to finish. */
+  function sentOnWhatsApp() {
+    track("contact_submit_success", { service: service || "not-sure", via: "whatsapp" });
+    try {
+      sessionStorage.removeItem("omni:scope");
+    } catch {
+      /* ignore */
+    }
+    router.push("/thank-you?via=whatsapp");
+  }
 
   async function validateDetails() {
     const { inquirySchema, fieldErrors } = await import("@/lib/inquiry/schema");
@@ -430,8 +466,12 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
                   <Icon name="alert" size={18} />
                   <span>
                     {status.message}{" "}
+                    <a href={whatsapp()} target="_blank" rel="noopener" className={s.mailto} onClick={sentOnWhatsApp}>
+                      Send it on WhatsApp instead
+                    </a>{" "}
+                    or{" "}
                     <a href={mailto()} className={s.mailto}>
-                      Email it to {site.contactEmail.value} instead
+                      email it to {site.contactEmail.value}
                     </a>
                   </span>
                 </div>
@@ -440,10 +480,17 @@ export function BriefStudio({ initialService = "", initialPlan = "", fromPricing
                 <button type="button" className="btn btn-ghost" onClick={() => setStep(2)}>
                   Back
                 </button>
-                <button type="button" className="btn btn-primary" onClick={send} aria-busy={status.kind === "sending"} disabled={status.kind === "sending"}>
-                  {status.kind === "sending" ? "Sending…" : "Send brief"}
-                  <Icon name="arrow-right" size={18} className="btn-arrow" />
-                </button>
+                {emailReady ? (
+                  <button type="button" className="btn btn-primary" onClick={send} aria-busy={status.kind === "sending"} disabled={status.kind === "sending"}>
+                    {status.kind === "sending" ? "Sending…" : "Send brief"}
+                    <Icon name="arrow-right" size={18} className="btn-arrow" />
+                  </button>
+                ) : (
+                  <a href={whatsapp()} target="_blank" rel="noopener" className="btn btn-primary" onClick={sentOnWhatsApp}>
+                    Send on WhatsApp
+                    <Icon name="arrow-right" size={18} className="btn-arrow" />
+                  </a>
+                )}
               </div>
             </div>
           )}

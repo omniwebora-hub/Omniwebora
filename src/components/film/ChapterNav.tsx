@@ -100,8 +100,9 @@ export function ChapterNav() {
       to = Math.max(0, Math.min(document.documentElement.scrollHeight - H(), to));
       const dist = Math.abs(to - from);
       if (dist < 2) return onEnd?.();
-      // longer moves take a little longer, so a camera move plays at a calm pace
-      const dur = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : (ms ?? Math.min(1900, 650 + (dist / H()) * 320));
+      // longer moves take longer, so a camera move plays at a calm, readable pace (owner, 2026-11-14:
+      // "a few scrolls and it moves very fast")
+      const dur = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : (ms ?? Math.min(3000, 1000 + (dist / H()) * 650));
       const t0 = performance.now();
       a.gliding = true;
       a.expect = from;
@@ -173,6 +174,41 @@ export function ChapterNav() {
       clearTimeout(idle);
       idle = window.setTimeout(settle, 170);
     };
+    // Mouse wheel and trackpad: one gesture moves exactly one chapter. A burst of wheel events (a fast
+    // spin, or a trackpad's momentum tail) is one gesture; the native scroll it would cause is replaced
+    // by the calm glide, so a flick can no longer race through several chapters and camera moves.
+    // A continuing burst advances again only after the glide has finished and a short beat has passed.
+    let wheelDir = 0;
+    let lastWheel = 0;
+    let lastGo = 0;
+    let wheelTo = 0;
+    let lastAbs = 0;
+    const onWheel = (e: WheelEvent) => {
+      const free = e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || !live() || writing();
+      if (free || !e.deltaY) return take(e);
+      e.preventDefault();
+      clearTimeout(autoT);
+      clearTimeout(idle);
+      const now = performance.now();
+      const d = Math.sign(e.deltaY);
+      const abs = Math.abs(e.deltaY);
+      // a sharp rise in strength is a new flick, even inside a trackpad's stream of events
+      const fresh = abs > Math.max(20, lastAbs * 1.6);
+      const burst = now - lastWheel < 240 && d === wheelDir && !fresh;
+      // a fading stream (momentum) never advances again; a steady one (a long wheel spin) may, after a beat
+      const fading = abs < lastAbs * 0.97 || abs < 10;
+      lastWheel = now;
+      lastAbs = abs;
+      if (burst && (a.gliding || fading || now - lastGo < 3100)) return;
+      // a new gesture in the same direction during a glide goes one chapter beyond where it was heading
+      const y = a.gliding && d === wheelDir ? wheelTo : window.scrollY;
+      wheelDir = d;
+      lastGo = now;
+      const cs = chapters(film.stops());
+      wheelTo = d > 0 ? (cs.find((x) => x.y > y + 8)?.y ?? onward()) : (cs.filter((x) => x.y < y - 8).pop()?.y ?? 0);
+      glide(wheelTo, undefined, arm);
+    };
+
     // The visitor's own input always wins over a running glide or a playing step.
     const take = (e: Event) => {
       const inNav = (e.target as HTMLElement | null)?.closest?.("[data-chapter-nav]");
@@ -196,7 +232,8 @@ export function ChapterNav() {
     const opts = { passive: true, capture: true } as const;
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
-    for (const t of ["wheel", "touchstart", "keydown", "pointerdown"]) window.addEventListener(t, take, opts);
+    for (const t of ["touchstart", "keydown", "pointerdown"]) window.addEventListener(t, take, opts);
+    window.addEventListener("wheel", onWheel, { passive: false, capture: true });
     window.addEventListener("touchstart", onTouchStart, opts);
     window.addEventListener("touchend", onTouchEnd, opts);
     window.addEventListener("touchcancel", onTouchEnd, opts);
@@ -219,7 +256,8 @@ export function ChapterNav() {
       navRef.current = null;
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
-      for (const t of ["wheel", "touchstart", "keydown", "pointerdown"]) window.removeEventListener(t, take, opts);
+      for (const t of ["touchstart", "keydown", "pointerdown"]) window.removeEventListener(t, take, opts);
+      window.removeEventListener("wheel", onWheel, { capture: true });
       window.removeEventListener("touchstart", onTouchStart, opts);
       window.removeEventListener("touchend", onTouchEnd, opts);
       window.removeEventListener("touchcancel", onTouchEnd, opts);
