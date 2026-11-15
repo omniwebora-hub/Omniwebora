@@ -24,9 +24,9 @@ export type FilmSegment = {
   fade?: number;
 };
 /** `stops`: where the page rests in a hold, as progress through it (default: once the camera has
- *  settled, 0.32). A hold may list several. With `autoplay` they are steps of one chapter, which play
- *  by themselves while the visitor rests (the product wall, a room's interface); without it each stop
- *  is a chapter of its own. */
+ *  settled, 0.32). A hold may list several. With `autoplay` they are steps of one chapter (the product
+ *  wall, a room's interface), each a resting place the visitor scrolls to; without it each stop is a
+ *  chapter of its own. The page never moves by itself (ChapterNav). */
 export type FilmBlock = { id: string; kind: "hold" | "seg"; seg?: string; still?: string; stops?: number[]; autoplay?: boolean };
 /** A resting place for the chapter buttons and scroll settling (document scroll position). */
 export type FilmStop = { y: number; chapter: number; step: number; steps: number };

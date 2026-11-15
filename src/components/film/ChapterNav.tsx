@@ -5,28 +5,25 @@ import { runningFilms, type FilmEngine, type FilmStop } from "./engine";
 import s from "./ChapterNav.module.css";
 
 /**
- * How a film page moves (owner, 2026-11-04: "button type to go next and next"; "it should be easy to
- * scroll, not keep swiping"):
- * - One gesture, one chapter. Scrolling stays native, but when the visitor stops between chapters the
- *   page finishes the move: on to the next chapter, or back to the start of the one they scrolled
- *   into from below. A small flick or a wheel turn is enough; a long fling still travels far.
- * - The steps of a chapter play by themselves while the visitor rests (the product wall, a room's
- *   interface, the seven stages), a short pause on each; any touch or scroll stops them.
- * - Previous / Next buttons step chapter by chapter; after the last one, Next goes on to the page's
- *   next step. The page glides, eased, so the camera plays the move instead of cutting.
- * The visitor's own wheel, touch or key always takes over at once. Nothing settles while they write
- * (a form field has focus, or the chapter is a form: `data-free-scroll`) or once the film has ended.
+ * How a film page moves (owner, 2026-11-04: "button type to go next and next"; 2026-11-16: "just one
+ * mouse scroll and chak chak chak it moves … nice and slow, not frustrating"):
+ * - The page never moves by itself. Every move answers the visitor: one gesture (a wheel turn, a fast
+ *   spin, a trackpad flick with its momentum, a touch swipe) is one calm step to the next resting place:
+ *   the next screen of a chapter's interface (the product wall, a room's steps) or the next chapter.
+ * - A gesture made while the page is still moving queues one more step, played after the current one,
+ *   never faster; turning back reverses at once.
+ * - Scrolling stays native for touch: when the visitor lets go between resting places, the page finishes
+ *   the move in the direction they were going.
+ * - Previous / Next buttons step the same way; after the last place, Next goes on to the page's next step.
+ *   The page glides, eased, so the camera plays the move instead of cutting.
+ * Nothing settles while the visitor writes (a form field has focus, or the chapter is a form:
+ * `data-free-scroll`) or once the film has ended.
  */
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
-/** Pause on each step of a chapter before the next one plays (ms); long enough to read each screen
- *  (owner, 2026-11-15: the product wall "alone is very fast"). */
-const STEP_PAUSE = 4500;
-/** The move from one step to the next (ms). */
-const STEP_GLIDE = 1500;
 
 export function ChapterNav() {
   const [film, setFilm] = useState<FilmEngine | null>(null);
-  const [state, setState] = useState({ show: false, first: true, last: false, n: 0, at: 0 });
+  const [state, setState] = useState({ show: false, first: true, last: false, n: 0, at: 0, place: 0, places: 0 });
   const [typing, setTyping] = useState(false);
   const typingRef = useRef(false);
   /** `expect`: where the running glide last put the page; `at`: where the last glide ended (its
@@ -87,8 +84,10 @@ export function ChapterNav() {
       const y = window.scrollY;
       const cs = chapters(film.stops());
       const at = cs.filter((x) => x.y <= y + 8).length;
-      const next = { show: live() && !free(), first: y <= (cs[0]?.y ?? 0) + 8, last: at >= cs.length, n: cs.length, at };
-      setState((p) => (p.show === next.show && p.first === next.first && p.last === next.last && p.at === next.at && p.n === next.n ? p : next));
+      const all = film.stops();
+      const place = all.filter((x) => x.y <= y + 8).length;
+      const next = { show: live() && !free(), first: y <= (cs[0]?.y ?? 0) + 8, last: at >= cs.length, n: cs.length, at, place, places: all.length };
+      setState((p) => (p.show === next.show && p.first === next.first && p.last === next.last && p.at === next.at && p.n === next.n && p.place === next.place && p.places === next.places ? p : next));
     };
 
     const stop = () => {
@@ -103,9 +102,9 @@ export function ChapterNav() {
       to = Math.max(0, Math.min(document.documentElement.scrollHeight - H(), to));
       const dist = Math.abs(to - from);
       if (dist < 2) return onEnd?.();
-      // longer moves take longer, so a camera move plays at a calm, readable pace (owner, 2026-11-14:
-      // "a few scrolls and it moves very fast"); about 1.5 s for a typical chapter (owner, 2026-11-15)
-      const dur = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : (ms ?? Math.min(2200, 700 + (dist / H()) * 470));
+      // calm and even: a short move between a chapter's screens takes ~1.2 s, a camera move between
+      // chapters ~1.8 s, the longest 2.4 s (owner, 2026-11-16: "nice and slow, not frustrating")
+      const dur = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : (ms ?? Math.min(2400, 1050 + (dist / H()) * 480));
       const t0 = performance.now();
       a.gliding = true;
       a.expect = from;
@@ -128,25 +127,29 @@ export function ChapterNav() {
       a.raf = requestAnimationFrame(step);
     };
 
-    // Steps that play by themselves while the visitor rests on a chapter.
-    let autoT = 0;
-    let heldChapter = -1; // the visitor took over this chapter's interface: leave it to them
+    // Resting places: every chapter and every screen of a chapter's interface.
+    const places = () => film.stops().map((x) => x.y);
+    const target = (y: number, d: number) => (d > 0 ? (places().find((v) => v > y + 8) ?? onward()) : (places().filter((v) => v < y - 8).pop() ?? 0));
     // writing: a field has focus, the chapter holds a form, or a free-scroll chapter is on screen
     const writing = () => typingRef.current || !!document.querySelector("[data-current] form") || free();
-    const arm = () => {
-      clearTimeout(autoT);
-      const stops = film.stops();
-      const y = window.scrollY;
-      const i = stops.findIndex((x) => Math.abs(x.y - y) < 6);
-      const here = stops[i];
-      if (!here || here.chapter === heldChapter || here.step >= here.steps - 1) return;
-      autoT = window.setTimeout(() => {
-        if (a.gliding || writing() || Math.abs(window.scrollY - here.y) > 6) return;
-        glide(stops[i + 1].y, STEP_GLIDE, arm);
-      }, STEP_PAUSE);
+
+    // One step at a time; a gesture during a move queues one more (never more), played after it.
+    let moving = 0;
+    let queued = false;
+    const go = (d: number) => {
+      moving = d;
+      queued = false;
+      glide(target(window.scrollY, d), undefined, () => {
+        if (queued) go(d);
+      });
+    };
+    const ask = (d: number) => {
+      if (!a.gliding) go(d);
+      else if (d === moving) queued = true;
+      else go(d); // turning back: at once
     };
 
-    // One gesture, one chapter: settle once the visitor stops scrolling between chapters.
+    // Touch and other native scrolling: when the visitor lets go between resting places, finish the move.
     let idle = 0;
     let touching = false;
     let lastY = window.scrollY;
@@ -154,11 +157,8 @@ export function ChapterNav() {
     const settle = () => {
       if (touching || a.gliding || writing() || !live()) return;
       const y = window.scrollY;
-      // a visitor's gesture rests only on chapters (the steps between are the chapter's own demo)
-      const cs = chapters(film.stops()).map((x) => x.y);
-      if (cs.some((v) => Math.abs(v - y) < 6)) return arm();
-      if (dir > 0) glide(cs.find((v) => v > y) ?? onward(), undefined, arm);
-      else if (dir < 0) glide(cs.filter((v) => v < y).pop() ?? 0, undefined, arm);
+      if (places().some((v) => Math.abs(v - y) < 6)) return;
+      if (dir) go(dir);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(read);
@@ -170,55 +170,52 @@ export function ChapterNav() {
         return;
       }
       if (a.gliding) stop();
+      queued = false;
       a.at = -1;
       if (y !== lastY) dir = y > lastY ? 1 : -1;
       lastY = y;
-      clearTimeout(autoT);
       clearTimeout(idle);
       idle = window.setTimeout(settle, 170);
     };
-    // Mouse wheel and trackpad: one gesture moves exactly one chapter. A burst of wheel events (a fast
-    // spin, or a trackpad's momentum tail) is one gesture; the native scroll it would cause is replaced
-    // by the calm glide, so a flick can no longer race through several chapters and camera moves.
-    // A continuing burst advances again only after the glide has finished and a short beat has passed.
+    // Mouse wheel and trackpad: one gesture, one step. A burst of wheel events (a fast spin, or a
+    // trackpad's momentum tail) is one gesture; the native scroll it would cause is replaced by the calm
+    // glide. A steady spin that keeps going advances again only after a long beat.
     let wheelDir = 0;
     let lastWheel = 0;
     let lastGo = 0;
-    let wheelTo = 0;
     let lastAbs = 0;
     const onWheel = (e: WheelEvent) => {
-      const free = e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || !live() || writing();
-      if (free || !e.deltaY) return take(e);
+      const loose = e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || !live() || writing();
+      if (loose || !e.deltaY) return take(e);
       e.preventDefault();
-      clearTimeout(autoT);
       clearTimeout(idle);
       const now = performance.now();
       const d = Math.sign(e.deltaY);
       const abs = Math.abs(e.deltaY);
-      // a sharp rise in strength is a new flick, even inside a trackpad's stream of events
-      const fresh = abs > Math.max(20, lastAbs * 1.6);
-      const burst = now - lastWheel < 240 && d === wheelDir && !fresh;
+      // a strong push after the momentum has almost died out is a new flick, even inside a trackpad's
+      // stream (a busy page merges events, so a mid-stream jump in strength alone proves nothing)
+      const fresh = lastAbs < 12 && abs > Math.max(30, lastAbs * 3);
+      // wheel events can arrive late while the camera is busy, so only a clear pause (450 ms) starts a new
+      // gesture; people pause about that long between one scroll and the next anyway
+      const burst = now - lastWheel < 450 && d === wheelDir && !fresh;
       // a fading stream (momentum) never advances again; a steady one (a long wheel spin) may, after a beat
-      const fading = abs < lastAbs * 0.97 || abs < 10;
+      // (deltas are rounded, so a small one that merely repeats is still fading; a large one that repeats
+      // is a wheel held spinning)
+      const fading = abs < 10 || abs < lastAbs * 0.97 || (abs < 40 && abs <= lastAbs);
       lastWheel = now;
       lastAbs = abs;
       if (burst && (a.gliding || fading || now - lastGo < 3100)) return;
-      // a new gesture in the same direction during a glide goes one chapter beyond where it was heading
-      const y = a.gliding && d === wheelDir ? wheelTo : window.scrollY;
       wheelDir = d;
       lastGo = now;
-      const cs = chapters(film.stops());
-      wheelTo = d > 0 ? (cs.find((x) => x.y > y + 8)?.y ?? onward()) : (cs.filter((x) => x.y < y - 8).pop()?.y ?? 0);
-      glide(wheelTo, undefined, arm);
+      ask(d);
     };
 
-    // The visitor's own input always wins over a running glide or a playing step.
+    // The visitor's own input always wins over a running glide.
     const take = (e: Event) => {
       const inNav = (e.target as HTMLElement | null)?.closest?.("[data-chapter-nav]");
       if (inNav) return;
-      if (e.type === "pointerdown") heldChapter = film.stops().find((x) => Math.abs(x.y - window.scrollY) < 6)?.chapter ?? heldChapter;
+      queued = false;
       stop();
-      clearTimeout(autoT);
     };
     const onTouchStart = () => {
       touching = true;
@@ -231,7 +228,6 @@ export function ChapterNav() {
     };
 
     read();
-    arm();
     const opts = { passive: true, capture: true } as const;
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -241,20 +237,10 @@ export function ChapterNav() {
     window.addEventListener("touchend", onTouchEnd, opts);
     window.addEventListener("touchcancel", onTouchEnd, opts);
     // the buttons
-    navRef.current = {
-      next: () => {
-        const y = window.scrollY;
-        glide(chapters(film.stops()).find((x) => x.y > y + 8)?.y ?? onward(), undefined, arm);
-      },
-      prev: () => {
-        const y = window.scrollY;
-        glide(chapters(film.stops()).filter((x) => x.y < y - 8).pop()?.y ?? 0, undefined, arm);
-      },
-    };
+    navRef.current = { next: () => ask(1), prev: () => ask(-1) };
     return () => {
       cancelAnimationFrame(raf);
       stop();
-      clearTimeout(autoT);
       clearTimeout(idle);
       navRef.current = null;
       window.removeEventListener("scroll", onScroll);
@@ -269,8 +255,8 @@ export function ChapterNav() {
 
   if (!film) return null;
   return (
-    <nav className={s.nav} data-chapter-nav data-show={state.show && !typing ? "true" : undefined} aria-label="Chapters">
-      <button type="button" className={s.prev} onClick={() => navRef.current?.prev()} disabled={state.first} aria-label="Previous chapter">
+    <nav className={s.nav} data-chapter-nav data-place={state.place} data-places={state.places} data-show={state.show && !typing ? "true" : undefined} aria-label="Chapters">
+      <button type="button" className={s.prev} onClick={() => navRef.current?.prev()} disabled={state.first} aria-label="Previous">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M6 14.5 12 8.5l6 6" />
         </svg>
@@ -280,7 +266,7 @@ export function ChapterNav() {
         <i>/</i>
         {String(state.n).padStart(2, "0")}
       </span>
-      <button type="button" className={s.next} onClick={() => navRef.current?.next()} aria-label={state.last ? "Next, past the film" : "Next chapter"}>
+      <button type="button" className={s.next} onClick={() => navRef.current?.next()} aria-label={state.last ? "Next, past the film" : "Next"}>
         <span>Next</span>
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M6 9.5l6 6 6-6" />

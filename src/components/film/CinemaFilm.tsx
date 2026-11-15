@@ -123,8 +123,8 @@ export function CinemaFilm({
       return { z, tx: clamp(tx, geo.W - geo.px - z * geo.pw, -geo.px), ty: clamp(ty, geo.H - geo.py - z * geo.ph, -geo.py) };
     };
 
-    // A multi-step chapter rests on each step, mid-step (where its camera has settled); the steps play
-    // by themselves while the visitor rests (ChapterNav).
+    // A multi-step chapter rests on each step, mid-step (where its camera has settled); each step is a
+    // resting place the visitor scrolls to (ChapterNav).
     const blocks = cutBlocks.map((b) =>
       b.kind === "hold" && (b.steps ?? 1) > 1 && !b.stops ? { ...b, autoplay: true, stops: Array.from({ length: b.steps! }, (_, k) => 0.12 + (0.76 * (k + 0.5)) / b.steps!) } : b,
     );

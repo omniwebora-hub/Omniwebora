@@ -35,11 +35,12 @@ async function swipe(cdp, dy) {
   await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
 }
 async function settled(page) {
-  let y = -1;
-  for (let t = 0; t < 60; t++) {
+  // still for three samples in a row: a frame stall in the middle of a move is not the end of it
+  let y = -1, still = 0;
+  for (let t = 0; t < 90; t++) {
     await page.waitForTimeout(160);
     const now = await page.evaluate(() => Math.round(scrollY));
-    if (now === y) return now;
+    if (now === y) { if (++still >= 3) return now; } else still = 0;
     y = now;
   }
   return y;
@@ -66,13 +67,13 @@ for (const path of paths) {
     await page.waitForTimeout(350);
     await settled(page);
     c = await counter(page);
-    if (c.show && c.at !== before.at + 1) bad(`${path} gesture ${gestures}: chapter ${before.at} → ${c.at} (expected ${before.at + 1})`);
+    if (c.show && c.at > before.at + 1) bad(`${path} gesture ${gestures}: chapter ${before.at} → ${c.at} (one gesture skipped a chapter)`);
     if (c.y <= before.y) bad(`${path} gesture ${gestures}: did not move forward (${before.y} → ${c.y})`);
   }
   console.log(`${path} [${phone ? "phone" : "desktop"}] ${of} chapters, ${gestures} gestures to the end`);
 
   if (path === "/") {
-    // rest on the product wall: its steps should play by themselves
+    // rest on the product wall: the page must never move by itself (owner, 2026-11-16)
     await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
     await page.waitForTimeout(800);
     for (let k = 0; k < 30; k++) {
@@ -81,13 +82,13 @@ for (const path of paths) {
       await settled(page);
     }
     const y0 = await settled(page);
-    await page.waitForTimeout(4200);
+    await page.waitForTimeout(8000);
     const y1 = await page.evaluate(() => Math.round(scrollY));
-    if (y1 <= y0) bad(`/ product wall: steps did not play by themselves (${y0} → ${y1})`);
-    else console.log(`/ product wall plays its steps by itself (${y0} → ${y1})`);
+    if (y1 !== y0) bad(`/ product wall: the page moved by itself (${y0} → ${y1})`);
+    else console.log(`/ product wall stays put while the visitor rests (${y0})`);
   }
   if (errors.length) bad(`${path}: page errors: ${errors.join("; ")}`);
   await page.close();
 }
-console.log(fails ? `FAIL ${fails}` : "PASS one gesture, one chapter");
+console.log(fails ? `FAIL ${fails}` : "PASS one gesture, one step");
 await browser.close();

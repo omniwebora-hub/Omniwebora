@@ -109,7 +109,7 @@ for (const path of paths) {
     await page.screenshot({ path: `${out}/${name}-${String(stops).padStart(2, "0")}.png` });
     const tag = `${path} stop ${stops} (${info.current.join(",") || "none"})`;
     if (info.y <= before + 4) bad(`${tag}: did not move forward (${before} → ${info.y})`);
-    if (label === "Next chapter") {
+    if (label === "Next") {
       if (info.current.length > 1) bad(`${tag}: ${info.current.length} chapters current`);
       if (info.shown !== null && info.shown < 0.95) bad(`${tag}: words at opacity ${info.shown}`);
     }
