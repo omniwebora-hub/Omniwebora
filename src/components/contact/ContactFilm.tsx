@@ -60,11 +60,45 @@ export function ContactFilm({ children }: { children: React.ReactNode }) {
     return () => brief.removeEventListener("focusin", onFocus);
   }, []);
   useEffect(() => {
-    // Arriving with intent (a service, a plan, or a hand-off from Pricing / How We Work): straight to the brief.
-    const q = new URLSearchParams(window.location.search);
-    if (window.location.hash || !["service", "plan", "from"].some((k) => q.has(k))) return;
-    const r = requestAnimationFrame(() => document.getElementById("brief")?.scrollIntoView({ behavior: "instant", block: "start" }));
-    return () => cancelAnimationFrame(r);
+    // Every "Contact Us" leads to the form (owner, 2026-11-15): arriving at the top of /contact, the page
+    // glides briskly down to the brief after a short beat. A hash link, a restored scroll position or any
+    // touch, wheel or key from the visitor leaves the page alone.
+    if (window.location.hash || window.scrollY > 40) return;
+    const target = () => {
+      const el = document.getElementById("brief");
+      if (!el) return null;
+      const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      return el.getBoundingClientRect().top + window.scrollY - pad;
+    };
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let raf = 0;
+    let stopped = false;
+    const stop = () => {
+      stopped = true;
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+    };
+    const inputs = ["wheel", "touchstart", "keydown", "pointerdown"] as const;
+    for (const e of inputs) window.addEventListener(e, stop, { passive: true, capture: true });
+    const timer = window.setTimeout(() => {
+      if (stopped || window.scrollY > 40) return;
+      const from = window.scrollY;
+      const dur = reduced ? 0 : 1100;
+      const t0 = performance.now();
+      const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+      const step = (now: number) => {
+        const to = target();
+        if (stopped || to === null) return;
+        const t = dur ? Math.min(1, (now - t0) / dur) : 1;
+        window.scrollTo({ top: from + (to - from) * ease(t), behavior: "instant" });
+        if (t < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    }, reduced ? 0 : 450);
+    return () => {
+      stop();
+      for (const e of inputs) window.removeEventListener(e, stop, { capture: true });
+    };
   }, []);
   return (
     <div ref={wrap} className={s.answers}>

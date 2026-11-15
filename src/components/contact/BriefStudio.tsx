@@ -8,19 +8,9 @@ import type { InquiryFieldErrors } from "@/lib/inquiry/schema";
 import { getAttribution } from "@/lib/utm";
 import { track } from "@/lib/analytics";
 import { Icon } from "@/components/ui/Icon";
-import { site } from "@/content/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import s from "./BriefStudio.module.css";
 
-const SERVER_MESSAGES: Record<string, string> = {
-  transport_unconfigured:
-    "This form isn't connected to a mailbox yet, so your brief was not sent from here.",
-  transport_failed: "Your brief couldn't be delivered just now. Nothing was lost on your side: please try again in a minute.",
-  rate_limited: "Too many submissions from this connection. Wait a few minutes, then send it again.",
-  too_large: "That brief is too long to send. Shorten the description and try again.",
-  forbidden: "The form couldn't be submitted from this page. Reload the page and try again.",
-  invalid_json: "Something went wrong preparing your brief. Reload the page and try again.",
-};
 
 /** Legacy ?service= values from older links map onto the current categories. */
 const LEGACY: Record<string, string> = { websites: "website", "mobile-apps": "mobile", "business-software": "custom-software", "ai-automation": "business-automation", cloud: "not-sure" };
@@ -40,9 +30,9 @@ function readScope(fromPricing: boolean): { service?: string; summary?: string }
 type Fields = { name: string; email: string; company: string; message: string; consent: boolean; website: string };
 
 /** Reads ?service= and ?from= and renders the studio with them (wrap in Suspense). */
-export function BriefStudioFromUrl({ emailReady = false }: { emailReady?: boolean }) {
+export function BriefStudioFromUrl() {
   const params = useSearchParams();
-  return <BriefStudio emailReady={emailReady} initialService={params.get("service") ?? ""} initialPlan={params.get("plan") ?? ""} fromPricing={["pricing", "approach"].includes(params.get("from") ?? "")} />;
+  return <BriefStudio initialService={params.get("service") ?? ""} initialPlan={params.get("plan") ?? ""} fromPricing={["pricing", "approach"].includes(params.get("from") ?? "")} />;
 }
 
 /**
@@ -53,13 +43,10 @@ export function BriefStudio({
   initialService = "",
   initialPlan = "",
   fromPricing = false,
-  emailReady = false,
 }: {
   initialService?: string;
   initialPlan?: string;
   fromPricing?: boolean;
-  /** The server can email the brief to the owner (RESEND or webhook configured). Otherwise it goes by WhatsApp. */
-  emailReady?: boolean;
 }) {
   const id = useId();
   const router = useRouter();
@@ -83,7 +70,6 @@ export function BriefStudio({
   const [scope, setScope] = useState<string>(saved?.summary ?? "");
   const [fields, setFields] = useState<Fields>({ name: "", email: "", company: "", message: "", consent: false, website: "" });
   const [errors, setErrors] = useState<InquiryFieldErrors>({});
-  const [status, setStatus] = useState<{ kind: "idle" | "sending" } | { kind: "error"; message: string }>({ kind: "idle" });
   useEffect(() => {
     startedAt.current = Date.now();
     track("contact_start", { prefilled: initialService ? "service" : fromPricing ? "pricing" : "none" });
@@ -130,12 +116,6 @@ export function BriefStudio({
       .filter(Boolean)
       .join("\n");
 
-  // If the site cannot deliver the brief, the visitor can send the same brief by email in one tap.
-  const mailto = () => {
-    const subject = `Project brief: ${label(serviceOptions, service) ?? "Not sure yet"} from ${fields.name}`;
-    const body = `${fields.message}\n\n${briefText()}\n\n${fields.name}${fields.company ? `, ${fields.company}` : ""}\n${fields.email}`;
-    return `mailto:${site.contactEmail.value}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
 
   // The whole brief as one WhatsApp message to the owner (O09).
   const whatsapp = () =>
@@ -146,11 +126,11 @@ ${briefText()}
 
 ${fields.message}
 
-${fields.name}${fields.company ? `, ${fields.company}` : ""}
-${fields.email}`,
+${fields.name}${fields.company ? `, ${fields.company}` : ""}${fields.email ? `
+${fields.email}` : ""}`,
     );
 
-  /** No mailbox connected: the brief opens in WhatsApp (a new tab / the app), and the page says how to finish. */
+  /** Briefs are sent on WhatsApp only (owner, 2026-11-15): it opens in WhatsApp (a new tab / the app), and the page says how to finish. */
   function sentOnWhatsApp() {
     track("contact_submit_success", { service: service || "not-sure", via: "whatsapp" });
     try {
@@ -189,40 +169,7 @@ ${fields.email}`,
     };
   }
 
-  async function send() {
-    if (status.kind === "sending") return;
-    if (!(await validateDetails())) {
-      setStep(2);
-      return;
-    }
-    setStatus({ kind: "sending" });
-    track("submit_inquiry", { location: "contact", service: service || "not-sure" });
-    try {
-      const res = await fetch("/api/inquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload()) });
-      const body = (await res.json().catch(() => ({}))) as { ok?: boolean; code?: string; fieldErrors?: InquiryFieldErrors };
-      if (res.ok && body.ok) {
-        track("contact_submit_success", { service: service || "not-sure" });
-        try {
-          sessionStorage.removeItem("omni:scope");
-        } catch {
-          /* ignore */
-        }
-        router.push("/thank-you");
-        return;
-      }
-      if (body.code === "invalid" && body.fieldErrors) {
-        setErrors(body.fieldErrors);
-        setStatus({ kind: "idle" });
-        setStep(2);
-        return;
-      }
-      setStatus({ kind: "error", message: SERVER_MESSAGES[body.code ?? ""] ?? "Your brief couldn't be sent. Please try again." });
-      track("inquiry_error", { location: "contact", code: body.code ?? String(res.status) });
-    } catch {
-      setStatus({ kind: "error", message: "You appear to be offline. Check your connection and send it again." });
-      track("inquiry_error", { location: "contact", code: "network" });
-    }
-  }
+
 
   const err = (k: keyof InquiryFieldErrors) =>
     errors[k] ? (
@@ -267,7 +214,7 @@ ${fields.email}`,
           </div>
         )}
         <p className={s.next}>
-          We reply by email.
+          We reply on WhatsApp.
         </p>
       </aside>
 
@@ -389,7 +336,7 @@ ${fields.email}`,
                   {err("name")}
                 </div>
                 <div className={s.field}>
-                  <label htmlFor={`${id}-email`}>Business email *</label>
+                  <label htmlFor={`${id}-email`}>Email (optional)</label>
                   <input id={`${id}-email`} name="email" type="email" autoComplete="email" value={fields.email} onChange={(e) => set("email", e.target.value)} aria-invalid={!!errors.email} aria-describedby={errors.email ? `${id}-email-err` : undefined} maxLength={LIMITS.email.max} />
                   {err("email")}
                 </div>
@@ -452,7 +399,8 @@ ${fields.email}`,
                 </dd>
                 <dt>Contact</dt>
                 <dd>
-                  {fields.name} · {fields.email}
+                  {fields.name}
+                  {fields.email ? ` · ${fields.email}` : ""}
                   {fields.company ? ` · ${fields.company}` : ""}{" "}
                   <button type="button" className={s.edit} onClick={() => setStep(2)}>
                     Edit
@@ -461,36 +409,14 @@ ${fields.email}`,
                 <dt>Description</dt>
                 <dd className={s.reviewMessage}>{fields.message}</dd>
               </dl>
-              {status.kind === "error" && (
-                <div className={s.error} role="alert">
-                  <Icon name="alert" size={18} />
-                  <span>
-                    {status.message}{" "}
-                    <a href={whatsapp()} target="_blank" rel="noopener" className={s.mailto} onClick={sentOnWhatsApp}>
-                      Send it on WhatsApp instead
-                    </a>{" "}
-                    or{" "}
-                    <a href={mailto()} className={s.mailto}>
-                      email it to {site.contactEmail.value}
-                    </a>
-                  </span>
-                </div>
-              )}
               <div className={s.actions}>
                 <button type="button" className="btn btn-ghost" onClick={() => setStep(2)}>
                   Back
                 </button>
-                {emailReady ? (
-                  <button type="button" className="btn btn-primary" onClick={send} aria-busy={status.kind === "sending"} disabled={status.kind === "sending"}>
-                    {status.kind === "sending" ? "Sending…" : "Send brief"}
-                    <Icon name="arrow-right" size={18} className="btn-arrow" />
-                  </button>
-                ) : (
-                  <a href={whatsapp()} target="_blank" rel="noopener" className="btn btn-primary" onClick={sentOnWhatsApp}>
-                    Send on WhatsApp
-                    <Icon name="arrow-right" size={18} className="btn-arrow" />
-                  </a>
-                )}
+                <a href={whatsapp()} target="_blank" rel="noopener" className="btn btn-primary" onClick={sentOnWhatsApp}>
+                  <Icon name="whatsapp" size={18} />
+                  Send on WhatsApp
+                </a>
               </div>
             </div>
           )}

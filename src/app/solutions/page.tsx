@@ -124,6 +124,7 @@ export default function SolutionsPage() {
             <p className={c.outroLede}>Tell us what you need and we will suggest where to start.</p>
             <div className={c.actions}>
               <Link href="/contact" className="btn btn-primary">
+                <Icon name="whatsapp" size={18} />
                 Contact us
               </Link>
               <Link href="/approach" className={c.more}>

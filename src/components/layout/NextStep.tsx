@@ -21,7 +21,8 @@ export function NextStep() {
       <Link href={next.href} className={styles.nextLink}>
         <span>{next.title}</span>
         <span className={styles.nextCta}>
-          {next.cta} <Icon name="arrow-right" size={20} />
+          {inSolutions && <Icon name="whatsapp" size={20} />}
+          {next.cta} {!inSolutions && <Icon name="arrow-right" size={20} />}
         </span>
       </Link>
     </div>

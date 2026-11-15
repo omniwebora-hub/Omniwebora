@@ -112,8 +112,8 @@ export function Header() {
             <Icon name="search" size={20} />
           </button>
           <Link href={primaryCta.href} className={`btn btn-primary btn-small ${styles.cta}`} onClick={() => track("project_cta_click", { location: "header" })}>
+            <Icon name="whatsapp" size={18} />
             {primaryCta.label}
-            <Icon name="arrow-right" size={18} className="btn-arrow" />
           </Link>
           <button
             type="button"
@@ -161,8 +161,8 @@ export function Header() {
           </nav>
           <div className={styles.menuFoot}>
             <Link href="/contact" className="btn btn-primary" onClick={() => track("project_cta_click", { location: "mobile_menu" })}>
+              <Icon name="whatsapp" size={18} />
               Contact Us
-              <Icon name="arrow-right" size={18} className="btn-arrow" />
             </Link>
             <button type="button" className="btn btn-ghost" onClick={openSearch}>
               <Icon name="search" size={18} /> Search

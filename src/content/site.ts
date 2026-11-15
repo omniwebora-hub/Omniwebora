@@ -26,7 +26,7 @@ export const site = {
     todo: "Confirm registered company name for footer and privacy policy.",
   } satisfies Verifiable<string>,
 
-  /** Owner, 2026-10-30 (FACT_REGISTER O06). Every brief is delivered here. */
+  /** Owner, 2026-10-30 (FACT_REGISTER O06). Not shown and not used for delivery: contact is WhatsApp only (owner, 2026-11-15). */
   contactEmail: {
     value: "info@omniwebora.com",
     verified: true,

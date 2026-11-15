@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Icon } from "@/components/ui/Icon";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { StudioFilm } from "@/components/about/StudioFilm";
@@ -47,6 +48,7 @@ export default function AboutPage() {
               <p className={c.lede}>We listen first, plan in seven clear stages and stay with you after launch. A rough idea is enough to begin.</p>
               <div className={c.actions}>
                 <Link href="/contact" className="btn btn-primary btn-small">
+                  <Icon name="whatsapp" size={18} />
                   Contact us
                 </Link>
                 <Link href="/approach" className={c.more}>

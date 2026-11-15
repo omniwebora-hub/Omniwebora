@@ -40,7 +40,8 @@ export function organizationJsonLd() {
         url: site.url,
         description: site.description,
         ...(site.logo.verified ? { logo: `${site.url}${site.logo.value}` } : {}),
-        ...(site.contactEmail.verified ? { email: site.contactEmail.value } : {}),
+        // contact is WhatsApp only (owner, 2026-11-15)
+        ...(site.whatsapp.verified ? { telephone: site.whatsapp.display } : {}),
         ...(site.social.some((s) => s.verified) ? { sameAs: site.social.filter((s) => s.verified).map((s) => s.href) } : {}),
       },
       {

@@ -31,8 +31,8 @@ export function Footer() {
           <p>Websites, apps, software and marketing for your business.</p>
           <ContactLinks className={styles.direct} />
           <Link href="/contact" className="btn btn-on-ink btn-small">
+            <Icon name="whatsapp" size={18} />
             Contact us
-            <Icon name="arrow-right" size={18} className="btn-arrow" />
           </Link>
         </div>
 

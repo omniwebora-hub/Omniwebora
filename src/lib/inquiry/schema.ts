@@ -12,11 +12,14 @@ export const inquirySchema = z.object({
     .trim()
     .min(LIMITS.name.min, { error: "Enter your name." })
     .max(LIMITS.name.max, { error: `Keep your name under ${LIMITS.name.max} characters.` }),
+  // Optional (owner, 2026-11-15: replies go by WhatsApp only); checked only when given.
   email: z
-    .string({ error: "Enter your business email." })
+    .string()
     .trim()
     .max(LIMITS.email.max, { error: "That email address is too long." })
-    .pipe(z.email({ error: "Enter an email address like name@company.com." })),
+    .pipe(z.union([z.literal(""), z.email({ error: "Enter an email address like name@company.com." })]))
+    .optional()
+    .default(""),
   company: z
     .string()
     .trim()

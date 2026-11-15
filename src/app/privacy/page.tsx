@@ -45,7 +45,7 @@ export default function PrivacyPage() {
             <h2>What we collect</h2>
             <p>When you send an inquiry through the contact form, we receive:</p>
             <ul>
-              <li>your name and the email address you provide;</li>
+              <li>your name, your WhatsApp number (sent with your message) and, if you choose to give it, an email address;</li>
               <li>your company name, if you choose to give it;</li>
               <li>the service you selected, your timeline (optional) and your project description;</li>
               <li>the page you submitted the form from, and any campaign tags (such as utm_source) in the link that brought you to the site, plus the website you came from.</li>
@@ -68,14 +68,14 @@ export default function PrivacyPage() {
 
             <h2>Where it goes and how long we keep it</h2>
             <p>
-              Inquiries are delivered to our team by email or into the system we use to manage enquiries. Retention periods and the
+              Inquiries are sent to our team on WhatsApp, and we reply there. Retention periods and the
               names of any service providers involved will be listed here once confirmed.
             </p>
 
             <h2>Your choices</h2>
             <p>
               You can ask us what we hold about you, ask us to correct it, or ask us to delete it. Until a dedicated privacy contact
-              is published here, reply to any email we have sent you, or send a request through the{" "}
+              is published here, message us on WhatsApp, or send a request through the{" "}
               <Link href="/contact">contact form</Link>.
             </p>
 

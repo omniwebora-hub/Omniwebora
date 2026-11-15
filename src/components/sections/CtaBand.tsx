@@ -24,8 +24,8 @@ export function CtaBand({
           <p>{body}</p>
         </div>
         <TrackedLink href={href} event="start_project" props={{ location }} className="btn btn-on-ink">
+          <Icon name="whatsapp" size={18} />
           {label}
-          <Icon name="arrow-right" size={18} className="btn-arrow" />
         </TrackedLink>
       </div>
     </section>

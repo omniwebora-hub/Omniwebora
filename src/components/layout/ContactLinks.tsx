@@ -3,15 +3,14 @@ import { whatsappLink } from "@/lib/whatsapp";
 import styles from "./ContactLinks.module.css";
 
 /**
- * Direct contact: WhatsApp (O09) first, then the owner's email (O06).
+ * Direct contact: WhatsApp only (O09; owner, 2026-11-15: no email).
  * Nothing is shown for a channel that is not confirmed.
  */
 export function ContactLinks({ className }: { className?: string }) {
-  const email = site.contactEmail.verified ? site.contactEmail.value : "";
   const wa = site.whatsapp.verified ? site.whatsapp.value : "";
-  if (!email && !wa) return null;
+  if (!wa) return null;
   return (
-    <ul className={`${styles.links} ${className ?? ""}`} aria-label="Contact Omniwebora directly">
+    <ul className={`${styles.links} ${className ?? ""}`} aria-label="Contact Omniwebora on WhatsApp">
       {wa && (
         <li>
           <a href={whatsappLink("Hello Omniwebora, I'd like to talk about a project.")} target="_blank" rel="noopener">
@@ -22,16 +21,6 @@ export function ContactLinks({ className }: { className?: string }) {
               />
             </svg>
             WhatsApp {site.whatsapp.display}
-          </a>
-        </li>
-      )}
-      {email && (
-        <li>
-          <a href={`mailto:${email}`}>
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M3 6.5h18v11H3z M3.5 7l8.5 6.5L20.5 7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-            </svg>
-            {email}
           </a>
         </li>
       )}

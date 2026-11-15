@@ -54,8 +54,8 @@ export default function HomePage() {
             <p className={c.lede}>Websites, apps, software and marketing for your business.</p>
             <div className={c.actions}>
               <TrackedLink href="/contact" event="start_project" props={{ location: "hero" }} className="btn btn-primary">
+                <Icon name="whatsapp" size={18} />
                 Contact Us
-                <Icon name="arrow-right" size={18} className="btn-arrow" />
               </TrackedLink>
               <Link href="/solutions" className={c.more}>
                 Explore our solutions <Icon name="arrow-right" size={16} />
@@ -207,6 +207,7 @@ export default function HomePage() {
             <p className={c.lede}>A rough idea is enough to begin.</p>
             <div className={c.actions}>
               <TrackedLink href="/contact" event="project_cta_click" props={{ location: "home_final" }} className="btn btn-primary btn-small">
+                <Icon name="whatsapp" size={18} />
                 Contact Us
               </TrackedLink>
               <Link href="/solutions" className={c.more}>

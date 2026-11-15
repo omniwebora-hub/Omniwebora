@@ -289,7 +289,21 @@ test.describe("project brief and API", () => {
     await expect(page.getByRole("radio", { name: /£/ })).toHaveCount(0);
   });
 
-  test("without a mailbox the brief is sent to the owner's WhatsApp, prefilled", async ({ page }) => {
+  test("Contact Us (with the WhatsApp icon) leads straight to the form", async ({ page, isMobile }) => {
+    test.skip(isMobile, "the header button is in the menu on phones");
+    await page.goto("/pricing");
+    const cta = page.getByRole("banner").getByRole("link", { name: "Contact Us" });
+    await expect(cta.locator("svg path[fill='currentColor']")).toHaveCount(1);
+    await cta.click();
+    await expect(page).toHaveURL(/\/contact$/);
+    // the page glides down on its own until the brief is on screen
+    await expect
+      .poll(async () => page.evaluate(() => document.getElementById("brief")!.getBoundingClientRect().top), { timeout: 6000 })
+      .toBeLessThan(200);
+    await expect(page.getByRole("heading", { name: "What do you need?" })).toBeInViewport();
+  });
+
+  test("the brief is sent to the owner's WhatsApp, prefilled", async ({ page }) => {
     await page.goto("/contact?service=website");
     await toChapter(page, "brief");
     await expect(page.getByRole("radio", { name: "Website" })).toBeChecked();
@@ -297,7 +311,7 @@ test.describe("project brief and API", () => {
     await page.getByRole("radio", { name: "Connect tools" }).check();
     await page.getByRole("button", { name: "Continue" }).click();
     await page.getByLabel("Your name *").fill("Test Person");
-    await page.getByLabel("Business email *").fill("test@example.com");
+    await page.getByLabel("Email (optional)").fill("test@example.com");
     await page.getByLabel(/What are you trying to build or fix/).fill("We would like a new marketing website for our studio.");
     await page.getByRole("checkbox").check();
     await page.getByRole("button", { name: "Review brief" }).click();
