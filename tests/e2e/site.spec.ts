@@ -38,7 +38,7 @@ function collectErrors(page: Page) {
     if (m.type() === "error") errors.push(`console: ${m.text()}`);
   });
   page.on("response", (r) => {
-    if (r.status() >= 400 && !r.url().includes("/api/inquiry")) errors.push(`HTTP ${r.status()} ${r.url()}`);
+    if (r.status() >= 400) errors.push(`HTTP ${r.status()} ${r.url()}`);
   });
   return errors;
 }
@@ -266,7 +266,7 @@ test.describe("home", () => {
   });
 });
 
-test.describe("project brief and API", () => {
+test.describe("project brief", () => {
   test("the brief validates its details step and focuses the first invalid field", async ({ page }) => {
     await page.goto("/contact");
     await toChapter(page, "brief");
@@ -342,23 +342,6 @@ test.describe("project brief and API", () => {
     await expect(page.getByRole("complementary", { name: "Your brief so far" })).toContainText("We take bookings or appointments");
   });
 
-  test("API validates, rejects bots, rate-limits and refuses non-POST", async ({ request, baseURL }) => {
-    const good = {
-      name: "API Test",
-      email: "api@example.com",
-      message: "Testing the inquiry endpoint with a valid message.",
-      consent: true,
-      startedAt: Date.now() - 10_000,
-    };
-    const headers = { origin: baseURL! };
-    expect((await request.get("/api/inquiry")).status()).toBe(405);
-    expect((await request.post("/api/inquiry", { data: { ...good, email: "bad" }, headers })).status()).toBe(400);
-    const bot = await request.post("/api/inquiry", { data: { ...good, website: "spam" }, headers });
-    expect(bot.status()).toBe(200);
-    expect((await request.post("/api/inquiry", { data: good, headers: { origin: "https://evil.example" } })).status()).toBe(403);
-    const unconfigured = await request.post("/api/inquiry", { data: good, headers });
-    expect([503, 429]).toContain(unconfigured.status());
-  });
 });
 
 test.describe("route interactions", () => {

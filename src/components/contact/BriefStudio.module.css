@@ -450,14 +450,6 @@
   font-weight: 600;
 }
 
-.mailto {
-  display: inline-block;
-  margin-top: 6px;
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
 .noscript {
   padding: 14px 16px;
   border-radius: 12px;

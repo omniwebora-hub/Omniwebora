@@ -100,9 +100,9 @@ export function ChapterNav() {
       to = Math.max(0, Math.min(document.documentElement.scrollHeight - H(), to));
       const dist = Math.abs(to - from);
       if (dist < 2) return onEnd?.();
-      // longer moves take longer, so a camera move plays at a calm, readable pace (owner, 2026-11-14:
-      // "a few scrolls and it moves very fast")
-      const dur = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : (ms ?? Math.min(3000, 1000 + (dist / H()) * 650));
+      // longer moves take a little longer so a camera move still reads, but never drags (owner,
+      // 2026-11-14: "moves very fast"; 2026-11-15: "very very slow, have to scroll so much")
+      const dur = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : (ms ?? Math.min(1400, 600 + (dist / H()) * 280));
       const t0 = performance.now();
       a.gliding = true;
       a.expect = from;
@@ -177,7 +177,8 @@ export function ChapterNav() {
     // Mouse wheel and trackpad: one gesture moves exactly one chapter. A burst of wheel events (a fast
     // spin, or a trackpad's momentum tail) is one gesture; the native scroll it would cause is replaced
     // by the calm glide, so a flick can no longer race through several chapters and camera moves.
-    // A continuing burst advances again only after the glide has finished and a short beat has passed.
+    // Separate wheel notches are separate gestures (each one moves on, even mid-glide); a steady spin
+    // advances again once the glide has finished and a short beat has passed.
     let wheelDir = 0;
     let lastWheel = 0;
     let lastGo = 0;
@@ -194,14 +195,20 @@ export function ChapterNav() {
       const abs = Math.abs(e.deltaY);
       // a sharp rise in strength is a new flick, even inside a trackpad's stream of events
       const fresh = abs > Math.max(20, lastAbs * 1.6);
-      const burst = now - lastWheel < 240 && d === wheelDir && !fresh;
+      // a mouse notch (large delta) is its own gesture unless it comes in a rapid spin; a trackpad
+      // stream (small deltas every frame) is one gesture
+      const gap = now - lastWheel;
+      const burst = (abs >= 40 ? gap < 110 : gap < 240) && d === wheelDir && !fresh;
       // a fading stream (momentum) never advances again; a steady one (a long wheel spin) may, after a beat
       const fading = abs < lastAbs * 0.97 || abs < 10;
       lastWheel = now;
       lastAbs = abs;
-      if (burst && (a.gliding || fading || now - lastGo < 3100)) return;
+      if (burst && (a.gliding || fading || now - lastGo < 700)) return;
       // a new gesture in the same direction during a glide goes one chapter beyond where it was heading
-      const y = a.gliding && d === wheelDir ? wheelTo : window.scrollY;
+      // (at most two chapters ahead of the camera, so the page never races away)
+      const queued = a.gliding && d === wheelDir;
+      if (queued && chapters(film.stops()).filter((x) => x.y > window.scrollY + 8 && x.y <= wheelTo + 8).length >= 2) return;
+      const y = queued ? wheelTo : window.scrollY;
       wheelDir = d;
       lastGo = now;
       const cs = chapters(film.stops());

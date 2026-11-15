@@ -11,7 +11,7 @@ Node.js ≥ 20.9 (developed on 22.19), npm 10.
 ```bash
 npm install
 npm run dev          # http://localhost:3000
-npm run build        # production build (all pages static except /api/inquiry)
+npm run build        # production build (every page is static)
 npm start            # serve the production build
 npm run typecheck
 npm run lint
@@ -22,7 +22,7 @@ npm run test:e2e     # Playwright + axe (run `npm run build` first; first time: 
 ## Project map
 | Path | What it is |
 |---|---|
-| `src/app/` | Routes: `/`, `/solutions` (+ six detail pages), `/approach` (How We Work), `/pricing`, `/about`, `/contact`, `/privacy`, `/thank-you`, `POST /api/inquiry` |
+| `src/app/` | Routes: `/`, `/solutions` (+ six detail pages), `/approach` (How We Work), `/pricing`, `/about`, `/contact`, `/privacy`, `/thank-you` |
 | `src/components/film/` | The film system: `engine.ts` (eased scroll, video scrubbing, joins), `CinemaFilm.tsx` (chapters, stills, overlays), shared chapter styles |
 | `src/components/<page>/` | Each page's film and tools (`HomeFilm`, `PricingFilm`, `ContactFilm`, `RoomFilm`, …) |
 | `src/components/displays/` | The live interfaces shown on the walls (website, phone app, operations console, …) |
@@ -48,17 +48,13 @@ Copy `.env.example` to `.env.local` (and set the same in Vercel). Never commit r
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Canonical origin of the deployed site |
 | `NEXT_PUBLIC_ALLOW_INDEXING` | `true` only on the approved production domain; otherwise every page is `noindex` and robots.txt disallows all |
-| `RESEND_API_KEY`, `INQUIRY_FROM_EMAIL` | Email delivery of project briefs via Resend (sender on a verified domain) |
-| `INQUIRY_TO_EMAIL` | Inbox for briefs; defaults to info@omniwebora.com |
-| `INQUIRY_WEBHOOK_URL` | Alternative: POST briefs as JSON to a CRM/automation webhook |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | WhatsApp number (digits, with country code); empty = no WhatsApp link |
-| `INQUIRY_DEV_LOG` | `1` in development only: log briefs to the server console |
 | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Optional cookieless analytics; empty = nothing is sent |
 
-Without a transport the brief says plainly it was not sent (HTTP 503) and offers a ready-filled email to info@omniwebora.com instead; it never pretends to succeed.
+The brief is sent to the owner on WhatsApp: the last step opens WhatsApp with the brief prefilled and the visitor presses send. Nothing is emailed and no server code is involved.
 
 ## Deployment
-Hosted on Vercel (framework preset Next.js, no extra settings). The only server code is `POST /api/inquiry`; its rate limiter is in-memory per instance (`src/lib/inquiry/rateLimit.ts`), so back it with a shared store if abuse becomes a concern. Before going live on the real domain, complete `reports/CONTENT_APPROVAL_CHECKLIST.md` and set `NEXT_PUBLIC_ALLOW_INDEXING=true` there only.
+Hosted on Vercel (framework preset Next.js, no extra settings). There is no server code; every page is static. Before going live on the real domain, complete `reports/CONTENT_APPROVAL_CHECKLIST.md` and set `NEXT_PUBLIC_ALLOW_INDEXING=true` there only.
 
 ## Home opening
 Home opens on the crystal: the golden-hour terrace still (`h00-hero-*`) with the Omniwebora mark in the crystal's core and the six services as glass cards around it (`src/components/home/HomeOpening.tsx`; the cards are laid out per screen so they never cover the crystal or the words). On scroll the camera pushes in (`home-push/`), holds, flies into the core (`home-dive/`) and comes out on the drawing of the building, chapter 01. The same film runs on phones (portrait framing); reduced motion gets the stacked layout. The mark follows `src/content/homePushTrack.ts` (`scripts/cinematic/track_crystal.py`).

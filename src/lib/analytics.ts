@@ -16,9 +16,6 @@ export type TrackEvent =
   | "project_cta_click"
   | "view_service"
   | "start_project"
-  | "submit_inquiry"
-  | "inquiry_success"
-  | "inquiry_error"
   | "click_process"
   | "view_work";
 
